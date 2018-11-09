@@ -352,7 +352,7 @@ public class MainActivity extends PermissionsActivity {
                     @Override
                     public void run() {
                         if (isConnectedToInternet()) {
-                            pay();
+                            paySeller();
                         }
                         /*while(webSocketClient!=null){
                             long t = System.currentTimeMillis();
@@ -689,13 +689,13 @@ public class MainActivity extends PermissionsActivity {
                 findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
             }
         });
-        pay();
+        paySeller();
         checkIfConnectedToWifi();
     }
 
-    private void pay() {
+    private void paySeller() {
         System.out.println("Start the transaction");
-        ApplyTransaction.pay(this,amount);
+        ApplyTransaction.paySeller(this,amount);
     }
 
     private void checkIfConnectedToWifi() {

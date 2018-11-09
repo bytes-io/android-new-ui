@@ -6,10 +6,12 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import jota.error.ArgumentException;
 
 public class ApplyTransaction {
     private static Iota iota = null;
@@ -23,7 +25,7 @@ public class ApplyTransaction {
     private static String toAddress;
     private static String senderSeed;
 
-    public static void pay(Context context,long amountIni){
+    public static void paySeller(Context context,long amountIni){
 
         if (iota == null) {
             iota = createIota(context);
@@ -58,6 +60,36 @@ public class ApplyTransaction {
         double tickerPrice = price.get("IOT");
         System.out.println(tickerPrice);
         return currentBalance * tickerPrice;
+    }
+
+    public static ResponseGetBalance getBalance(Context context) throws ArgumentException, IOException, ParseException {
+
+        if (iota == null) {
+            iota = createIota(context);
+        }
+
+        long balanceInI = iota.getBalance();
+        double balanceInUsd = balanceInI * getBalanceUSD();
+        return new ResponseGetBalance(balanceInI, balanceInUsd);
+    }
+
+    public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) {
+
+        if (iota == null) {
+            iota = createIota(context);
+        }
+
+        List<String> tails = new ArrayList<String>();
+        try {
+            tails = iota.makeTx(payOutAddress, amountIni);
+        } catch(Throwable e) {
+            System.err.println("\nERROR: Something went wrong: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        String hash = tails.get(0);
+        String link = explorerHost + "/transaction/" + tails.get(0);
+        return new ResponsePayOut(hash, link, "Pending");
     }
 
     private static Iota createIota(Context context) {

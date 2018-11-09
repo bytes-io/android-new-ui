@@ -1,21 +1,24 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
+import java.text.DateFormat;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 import jota.IotaAPI;
+import jota.dto.response.GetBalancesAndFormatResponse;
 import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.GetNodeInfoResponse;
 import jota.error.ArgumentException;
 import jota.model.Input;
 import jota.model.Transaction;
 import jota.model.Transfer;
-
+import jota.utils.IotaAPIUtils;
+import jota.utils.StopWatch;
 
 public class Iota {
-    private IotaAPI iotaApi;
+    private IotaAPI iotaAPI;
     private String seed;
 
     public int minWeightMagnitude = 14;
@@ -24,7 +27,7 @@ public class Iota {
 
     public Iota(String protocol, String host, String port, String seed)
     {
-        iotaApi = new IotaAPI.Builder()
+        iotaAPI = new IotaAPI.Builder()
                 .protocol(protocol)
                 .host(host)
                 .port(port)
@@ -33,7 +36,7 @@ public class Iota {
     }
 
     public String getLatestMilestone() throws ArgumentException {
-        GetNodeInfoResponse nodeInfo = iotaApi.getNodeInfo();
+        GetNodeInfoResponse nodeInfo = iotaAPI.getNodeInfo();
         String latestMilestoneHash = nodeInfo.getLatestMilestone();
         // System.out.println("\n NodeInfo: Latest Milestone Index: " + latestMilestoneHash);
 
@@ -48,12 +51,12 @@ public class Iota {
         List<Transfer> transfers = new ArrayList<Transfer>();
         transfers.add(new Transfer(addressTo, amountIni));
 
-        String remainderAddress = getNewAddress();
+        String remainderAddress = this.getCurrentAddress();
 
         // bundle prep for all transfers
         System.out.println("before prepareTransfers: " + DateFormat.getDateTimeInstance()
                 .format(new Date()) );
-        List<String> trytesBundle = iotaApi.prepareTransfers(seed, security, transfers, remainderAddress, inputs, tips, validateInputs);
+        List<String> trytesBundle = iotaAPI.prepareTransfers(seed, security, transfers, remainderAddress, inputs, tips, validateInputs);
         System.out.println("after prepareTransfers: " + DateFormat.getDateTimeInstance()
                 .format(new Date()) );
 
@@ -62,7 +65,7 @@ public class Iota {
 
         System.out.println("before sendTrytes: " + DateFormat.getDateTimeInstance()
                 .format(new Date()) );
-        List<Transaction> transactions = iotaApi.sendTrytes(trytes, depth, minWeightMagnitude, reference);
+        List<Transaction> transactions = iotaAPI.sendTrytes(trytes, depth, minWeightMagnitude, reference);
         System.out.println("after sendTrytes: " + DateFormat.getDateTimeInstance()
                 .format(new Date()) );
         System.out.println("\n transactions: " + transactions);
@@ -79,14 +82,46 @@ public class Iota {
         return true;
     }
 
-    public String getNewAddress() throws ArgumentException {
-        int index = 0;
-        boolean checksum = false;
-        int total = 1;
-        boolean returnAll = false;
+    public String getCurrentAddress() throws ArgumentException {
+        boolean checksum = true;
 
-        GetNewAddressResponse getNewAddressResponse = iotaApi.getNewAddress(seed, security, index, checksum, total, returnAll);
+        GetNewAddressResponse getNewAddressResponse = iotaAPI.getNextAvailableAddress(seed, security, checksum);
+
         return getNewAddressResponse.getAddresses().get(0);
+    }
 
+    public long getBalance() throws ArgumentException {
+
+        String currentAddress = this.getCurrentAddress();
+        List<String> tips = new ArrayList<String>();
+        long threshold = 0;
+        int start = 0; //currentAddressIndex
+        StopWatch stopWatch = new StopWatch();
+
+        GetBalancesAndFormatResponse res = iotaAPI.getBalanceAndFormat(
+                Arrays.asList(currentAddress),
+                tips,
+                threshold,
+                start,
+                stopWatch,
+                security);
+        return res.getTotalBalance();
+    }
+
+    public Integer getAvailableAddressIndex(Integer lastKnownAddressIndex) throws ArgumentException {
+        int i = lastKnownAddressIndex == null ? -1 : lastKnownAddressIndex;
+
+        while (true) {
+            i++;
+            String newAddress = IotaAPIUtils.newAddress(seed, 2, i, false, null);
+            System.out.println(i + "   " + newAddress);
+            if (iotaAPI.findTransactionsByAddresses(new String[]{newAddress}).getHashes().length == 0) {
+                return i;
+            }
+        }
+    }
+
+    private String getAddress(int index) throws ArgumentException {
+        return IotaAPIUtils.newAddress(seed, 2, index, false, null);
     }
 }
