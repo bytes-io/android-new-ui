@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.xcoder.bytes">
+    package="amiin.bazouk.application.com.demo_bytes_android">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <!-- REMOVE THIS ONE?? -->
@@ -30,7 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".MainActivity"
+            android:name="amiin.bazouk.application.com.demo_bytes_android.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -38,9 +38,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".SellActivity" />
-        <activity android:name=".ConnectActivity" />
-        <activity android:name=".AmountActivity"></activity>
+        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.SellActivity" />
+        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.ConnectActivity" />
+        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.AmountActivity"></activity>
     </application>
 
 </manifest>

@@ -1,4 +1,4 @@
-package com.xcoder.bytes;
+package amiin.bazouk.application.com.demo_bytes_android;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
@@ -46,8 +48,8 @@ import java.util.Calendar;
 import java.util.Enumeration;
 import java.util.List;
 
-import com.xcoder.bytes.hotspot.MyOreoWifiManager;
-import com.xcoder.bytes.iota.ApplyTransaction;
+import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
+import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -302,6 +304,15 @@ public class MainActivity extends PermissionsActivity {
         if(connectToHotspot()) {
             connectToServer();
         }
+        else{
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    findViewById(R.id.sell_button).setEnabled(true);
+                    findViewById(R.id.buy_button).setEnabled(true);
+                }
+            });
+        }
     }
 
     private void connectToServer() {
@@ -333,6 +344,8 @@ public class MainActivity extends PermissionsActivity {
                         buyButton.setTextColor(getResources().getColor(android.R.color.white));
                         findViewById(R.id.layout_main).setVisibility(View.INVISIBLE);
                         findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
+                        getSupportActionBar().setTitle(R.string.buying);
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
                     }
                 });
                 Thread startPaymentThread = new Thread(new Runnable() {
@@ -368,6 +381,8 @@ public class MainActivity extends PermissionsActivity {
                         buyButton.setBackgroundResource(android.R.drawable.btn_default);
                         findViewById(R.id.layout_main).setVisibility(View.VISIBLE);
                         findViewById(R.id.layout_buy).setVisibility(View.INVISIBLE);
+                        getSupportActionBar().setTitle(R.string.Bytes);
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_client_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -384,6 +399,13 @@ public class MainActivity extends PermissionsActivity {
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, final Response response) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        findViewById(R.id.sell_button).setEnabled(true);
+                        findViewById(R.id.buy_button).setEnabled(true);
+                    }
+                });
                 if (t.getClass() == ConnectException.class) {
                     mWifiManager.setWifiEnabled(false);
                     runOnUiThread(new Runnable() {
@@ -438,7 +460,9 @@ public class MainActivity extends PermissionsActivity {
                 break;
             }
         }
-        unregisterReceiver(mWifiScanReceiver);
+        if(mWifiScanReceiver!=null) {
+            unregisterReceiver(mWifiScanReceiver);
+        }
         mWifiScanReceiver = null;
         wifiList = new ArrayList<>();
         if(!isConnected){
@@ -616,6 +640,8 @@ public class MainActivity extends PermissionsActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        getSupportActionBar().setTitle(R.string.selling);
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
                         builder.setTitle(getResources().getString(R.string.new_client_connected))
                                 .setMessage(getResources().getString(R.string.new_client_connected))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -630,6 +656,8 @@ public class MainActivity extends PermissionsActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+                        getSupportActionBar().setTitle(R.string.Bytes);
+                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_server_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {

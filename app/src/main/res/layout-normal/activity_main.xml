@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context="amiin.bazouk.application.com.demo_bytes_android.MainActivity">
 
     <LinearLayout
         android:id="@+id/layout_main"
@@ -142,7 +141,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content"
-                android:text="BUY DATA"/>
+                android:text="@string/buy_data"/>
             <Button
                 android:id="@+id/sell_button"
                 android:layout_width="0dp"
@@ -150,7 +149,7 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 android:layout_height="wrap_content"
-                android:text="SELL DATA"/>
+                android:text="@string/sell_data"/>
 
         </LinearLayout>
         <LinearLayout
@@ -168,7 +167,7 @@
                 android:layout_height="wrap_content"
                 android:textColor="@android:color/white"
                 android:background="@drawable/roundbutton"
-                android:text="CHECK YOUR WALLET"/>
+                android:text="@string/check_your_wallet"/>
 
         </LinearLayout>
     </LinearLayout>

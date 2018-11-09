@@ -1,4 +1,4 @@
-package com.xcoder.bytes;
+package amiin.bazouk.application.com.demo_bytes_android;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +13,7 @@ import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
-import com.xcoder.bytes.iota.ApplyTransaction;
+import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
 
 public class AmountActivity extends AppCompatActivity {
 

@@ -1,4 +1,4 @@
-package com.xcoder.bytes.iota;
+package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 import android.content.Context;
 
@@ -9,7 +9,7 @@ import java.text.DateFormat;
 import java.util.Date;
 import java.util.List;
 
-import com.xcoder.bytes.R;
+import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class ApplyTransaction {
     private static Iota iota = null;

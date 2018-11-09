@@ -1,4 +1,4 @@
-package com.xcoder.bytes;
+package amiin.bazouk.application.com.demo_bytes_android;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;
