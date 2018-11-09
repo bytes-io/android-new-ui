@@ -91,19 +91,6 @@ public class MainActivity extends PermissionsActivity {
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         amount = preferences.getLong(AMOUNT_STRING,1);
 
-        //to move
-        findViewById(R.id.ready_to_connect).setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText("text to copy", ((TextView)findViewById(R.id.ready_to_connect)).getText().toString());
-                clipboard.setPrimaryClip(clip);
-                Toast.makeText(getApplicationContext(),"Text Copied",Toast.LENGTH_SHORT).show();
-                return true;
-            }
-        });
-        //
-
         mRunnableServer = new Runnable() {
             public void run() {
                 long [] res = new long[2];
