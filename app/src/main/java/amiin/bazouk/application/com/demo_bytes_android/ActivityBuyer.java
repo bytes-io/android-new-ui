@@ -23,6 +23,7 @@ public class ActivityBuyer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         Thread conversionThread = new Thread(new Runnable() {
             @Override
             public void run() {
