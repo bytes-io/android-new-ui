@@ -15,14 +15,14 @@ import java.io.IOException;
 
 import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
 
-public class AmountActivity extends AppCompatActivity {
+public class ActivityBuyer extends AppCompatActivity {
 
     private double rate = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_amount);
+        setContentView(R.layout.activity_buyer);
         Thread conversionThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -37,7 +37,7 @@ public class AmountActivity extends AppCompatActivity {
         });
         conversionThread.start();
 
-        findViewById(R.id.ok).setOnClickListener(new View.OnClickListener(){
+        findViewById(R.id.set_max_price).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 Intent result = new Intent();
@@ -48,7 +48,7 @@ public class AmountActivity extends AppCompatActivity {
             }
         });
 
-        findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener(){
+        /*findViewById(R.id.cancel).setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 finish();
@@ -76,6 +76,6 @@ public class AmountActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
             }
         };
-        ((EditText)findViewById(R.id.amount_iota)).addTextChangedListener(fieldValidatorTextWatcher);
+        ((EditText)findViewById(R.id.amount_iota)).addTextChangedListener(fieldValidatorTextWatcher);*/
     }
 }

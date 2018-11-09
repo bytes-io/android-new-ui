@@ -40,7 +40,7 @@
         </activity>
         <activity android:name="amiin.bazouk.application.com.demo_bytes_android.SellActivity" />
         <activity android:name="amiin.bazouk.application.com.demo_bytes_android.ConnectActivity" />
-        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.AmountActivity"></activity>
+        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer"></activity>
     </application>
 
 </manifest>

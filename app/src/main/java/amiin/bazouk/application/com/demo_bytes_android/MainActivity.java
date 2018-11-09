@@ -5,13 +5,14 @@ import android.app.AlertDialog;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -32,6 +33,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -88,6 +90,19 @@ public class MainActivity extends PermissionsActivity {
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         amount = preferences.getLong(AMOUNT_STRING,1);
+
+        //to move
+        findViewById(R.id.ready_to_connect).setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("text to copy", ((TextView)findViewById(R.id.ready_to_connect)).getText().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(),"Text Copied",Toast.LENGTH_SHORT).show();
+                return true;
+            }
+        });
+        //
 
         mRunnableServer = new Runnable() {
             public void run() {
@@ -209,16 +224,6 @@ public class MainActivity extends PermissionsActivity {
                 clientThread.start();
             }
         });
-
-        /*findViewById(R.id.settings).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(MainActivity.this,AmountActivity.class);
-                startActivityForResult(intent,AMOUNT_CHANGE_CODE);
-            }
-        });*/
-
-        //setUpToolBar();
     }
 
     @Override
@@ -231,7 +236,7 @@ public class MainActivity extends PermissionsActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.settings :
-                Intent intent = new Intent(MainActivity.this,AmountActivity.class);
+                Intent intent = new Intent(MainActivity.this,ActivityBuyer.class);
                 startActivityForResult(intent,AMOUNT_CHANGE_CODE);
         }
         return true;
@@ -925,28 +930,5 @@ public class MainActivity extends PermissionsActivity {
         if(mWifiScanReceiver!=null) {
             unregisterReceiver(mWifiScanReceiver);
         }
-    }
-    
-    private void setUpToolBar(){
-
-        ((RadioButton)findViewById(R.id.radio_button_1)).setChecked(true);
-        findViewById(R.id.radio_button_2).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,SellActivity.class));
-            }
-        });
-        findViewById(R.id.radio_button_3).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ConnectActivity.class));
-            }
-        });
-        findViewById(R.id.radio_button_4).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this,ConnectActivity.class));
-            }
-        });
     }
 }
