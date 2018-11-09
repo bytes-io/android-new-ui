@@ -138,7 +138,7 @@ public class MainActivity extends PermissionsActivity {
                 }
 
                 if(server!=null) {
-                    ((TextView)findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                    //Remove it
                     ((TextView)findViewById(R.id.data)).setText(String.valueOf(res[0]+res[1]));
 
                     mHandler.postDelayed(mRunnableServer, 10000);
@@ -258,6 +258,8 @@ public class MainActivity extends PermissionsActivity {
                     ((TextView)findViewById(R.id.data)).setText("0");
                     mStartTXServer = 0;
                     mStartRXServer = 0;
+                    getSupportActionBar().setTitle(R.string.Bytes);
+                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
                 }
             });
         } catch (IOException e) {
@@ -640,8 +642,7 @@ public class MainActivity extends PermissionsActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getSupportActionBar().setTitle(R.string.selling);
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+                        ((TextView)findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
                         builder.setTitle(getResources().getString(R.string.new_client_connected))
                                 .setMessage(getResources().getString(R.string.new_client_connected))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -656,8 +657,7 @@ public class MainActivity extends PermissionsActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getSupportActionBar().setTitle(R.string.Bytes);
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+                        ((TextView)findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_server_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -687,6 +687,8 @@ public class MainActivity extends PermissionsActivity {
                 sellButton.setBackgroundColor(getResources().getColor(R.color.red));
                 findViewById(R.id.layout_main).setVisibility(View.INVISIBLE);
                 findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
+                getSupportActionBar().setTitle(R.string.selling);
+                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             }
         });
         paySeller();
