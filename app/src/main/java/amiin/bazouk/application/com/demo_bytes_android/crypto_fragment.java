@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 public class crypto_fragment extends Fragment {
 
-    String address = "HAHAHAHAHA";//Account.getCurrentAddress(this)
+    String address = "Your current address";//Account.getCurrentAddress(this)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
