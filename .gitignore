@@ -10,4 +10,5 @@
 .externalNativeBuild
 **/*/res/values/secrets.xml
 .idea
+.idea/caches/build_file_checksums.ser
 app/src/main/res/values/secrets.xml
