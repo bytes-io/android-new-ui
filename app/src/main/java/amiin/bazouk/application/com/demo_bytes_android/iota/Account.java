@@ -53,6 +53,15 @@ public class Account {
         return tickerPrice;
     }
 
+    public static String getCurrentAddress(Context context) throws ArgumentException {
+
+        if (iota == null) {
+            iota = createIota(context);
+        }
+
+        return iota.getCurrentAddress();
+    }
+
     public static ResponseGetBalance getBalance(Context context) throws ArgumentException, IOException, ParseException {
 
         if (iota == null) {

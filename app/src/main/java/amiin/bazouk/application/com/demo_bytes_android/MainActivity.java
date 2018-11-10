@@ -709,7 +709,8 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void getBalance() throws ParseException, ArgumentException, IOException {
-        System.out.println("Start the transaction");
+        System.out.println("getBalance");
+        System.out.println("getCurrentAddress: "+Account.getCurrentAddress(this));
         ResponseGetBalance responseGetBalance = Account.getBalance(this);
         System.out.println(responseGetBalance.miota);
         System.out.println(responseGetBalance.usd);
