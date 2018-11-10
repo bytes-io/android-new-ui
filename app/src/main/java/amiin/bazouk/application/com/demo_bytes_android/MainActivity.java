@@ -255,6 +255,10 @@ public class MainActivity extends PermissionsActivity {
                 intent = new Intent(MainActivity.this,Payment.class);
                 startActivity(intent);
                 break;
+            case R.id.history :
+                intent = new Intent(MainActivity.this,Payment.class);
+                startActivity(intent);
+                break;
         }
         return true;
     }
