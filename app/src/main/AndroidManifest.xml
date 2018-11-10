@@ -7,11 +7,6 @@
     <!-- REMOVE THIS ONE?? -->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
-    <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission
-        android:name="android.permission.BLUETOOTH_PRIVILEGED"
-        tools:ignore="ProtectedPermissions" />
     <!-- REMOVE THIS ONE?? -->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -38,9 +33,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.SellActivity" />
-        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.ConnectActivity" />
-        <activity android:name="amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer"></activity>
+        <activity android:name=".ActivityBuyer" />
+        <activity
+            android:name=".Payment"
+            android:label="@string/title_activity_payment"
+            android:theme="@style/AppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

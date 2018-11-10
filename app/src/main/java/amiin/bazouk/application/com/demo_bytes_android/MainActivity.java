@@ -237,10 +237,16 @@ public class MainActivity extends PermissionsActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.settings :
-                Intent intent = new Intent(MainActivity.this,ActivityBuyer.class);
+                intent = new Intent(MainActivity.this,ActivityBuyer.class);
                 startActivityForResult(intent,AMOUNT_CHANGE_CODE);
+                break;
+            case R.id.payment :
+                intent = new Intent(MainActivity.this,Payment.class);
+                startActivity(intent);
+                break;
         }
         return true;
     }
