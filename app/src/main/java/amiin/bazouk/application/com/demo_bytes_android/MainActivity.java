@@ -22,6 +22,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -85,6 +86,13 @@ public class MainActivity extends PermissionsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (android.os.Build.VERSION.SDK_INT > 9)
+        {
+            StrictMode.ThreadPolicy policy = new
+                    StrictMode.ThreadPolicy.Builder().permitAll().build();
+            StrictMode.setThreadPolicy(policy);
+        }
+
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
 
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -716,6 +724,7 @@ public class MainActivity extends PermissionsActivity {
 
     private void getBalance() throws ParseException, ArgumentException, IOException {
         System.out.println("getBalance");
+//        Account.paySeller(this, 1);
         System.out.println("getCurrentAddress: "+Account.getCurrentAddress(this));
         ResponseGetBalance responseGetBalance = Account.getBalance(this);
         System.out.println(responseGetBalance.miota);
