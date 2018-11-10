@@ -17,6 +17,7 @@
             android:layout_margin="10dp"
             android:textStyle="bold"
             android:textSize="20sp"
+            android:textColor="@android:color/black"
             android:text="Deposit:"/>
 
         <TextView
@@ -51,30 +52,68 @@
             android:layout_margin="10dp"
             android:textStyle="bold"
             android:textSize="20sp"
+            android:textColor="@android:color/black"
             android:text="Withdraw:"/>
 
-        <EditText
-            android:id="@+id/iota_address_withdraw"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:textSize="15sp"
-            android:hint="iota address" />
+            android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/amount"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="15sp"
-            android:hint="amount" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
 
-        <Button
-            android:id="@+id/make_withdrawal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="MAKE WITHDRAWAL"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:text="Iota address: "/>
+
+                <EditText
+                    android:id="@+id/iota_address_withdraw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/white"
+                    android:textSize="15sp"
+                    android:hint="iota address" />
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="15sp"
+                    android:textColor="@android:color/black"
+                    android:text="Amount: "/>
+
+                <EditText
+                    android:id="@+id/amount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:inputType="number"
+                    android:textSize="15sp"
+                    android:background="@android:color/white"
+                    android:hint="amount" />
+
+            </LinearLayout>
+
+            <Button
+                android:id="@+id/make_withdrawal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MAKE WITHDRAWAL"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 

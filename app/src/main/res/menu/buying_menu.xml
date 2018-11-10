@@ -4,4 +4,6 @@
         android:title="@string/settings"/>
     <item android:id="@+id/payment"
         android:title="Payment"/>
+    <item android:id="@+id/history"
+        android:title="History"/>
 </menu>

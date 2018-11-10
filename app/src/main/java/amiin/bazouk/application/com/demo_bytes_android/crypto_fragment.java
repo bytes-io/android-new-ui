@@ -24,19 +24,21 @@ public class crypto_fragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         //to move
 
-        ((TextView)container.findViewById(R.id.iota_address_deposit)).setText(address);
-        container.findViewById(R.id.copy).setOnLongClickListener(new View.OnLongClickListener() {
+        View result = inflater.inflate(R.layout.crypto_fragment, container, false);
+
+        ((TextView)result.findViewById(R.id.iota_address_deposit)).setText(address);
+
+        result.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
             @Override
-            public boolean onLongClick(View v) {
+            public void onClick(View v) {
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("text to copy", ((TextView) container.findViewById(R.id.iota_address_deposit)).getText().toString());
                 clipboard.setPrimaryClip(clip);
-                Toast.makeText(getContext(),"Text Copied",Toast.LENGTH_SHORT).show();
-                return true;
+                Toast.makeText(getContext(),"Address Copied",Toast.LENGTH_SHORT).show();
             }
         });
 
-        container.findViewById(R.id.make_withdrawal).setOnClickListener(new View.OnClickListener() {
+        result.findViewById(R.id.make_withdrawal).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final AlertDialog.Builder builder;
@@ -44,16 +46,15 @@ public class crypto_fragment extends Fragment {
                     builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
                 } else {
                     builder = new AlertDialog.Builder(getContext());
+                }
                     builder.setTitle(R.string.withdrawal_confirmed)
                             .setMessage("Hash/link")
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                 }
                             }).setIcon(android.R.drawable.ic_dialog_alert).show();
-                }
-                builder.show();
             }
         });
-        return inflater.inflate(R.layout.crypto_fragment,container,false);
+        return result;
     }
 }
