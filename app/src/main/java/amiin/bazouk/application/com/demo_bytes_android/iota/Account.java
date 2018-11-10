@@ -45,7 +45,6 @@ public class Account {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
         }
-
     }
 
     public static double getPriceUSD() throws IOException, ParseException {

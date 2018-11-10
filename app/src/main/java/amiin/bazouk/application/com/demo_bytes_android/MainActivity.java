@@ -33,6 +33,7 @@ import android.widget.TextView;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -47,7 +48,8 @@ import java.util.Enumeration;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
-import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
+import amiin.bazouk.application.com.demo_bytes_android.iota.*;
+import jota.error.ArgumentException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
