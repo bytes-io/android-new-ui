@@ -49,6 +49,7 @@ import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
 import amiin.bazouk.application.com.demo_bytes_android.iota.*;
+import jota.dto.response.GetBalancesResponse;
 import jota.error.ArgumentException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -207,6 +208,23 @@ public class MainActivity extends PermissionsActivity {
                     });
                 }
                 clientThread.start();
+            }
+        });
+
+        findViewById(R.id.wallet_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("wallet btn click");
+
+                try {
+                    getBalance();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                } catch (ArgumentException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -687,7 +705,14 @@ public class MainActivity extends PermissionsActivity {
 
     private void paySeller() {
         System.out.println("Start the transaction");
-        Account.paySeller(this,amount);
+        Account.paySeller(this, amount);
+    }
+
+    private void getBalance() throws ParseException, ArgumentException, IOException {
+        System.out.println("Start the transaction");
+        ResponseGetBalance responseGetBalance = Account.getBalance(this);
+        System.out.println(responseGetBalance.miota);
+        System.out.println(responseGetBalance.usd);
     }
 
     private void checkIfConnectedToWifi() {

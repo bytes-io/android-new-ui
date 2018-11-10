@@ -160,6 +160,7 @@
             android:id="@+id/butto"
             android:weightSum="2">
             <Button
+                android:id="@+id/wallet_button"
                 android:layout_width="0dp"
                 android:layout_weight="2"
                 android:layout_marginLeft="20dp"

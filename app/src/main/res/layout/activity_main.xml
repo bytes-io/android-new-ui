@@ -162,7 +162,7 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/butto"
+            android:id="@+id/buttons1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="20dp"
@@ -170,6 +170,7 @@
             android:weightSum="2">
 
             <Button
+                android:id="@+id/wallet_button"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
