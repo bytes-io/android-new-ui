@@ -13,7 +13,7 @@ import java.util.List;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import jota.error.ArgumentException;
 
-public class ApplyTransaction {
+public class Account {
     private static Iota iota = null;
     private static Prices price = new Prices();
 
@@ -54,14 +54,6 @@ public class ApplyTransaction {
         return tickerPrice;
     }
 
-    public static double getBalanceUSD() throws IOException, ParseException {
-
-        long currentBalance = 1;
-        double tickerPrice = price.get("IOT");
-        System.out.println(tickerPrice);
-        return currentBalance * tickerPrice;
-    }
-
     public static ResponseGetBalance getBalance(Context context) throws ArgumentException, IOException, ParseException {
 
         if (iota == null) {
@@ -69,7 +61,7 @@ public class ApplyTransaction {
         }
 
         long balanceInI = iota.getBalance();
-        double balanceInUsd = balanceInI * getBalanceUSD();
+        double balanceInUsd = balanceInI * getPriceUSD();
         return new ResponseGetBalance(balanceInI, balanceInUsd);
     }
 

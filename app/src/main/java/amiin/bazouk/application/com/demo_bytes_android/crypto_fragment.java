@@ -16,11 +16,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
-
 public class crypto_fragment extends Fragment {
 
-    String address = "HAHAHAHAHA";//ApplyTransaction.getCurrentAddress(this)
+    String address = "HAHAHAHAHA";//Account.getCurrentAddress(this)
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {

@@ -3,17 +3,14 @@ package amiin.bazouk.application.com.demo_bytes_android;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.json.simple.parser.ParseException;
 
 import java.io.IOException;
 
-import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
+import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
 
 public class ActivityBuyer extends AppCompatActivity {
 
@@ -28,7 +25,7 @@ public class ActivityBuyer extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    rate = ApplyTransaction.getPriceUSD();
+                    rate = Account.getPriceUSD();
                 } catch (IOException e) {
                     e.printStackTrace();
                 } catch (ParseException e) {

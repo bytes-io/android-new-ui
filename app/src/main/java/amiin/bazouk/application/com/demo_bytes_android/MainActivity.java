@@ -5,8 +5,6 @@ import android.app.AlertDialog;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.BroadcastReceiver;
-import android.content.ClipData;
-import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -31,9 +29,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.RadioButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -51,7 +47,7 @@ import java.util.Enumeration;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
-import amiin.bazouk.application.com.demo_bytes_android.iota.ApplyTransaction;
+import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -689,7 +685,7 @@ public class MainActivity extends PermissionsActivity {
 
     private void paySeller() {
         System.out.println("Start the transaction");
-        ApplyTransaction.paySeller(this,amount);
+        Account.paySeller(this,amount);
     }
 
     private void checkIfConnectedToWifi() {
