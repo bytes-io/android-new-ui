@@ -29,7 +29,7 @@ dependencies {
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'
     implementation 'org.java-websocket:Java-WebSocket:1.3.0'
-    implementation 'com.squareup.okhttp3:okhttp:3.8.1'
+    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.linkedin.dexmaker:dexmaker-mockito:2.12.1'
     implementation 'com.github.iotaledger:iota-java:1.0.0-beta2'
