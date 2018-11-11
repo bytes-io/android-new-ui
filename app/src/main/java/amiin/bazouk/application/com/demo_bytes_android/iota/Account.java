@@ -1,6 +1,8 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import org.json.simple.parser.ParseException;
 
@@ -10,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import jota.error.ArgumentException;
 
@@ -25,11 +28,20 @@ public class Account {
     private static String toAddress;
     private static String senderSeed;
 
-    public static void paySeller(Context context,long amountIni){
+    public static void paySeller(Context context){
 
         if (iota == null) {
             iota = createIota(context);
         }
+
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
+        float maxPrice = Float.parseFloat(sharedPref
+                .getString(
+                        ActivityBuyer.PREF_MAX_PRICE,
+                        context.getResources().getString(R.string.default_pref_max_price)
+                ));
+        long amountIni = 1;
+
 
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
@@ -54,6 +66,9 @@ public class Account {
     }
 
     public static String getCurrentAddress(Context context) throws ArgumentException {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+
+        System.out.println("AMOUNT_STRING:" + prefs.getLong("amount_string", 0));
 
         if (iota == null) {
             iota = createIota(context);

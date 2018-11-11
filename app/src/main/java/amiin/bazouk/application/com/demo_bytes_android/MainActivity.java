@@ -64,7 +64,6 @@ public class MainActivity extends PermissionsActivity {
     private static final int UID_TETHERING = -5;
     private static final int AMOUNT_CHANGE_CODE = 20;
     public static final String AMOUNT_INTENT = "amount_intent";
-    private static final String AMOUNT_STRING = "amount_string";
     private WebSocketServer server;
     private OkHttpClient client;
     private WebSocket webSocketClient;
@@ -79,8 +78,7 @@ public class MainActivity extends PermissionsActivity {
     private List<ScanResult> wifiList = new ArrayList<>();
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
-    private long amount;
-    private SharedPreferences preferences;
+    private SharedPreferences sharedPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,9 +92,7 @@ public class MainActivity extends PermissionsActivity {
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        amount = preferences.getLong(AMOUNT_STRING,1);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         mRunnableServer = new Runnable() {
             public void run() {
@@ -724,7 +720,7 @@ public class MainActivity extends PermissionsActivity {
 
     private void paySeller() {
         System.out.println("Start the transaction");
-        Account.paySeller(this, amount);
+        Account.paySeller(this);
     }
 
     private void getBalance() throws ParseException, ArgumentException, IOException {
@@ -931,10 +927,6 @@ public class MainActivity extends PermissionsActivity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == AMOUNT_CHANGE_CODE) {
             if (resultCode == RESULT_OK) {
-                amount = data.getLongExtra(AMOUNT_INTENT,amount);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putLong(AMOUNT_STRING,amount);
-                editor.apply();
             }
         }
     }
