@@ -79,6 +79,7 @@ public class MainActivity extends PermissionsActivity {
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
 
+    public static final String PREF_MIOTA_USD = "pref_miota_usd";
     private static SharedPreferences preferences;
 
     @Override
@@ -94,6 +95,24 @@ public class MainActivity extends PermissionsActivity {
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
+        Thread conversionThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    float miotUSD = Account.getPriceUSD();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putFloat(PREF_MIOTA_USD,  miotUSD);
+                    editor.apply();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        conversionThread.start();
 
         mRunnableServer = new Runnable() {
             public void run() {

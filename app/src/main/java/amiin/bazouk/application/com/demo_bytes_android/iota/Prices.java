@@ -13,7 +13,7 @@ import okhttp3.*;
 public class Prices {
     OkHttpClient client = new OkHttpClient();
 
-    double get(String ticker) throws IOException, ParseException {
+    float get(String ticker) throws IOException, ParseException {
         String url = "https://www.bytes.io/api/prices?tickers[]=" + ticker;
         Request request = new Request.Builder()
                 .url(url)
@@ -30,7 +30,7 @@ public class Prices {
         JSONObject tickerObj = (JSONObject) jsonArray.get(0);
 
         String tickerPrice = (String) tickerObj.get("price");
-        return Double.parseDouble(tickerPrice);
+        return Float.parseFloat(tickerPrice);
     }
 }
 

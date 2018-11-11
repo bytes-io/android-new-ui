@@ -49,7 +49,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=" / MB"
+                android:text=" / GB"
                 android:textSize="30sp"
                 android:gravity="center" />
         </LinearLayout>

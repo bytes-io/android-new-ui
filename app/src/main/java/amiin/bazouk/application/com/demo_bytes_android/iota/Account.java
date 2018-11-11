@@ -13,6 +13,7 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer;
+import amiin.bazouk.application.com.demo_bytes_android.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import jota.error.ArgumentException;
 
@@ -34,14 +35,21 @@ public class Account {
             iota = createIota(context);
         }
 
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        float maxPrice = Float.parseFloat(sharedPref
-                .getString(
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        float maxPrice = Float.parseFloat(
+                preferences.getString(
                         ActivityBuyer.PREF_MAX_PRICE,
                         context.getResources().getString(R.string.default_pref_max_price)
                 ));
-        long amountIni = 1;
+        float miotaUSD = Float.parseFloat(
+                preferences.getString(
+                        MainActivity.PREF_MIOTA_USD,
+                        context.getResources().getString(R.string.default_pref_miota_usd)
+                ));
 
+        // assumptions
+        double consumptionInBytes = 1000;
+        long amountIni = 1;
 
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
@@ -59,8 +67,8 @@ public class Account {
         }
     }
 
-    public static double getPriceUSD() throws IOException, ParseException {
-        double tickerPrice = price.get("IOT");
+    public static float getPriceUSD() throws IOException, ParseException {
+        float tickerPrice = price.get("IOT");
         System.out.println(tickerPrice);
         return tickerPrice;
     }
