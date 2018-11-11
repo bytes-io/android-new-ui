@@ -143,7 +143,7 @@ public class crypto_fragment extends Fragment {
                             messageBuilder = "Problem with withdrawal";
                         }
                         else{
-                            messageBuilder = "Hash: "+hash+"\n Link: "+link;
+                            messageBuilder = "Hash: "+hash+"\n \n Link: "+link;
                         }
                         FragmentActivity fragmentActivity = getActivity();
                         if(fragmentActivity!=null) {

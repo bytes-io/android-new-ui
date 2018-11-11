@@ -63,7 +63,8 @@ public class MainActivity extends PermissionsActivity {
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11 ;
     private static final int UID_TETHERING = -5;
     private static final int AMOUNT_CHANGE_CODE = 20;
-    public static final String AMOUNT_INTENT = "amount_intent";
+    public static final String IS_SELLER = "is_seller";
+    public static final String IS_BUYER = "is_buyer";
     private WebSocketServer server;
     private OkHttpClient client;
     private WebSocket webSocketClient;
@@ -78,7 +79,8 @@ public class MainActivity extends PermissionsActivity {
     private List<ScanResult> wifiList = new ArrayList<>();
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
-    private SharedPreferences sharedPref;
+
+    public static SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,7 +94,7 @@ public class MainActivity extends PermissionsActivity {
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         mRunnableServer = new Runnable() {
             public void run() {
@@ -266,6 +268,9 @@ public class MainActivity extends PermissionsActivity {
             server.stop();
             server=null;
             mHandler.removeCallbacks(mRunnableServer);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putBoolean(IS_SELLER,false);
+            editor.apply();
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -351,6 +356,10 @@ public class MainActivity extends PermissionsActivity {
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
+
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(IS_BUYER,true);
+                editor.apply();
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -416,6 +425,9 @@ public class MainActivity extends PermissionsActivity {
                                 }).setIcon(android.R.drawable.ic_dialog_alert).show();
                     }
                 });
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(IS_BUYER,false);
+                editor.apply();
                 mStartTXClient = 0;
                 mStartRXClient = 0;
                 client = null;
@@ -712,6 +724,9 @@ public class MainActivity extends PermissionsActivity {
                 findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
                 getSupportActionBar().setTitle(R.string.selling);
                 getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putBoolean(IS_SELLER,true);
+                editor.apply();
             }
         });
         paySeller();

@@ -18,7 +18,7 @@ public class ActivityBuyer extends AppCompatActivity {
     public static final String PREF_MAX_PRICE = "pref_max_price";
 
     private double rate = -1;
-    private SharedPreferences sharedPref;
+    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +26,8 @@ public class ActivityBuyer extends AppCompatActivity {
         setContentView(R.layout.activity_buyer);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        float maxPrice = Float.parseFloat(sharedPref
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        float maxPrice = Float.parseFloat(preferences
                 .getString(
                     PREF_MAX_PRICE,
                     this.getResources().getString(R.string.default_pref_max_price)
@@ -57,7 +57,7 @@ public class ActivityBuyer extends AppCompatActivity {
 
                 String maxPrice = ((EditText)findViewById(R.id.max_price)).getText().toString();
                 System.out.println("Setting new maxPrice: " + maxPrice);
-                SharedPreferences.Editor editor = sharedPref.edit();
+                SharedPreferences.Editor editor = preferences.edit();
                 editor.putString(PREF_MAX_PRICE, maxPrice);
                 editor.apply();
 

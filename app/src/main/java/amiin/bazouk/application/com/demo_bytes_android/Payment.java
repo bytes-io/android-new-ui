@@ -1,5 +1,6 @@
 package amiin.bazouk.application.com.demo_bytes_android;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -14,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.android.dx.command.Main;
 
 public class Payment extends AppCompatActivity {
 
@@ -38,6 +41,9 @@ public class Payment extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+        if(MainActivity.preferences.getBoolean(MainActivity.IS_BUYER,false) || MainActivity.preferences.getBoolean(MainActivity.IS_SELLER,false)){
+            toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+        }
         setSupportActionBar(toolbar);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
