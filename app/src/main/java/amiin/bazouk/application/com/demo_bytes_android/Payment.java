@@ -1,7 +1,9 @@
 package amiin.bazouk.application.com.demo_bytes_android;
 
+import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -41,7 +43,8 @@ public class Payment extends AppCompatActivity {
         setContentView(R.layout.activity_payment);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
-        if(MainActivity.preferences.getBoolean(MainActivity.IS_BUYER,false) || MainActivity.preferences.getBoolean(MainActivity.IS_SELLER,false)){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
         }
         setSupportActionBar(toolbar);

@@ -62,7 +62,6 @@ public class MainActivity extends PermissionsActivity {
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11 ;
     private static final int UID_TETHERING = -5;
-    private static final int AMOUNT_CHANGE_CODE = 20;
     public static final String IS_SELLER = "is_seller";
     public static final String IS_BUYER = "is_buyer";
     private WebSocketServer server;
@@ -80,7 +79,7 @@ public class MainActivity extends PermissionsActivity {
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
 
-    public static SharedPreferences preferences;
+    private static SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -247,7 +246,7 @@ public class MainActivity extends PermissionsActivity {
         switch (item.getItemId()) {
             case R.id.settings :
                 intent = new Intent(MainActivity.this,ActivityBuyer.class);
-                startActivityForResult(intent,AMOUNT_CHANGE_CODE);
+                startActivity(intent);
                 break;
             case R.id.payment :
                 intent = new Intent(MainActivity.this,Payment.class);
@@ -385,7 +384,7 @@ public class MainActivity extends PermissionsActivity {
                 Thread startPaymentThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isConnectedToInternet()) {
+                        if (isConnectedToInternet(getApplicationContext())) {
                             paySeller();
                         }
                         /*while(webSocketClient!=null){
@@ -487,7 +486,7 @@ public class MainActivity extends PermissionsActivity {
                 connect(ssid,scanResult.capabilities);
                 time = System.currentTimeMillis();
                 while(System.currentTimeMillis()<time+15000){
-                    if(isConnectedToInternet()){
+                    if(isConnectedToInternet(getApplicationContext())){
                         isConnected = true;
                         break;
                     }
@@ -608,7 +607,7 @@ public class MainActivity extends PermissionsActivity {
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        if(!isConnectedToInternet()){
+        if(!isConnectedToInternet(getApplicationContext())){
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -752,7 +751,7 @@ public class MainActivity extends PermissionsActivity {
             @Override
             public void run() {
                 while(true){
-                    if(!isConnectedToInternet()){
+                    if(!isConnectedToInternet(getApplicationContext())){
                         stopServer();
                         return;
                     }
@@ -762,8 +761,8 @@ public class MainActivity extends PermissionsActivity {
         checkIfConnectedToWifiThread.start();
     }
 
-    private boolean isConnectedToInternet() {
-        final ConnectivityManager connectivityManager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+    public static boolean isConnectedToInternet(Context context) {
+        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         if(connectivityManager!=null) {
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
@@ -935,14 +934,6 @@ public class MainActivity extends PermissionsActivity {
                         connectToServer();
                     }
                 }
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == AMOUNT_CHANGE_CODE) {
-            if (resultCode == RESULT_OK) {
-            }
         }
     }
 
