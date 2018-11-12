@@ -84,10 +84,11 @@ public class Iota {
 
     public String getCurrentAddress() throws ArgumentException {
         boolean checksum = true;
-
-        GetNewAddressResponse getNewAddressResponse = iotaAPI.getNextAvailableAddress(seed, security, checksum);
-
-        return getNewAddressResponse.getAddresses().get(0);
+//
+//        GetNewAddressResponse getNewAddressResponse = iotaAPI.getNextAvailableAddress(seed, security, checksum);
+//
+//        return getNewAddressResponse.getAddresses().get(0);
+        return getAddress(0);
     }
 
     public long getBalance() throws ArgumentException {
