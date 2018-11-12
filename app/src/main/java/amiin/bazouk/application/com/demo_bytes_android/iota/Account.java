@@ -29,7 +29,7 @@ public class Account {
     private static String toAddress;
     private static String senderSeed;
 
-    public static void paySeller(Context context){
+    public static String paySeller(Context context){
 
         if (iota == null) {
             iota = createIota(context);
@@ -51,10 +51,11 @@ public class Account {
         double consumptionInBytes = 1000;
         long amountIni = 1;
 
+        List<String> tails = new ArrayList<String>();
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
-            List<String> tails = iota.makeTx(toAddress, amountIni);
+            tails = iota.makeTx(toAddress, amountIni);
             System.out.println("after makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
 
@@ -64,7 +65,9 @@ public class Account {
         } catch(Throwable e) {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
+            return "";
         }
+        return tails.get(0);
     }
 
     public static float getPriceUSD() throws IOException, ParseException {
@@ -74,9 +77,6 @@ public class Account {
     }
 
     public static String getCurrentAddress(Context context) throws ArgumentException {
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-
-        System.out.println("AMOUNT_STRING:" + prefs.getLong("amount_string", 0));
 
         if (iota == null) {
             iota = createIota(context);
