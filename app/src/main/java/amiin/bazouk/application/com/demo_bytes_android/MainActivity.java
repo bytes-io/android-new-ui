@@ -12,6 +12,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
@@ -25,12 +26,15 @@ import android.os.RemoteException;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.AppBarLayout;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.support.v7.widget.Toolbar;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -50,7 +54,6 @@ import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
 import amiin.bazouk.application.com.demo_bytes_android.iota.*;
-import jota.dto.response.GetBalancesResponse;
 import jota.error.ArgumentException;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -78,6 +81,8 @@ public class MainActivity extends PermissionsActivity {
     private List<ScanResult> wifiList = new ArrayList<>();
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
+    private Toolbar toolbar;
+    private AppBarLayout appBar;
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     private static SharedPreferences preferences;
@@ -94,6 +99,9 @@ public class MainActivity extends PermissionsActivity {
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        appBar = findViewById(R.id.appbar);
+        toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Thread conversionThread = new Thread(new Runnable() {
@@ -295,17 +303,14 @@ public class MainActivity extends PermissionsActivity {
                     Button buyButton = findViewById(R.id.buy_button);
                     buyButton.setEnabled(true);
                     Button sellButton = findViewById(R.id.sell_button);
-                    sellButton.setText(getResources().getString(R.string.sell));
-                    sellButton.setBackgroundResource(android.R.drawable.btn_default);
-                    sellButton.setTextColor(buyButton.getTextColors().getDefaultColor());
-                    findViewById(R.id.layout_main).setVisibility(View.VISIBLE);
-                    findViewById(R.id.layout_buy).setVisibility(View.INVISIBLE);
+                    sellButton.setBackgroundDrawable(buyButton.getBackground());
+                    changeButtonCharacteristics(sellButton, R.string.sell, buyButton.getTextColors().getDefaultColor());
+                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_buy));
+                    changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
                     ((TextView)findViewById(R.id.number_of_clients)).setText("0");
                     ((TextView)findViewById(R.id.data)).setText("0");
                     mStartTXServer = 0;
                     mStartRXServer = 0;
-                    getSupportActionBar().setTitle(R.string.Bytes);
-                    getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
                 }
             });
         } catch (IOException e) {
@@ -388,16 +393,13 @@ public class MainActivity extends PermissionsActivity {
                                     }
                                 }).setIcon(android.R.drawable.ic_dialog_alert).show();
                         getNetworkStatsClient();
-                        findViewById(R.id.sell_button).setEnabled(false);;
-                        findViewById(R.id.buy_button).setEnabled(true);
+                        findViewById(R.id.sell_button).setEnabled(false);
                         Button buyButton = findViewById(R.id.buy_button);
-                        buyButton.setText(getResources().getString(R.string.disconnect));
+                        buyButton.setEnabled(true);
                         buyButton.setBackgroundColor(getResources().getColor(R.color.red));
-                        buyButton.setTextColor(getResources().getColor(android.R.color.white));
-                        findViewById(R.id.layout_main).setVisibility(View.INVISIBLE);
-                        findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
-                        getSupportActionBar().setTitle(R.string.buying);
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+                        changeButtonCharacteristics(buyButton,R.string.disconnect,getResources().getColor(android.R.color.white));
+                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy),findViewById(R.id.layout_main));
+                        changeMenuColorAndTitle(R.string.buying,R.color.green);
                     }
                 });
                 Thread startPaymentThread = new Thread(new Runnable() {
@@ -428,13 +430,10 @@ public class MainActivity extends PermissionsActivity {
                         Button sellButton = findViewById(R.id.sell_button);
                         sellButton.setEnabled(true);
                         Button buyButton = findViewById(R.id.buy_button);
-                        buyButton.setText(getResources().getString(R.string.connect));
-                        buyButton.setTextColor(sellButton.getTextColors().getDefaultColor());
                         buyButton.setBackgroundResource(android.R.drawable.btn_default);
-                        findViewById(R.id.layout_main).setVisibility(View.VISIBLE);
-                        findViewById(R.id.layout_buy).setVisibility(View.INVISIBLE);
-                        getSupportActionBar().setTitle(R.string.Bytes);
-                        getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.colorPrimary)));
+                        changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
+                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_buy));
+                        changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_client_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -735,13 +734,10 @@ public class MainActivity extends PermissionsActivity {
             public void run() {
                 findViewById(R.id.buy_button).setEnabled(false);
                 Button sellButton = findViewById(R.id.sell_button);
-                sellButton.setText(getResources().getString(R.string.stop_selling));
-                sellButton.setTextColor(getResources().getColor(android.R.color.white));
                 sellButton.setBackgroundColor(getResources().getColor(R.color.red));
-                findViewById(R.id.layout_main).setVisibility(View.INVISIBLE);
-                findViewById(R.id.layout_buy).setVisibility(View.VISIBLE);
-                getSupportActionBar().setTitle(R.string.selling);
-                getSupportActionBar().setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+                changeButtonCharacteristics(sellButton, R.string.stop_selling, getResources().getColor(android.R.color.white));
+                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy),findViewById(R.id.layout_main));
+                changeMenuColorAndTitle(R.string.selling,R.color.green);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean(IS_SELLER,true);
                 editor.apply();
@@ -954,6 +950,21 @@ public class MainActivity extends PermissionsActivity {
                     }
                 }
         }
+    }
+
+    private void changeButtonCharacteristics(Button buttonCharacteristicsToChange, int resTextToChange, int resTextColorToChange){
+        buttonCharacteristicsToChange.setText(getResources().getString(resTextToChange));
+        buttonCharacteristicsToChange.setTextColor(resTextColorToChange);
+    }
+
+    private void makeLayoutsVisibleAndInvisible(LinearLayout layoutVisible, LinearLayout layoutInvisible){
+        layoutVisible.setVisibility(View.VISIBLE);
+        layoutInvisible.setVisibility(View.INVISIBLE);
+    }
+
+    private void changeMenuColorAndTitle(int resTitle, int resColor){
+        toolbar.setTitle(resTitle);
+        appBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
     }
 
     @Override
