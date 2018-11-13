@@ -12,8 +12,9 @@ public class TxData {
     public Date date;
     public Long value;
     public String address;
+    public String link;
 
-    public TxData(Transaction tx) {
+    public TxData(Transaction tx, String explorerHost) {
         this.hash = tx.getHash();
 
         Date date = new Date((long)tx.getTimestamp()*1000);
@@ -21,5 +22,6 @@ public class TxData {
 
         this.value = tx.getValue();
         this.address = tx.getAddress();
+        this.link = explorerHost + "/transaction/" + tx.getHash();
     }
 }

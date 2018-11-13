@@ -128,7 +128,7 @@ public class Account {
 
         for(Transaction tx: transactions) {
 
-            txs.add(new TxData(tx));
+            txs.add(new TxData(tx, explorerHost));
         }
         return txs;
     }
