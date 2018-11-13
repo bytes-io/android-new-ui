@@ -10,7 +10,9 @@ import jota.IotaAPI;
 import jota.dto.response.GetBalancesAndFormatResponse;
 import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.GetNodeInfoResponse;
+import jota.dto.response.GetTransferResponse;
 import jota.error.ArgumentException;
+import jota.model.Bundle;
 import jota.model.Input;
 import jota.model.Transaction;
 import jota.model.Transfer;
@@ -83,12 +85,8 @@ public class Iota {
     }
 
     public String getCurrentAddress() throws ArgumentException {
-        boolean checksum = true;
-//
-//        GetNewAddressResponse getNewAddressResponse = iotaAPI.getNextAvailableAddress(seed, security, checksum);
-//
-//        return getNewAddressResponse.getAddresses().get(0);
-        return getAddress(0);
+        int index = this.getAvailableAddressIndex(null);
+        return this.getAddress(index);
     }
 
     public long getBalance() throws ArgumentException {
@@ -96,7 +94,7 @@ public class Iota {
         String currentAddress = this.getCurrentAddress();
         List<String> tips = new ArrayList<String>();
         long threshold = 0;
-        int start = 0; //currentAddressIndex
+        int start = 2; //currentAddressIndex
         StopWatch stopWatch = new StopWatch();
 
         GetBalancesAndFormatResponse res = iotaAPI.getBalanceAndFormat(
@@ -109,12 +107,27 @@ public class Iota {
         return res.getTotalBalance();
     }
 
+    public List<Transaction> getTransactions() throws ArgumentException {
+        Integer start = 0;
+        Integer end = 10;
+        Boolean inclusionStates = true;
+
+        GetTransferResponse getTransferResponse = iotaAPI.getTransfers(seed, security, start, end, inclusionStates);
+        Bundle[] bundles = getTransferResponse.getTransfers();
+        List<Transaction> transactions = new ArrayList<Transaction>();
+        for(Bundle b: bundles) {
+            transactions.add(b.getTransactions().get(0));
+        }
+
+        return transactions;
+    }
+
     public Integer getAvailableAddressIndex(Integer lastKnownAddressIndex) throws ArgumentException {
         int i = lastKnownAddressIndex == null ? -1 : lastKnownAddressIndex;
 
         while (true) {
             i++;
-            String newAddress = IotaAPIUtils.newAddress(seed, 2, i, false, null);
+            String newAddress = this.getAddress(i);
             System.out.println(i + "   " + newAddress);
             if (iotaAPI.findTransactionsByAddresses(new String[]{newAddress}).getHashes().length == 0) {
                 return i;
@@ -123,6 +136,8 @@ public class Iota {
     }
 
     private String getAddress(int index) throws ArgumentException {
-        return IotaAPIUtils.newAddress(seed, 2, index, false, null);
+        boolean checksum = false;
+
+        return IotaAPIUtils.newAddress(seed, security, index, checksum, null);
     }
 }

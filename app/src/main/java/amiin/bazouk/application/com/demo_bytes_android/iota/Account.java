@@ -9,6 +9,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
@@ -16,6 +17,7 @@ import amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer;
 import amiin.bazouk.application.com.demo_bytes_android.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import jota.error.ArgumentException;
+import jota.model.Transaction;
 
 public class Account {
     private static Iota iota = null;
@@ -113,6 +115,22 @@ public class Account {
         String hash = tails.get(0);
         String link = explorerHost + "/transaction/" + tails.get(0);
         return new ResponsePayOut(hash, link, "Pending");
+    }
+
+    public static List<TxData> getTransactionHistory(Context context) throws ArgumentException {
+
+        if (iota == null) {
+            iota = createIota(context);
+        }
+
+        List<Transaction> transactions = iota.getTransactions();
+        List<TxData> txs = new ArrayList<>();
+
+        for(Transaction tx: transactions) {
+
+            txs.add(new TxData(tx));
+        }
+        return txs;
     }
 
     private static Iota createIota(Context context) {
