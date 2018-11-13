@@ -26,8 +26,10 @@ public class ActivityBuyer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buyer);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
+
         if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
             findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
