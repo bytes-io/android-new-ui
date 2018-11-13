@@ -3,6 +3,7 @@ package amiin.bazouk.application.com.demo_bytes_android.iota;
 import java.util.ArrayList;
 import java.text.DateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -118,6 +119,7 @@ public class Iota {
         for(Bundle b: bundles) {
             transactions.add(b.getTransactions().get(0));
         }
+        Collections.reverse(transactions);
 
         return transactions;
     }
