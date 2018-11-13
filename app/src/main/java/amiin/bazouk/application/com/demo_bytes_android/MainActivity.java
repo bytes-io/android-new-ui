@@ -12,7 +12,6 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
@@ -291,7 +290,9 @@ public class MainActivity extends PermissionsActivity {
     private void stopServer() {
         try {
             turnOffHotspot();
-            server.stop();
+            if(server!=null) {
+                server.stop();
+            }
             server=null;
             mHandler.removeCallbacks(mRunnableServer);
             SharedPreferences.Editor editor = preferences.edit();

@@ -1,5 +1,6 @@
 package amiin.bazouk.application.com.demo_bytes_android;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -63,30 +64,44 @@ public class Payment extends AppCompatActivity {
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
         setTitle("Payment");
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow); // Set the icon
 
+        // Icon click listener
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
     }
 
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_payment, menu);
+        // Inflate the menu;this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.buying_menu, menu);
         return true;
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.settings :
+                intent = new Intent(Payment.this,ActivityBuyer.class);
+                startActivity(intent);
+                break;
+            case R.id.payment :
+                intent = new Intent(Payment.this,Payment.class);
+                startActivity(intent);
+                break;
+            case R.id.history :
+                intent = new Intent(Payment.this,Payment.class);
+                intent.putExtra("is_history_intent",true);
+                startActivity(intent);
+                break;
         }
-
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     /**

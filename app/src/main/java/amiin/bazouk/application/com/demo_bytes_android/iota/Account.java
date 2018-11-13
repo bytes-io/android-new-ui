@@ -38,7 +38,7 @@ public class Account {
         }
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        float maxPrice = Float.parseFloat(
+        /*float maxPrice = Float.parseFloat(
                 preferences.getString(
                         ActivityBuyer.PREF_MAX_PRICE,
                         context.getResources().getString(R.string.default_pref_max_price)
@@ -47,11 +47,11 @@ public class Account {
                 preferences.getString(
                         MainActivity.PREF_MIOTA_USD,
                         context.getResources().getString(R.string.default_pref_miota_usd)
-                ));
+                ));*/
 
         // assumptions
         double consumptionInBytes = 1000;
-        long amountIni = 1;
+        long amountIni = 0;
 
         List<String> tails = new ArrayList<String>();
         try {

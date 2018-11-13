@@ -26,9 +26,9 @@
 
     <LinearLayout
         android:id="@+id/layout_main"
-        android:layout_below="@+id/appbar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/appbar"
         android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:paddingBottom="100dp">
@@ -53,144 +53,179 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/layout_buy"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/appbar"
         android:layout_margin="15dp"
-        android:visibility="invisible"
-        android:id="@+id/layout_buy"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="invisible">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="2"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal"
+            android:weightSum="2">
+
             <TextView
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="Number of clients"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/number_of_clients"
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="0"/>
+                android:text="0" />
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
-            android:weightSum="2"
+            android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
-            android:layout_height="wrap_content">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_height="wrap_content"
-                android:text="Connection status"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+            android:orientation="horizontal"
+            android:weightSum="2">
 
             <TextView
                 android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Connection status"
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="end"
-                android:layout_height="wrap_content"
-                android:text="Good"/>
+                android:text="Good" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Data usage"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/data"
                 android:layout_width="match_parent"
-                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="0"/>
+                android:gravity="end"
+                android:text="0" />
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:layout_height="wrap_content">
+            android:orientation="horizontal">
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Spent (last week)"
-                android:textSize="16sp"
-                android:textColor="@android:color/black"/>
+                android:textColor="@android:color/black"
+                android:textSize="16sp" />
 
             <TextView
                 android:layout_width="match_parent"
-                android:gravity="end"
                 android:layout_height="wrap_content"
-                android:text="EUR 10.42 / 200"/>
+                android:gravity="end"
+                android:text="EUR 10.42 / 200" />
         </LinearLayout>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
-        android:orientation="vertical"
+        android:layout_height="match_parent"
         android:layout_below="@+id/layout_buy"
-        android:layout_height="wrap_content">
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="7">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true">
+
+                <LinearLayout
+                    android:id="@+id/buttons"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/buy_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:text="@string/buy_data" />
+
+                    <Button
+                        android:id="@+id/sell_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="1"
+                        android:text="@string/sell_data" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/buttons1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/wallet_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="20dp"
+                        android:layout_marginRight="20dp"
+                        android:layout_weight="2"
+                        android:background="@drawable/roundbutton"
+                        android:text="@string/check_your_wallet"
+                        android:textColor="@android:color/white" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="20dp"
-            android:id="@+id/buttons"
-            android:weightSum="2">
-            <Button
-                android:id="@+id/buy_button"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="wrap_content"
-                android:text="@string/buy_data"/>
-            <Button
-                android:id="@+id/sell_button"
-                android:layout_width="0dp"
-                android:layout_weight="1"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="wrap_content"
-                android:text="@string/sell_data"/>
-
+            android:layout_height="0dp"
+            android:layout_weight="1">
         </LinearLayout>
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_margin="20dp"
-            android:id="@+id/butto"
-            android:weightSum="2">
-            <Button
-                android:id="@+id/wallet_button"
-                android:layout_width="0dp"
-                android:layout_weight="2"
-                android:layout_marginLeft="20dp"
-                android:layout_marginRight="20dp"
-                android:layout_height="wrap_content"
-                android:textColor="@android:color/white"
-                android:background="@drawable/roundbutton"
-                android:text="@string/check_your_wallet"/>
 
-        </LinearLayout>
     </LinearLayout>
+
 </RelativeLayout>
