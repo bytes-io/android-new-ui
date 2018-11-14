@@ -26,6 +26,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -102,6 +103,10 @@ public class MainActivity extends PermissionsActivity {
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(IS_SELLER, false);
+        editor.putBoolean(IS_BUYER, false);
+        editor.apply();
 
         Thread conversionThread = new Thread(new Runnable() {
             @Override
@@ -171,7 +176,7 @@ public class MainActivity extends PermissionsActivity {
 
                 if(server!=null) {
                     //Remove it
-                    ((TextView)findViewById(R.id.data)).setText(String.valueOf(res[0]+res[1]));
+                    ((TextView)findViewById(R.id.data_seller)).setText(String.valueOf(res[0]+res[1]));
 
                     mHandler.postDelayed(mRunnableServer, 10000);
                 }
@@ -184,7 +189,7 @@ public class MainActivity extends PermissionsActivity {
                 res[0] = TrafficStats.getTotalTxBytes()- mStartTXClient;
                 res[1] = TrafficStats.getTotalRxBytes()- mStartRXClient;
 
-                ((TextView)findViewById(R.id.data)).setText(String.valueOf(res[0]+res[1]));
+                ((TextView)findViewById(R.id.data_buyer)).setText(String.valueOf(res[0]+res[1]));
 
                 mHandler.postDelayed(mRunnableClient, 10000);
             }
@@ -306,10 +311,10 @@ public class MainActivity extends PermissionsActivity {
                     Button sellButton = findViewById(R.id.sell_button);
                     sellButton.setBackgroundDrawable(buyButton.getBackground());
                     changeButtonCharacteristics(sellButton, R.string.sell, buyButton.getTextColors().getDefaultColor());
-                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_buy));
+                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_sell));
                     changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
                     ((TextView)findViewById(R.id.number_of_clients)).setText("0");
-                    ((TextView)findViewById(R.id.data)).setText("0");
+                    ((TextView)findViewById(R.id.data_seller)).setText("0");
                     mStartTXServer = 0;
                     mStartRXServer = 0;
                 }
@@ -737,7 +742,7 @@ public class MainActivity extends PermissionsActivity {
                 Button sellButton = findViewById(R.id.sell_button);
                 sellButton.setBackgroundColor(getResources().getColor(R.color.red));
                 changeButtonCharacteristics(sellButton, R.string.stop_selling, getResources().getColor(android.R.color.white));
-                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy),findViewById(R.id.layout_main));
+                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell),findViewById(R.id.layout_main));
                 changeMenuColorAndTitle(R.string.selling,R.color.green);
                 SharedPreferences.Editor editor = preferences.edit();
                 editor.putBoolean(IS_SELLER,true);
@@ -966,7 +971,11 @@ public class MainActivity extends PermissionsActivity {
     private void changeMenuColorAndTitle(int resTitle, int resColor){
         toolbar.setTitle(resTitle);
         appBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,resColor));
+        }
     }
+
 
     @Override
     public void onPause(){

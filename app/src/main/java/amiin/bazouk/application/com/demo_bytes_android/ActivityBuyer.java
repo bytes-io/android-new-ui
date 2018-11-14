@@ -3,13 +3,16 @@ package amiin.bazouk.application.com.demo_bytes_android;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 
 import org.json.simple.parser.ParseException;
@@ -33,6 +36,9 @@ public class ActivityBuyer extends AppCompatActivity {
         if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
             findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.green));
+            }
         }
         setSupportActionBar(toolbar);
 
