@@ -23,9 +23,7 @@ public class Account {
     private static Iota iota = null;
     private static Prices price = new Prices();
 
-    private static String protocol;
-    private static String host;
-    private static String port;
+    private static String[] providers;
     private static int minWeightMagnitude;
     private static String explorerHost;
     private static String toAddress;
@@ -138,29 +136,41 @@ public class Account {
 
         if (network.equals("mainnet")) {
 
-            protocol = context.getResources().getString(R.string.mainnet_protocol);
-            host = context.getResources().getString(R.string.mainnet_host);
-            port = context.getResources().getString(R.string.mainnet_port);
+            providers = context.getResources().getStringArray(R.array.mainnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
             toAddress = context.getResources().getString(R.string.mainnet_to_address);
             senderSeed = context.getResources().getString(R.string.mainnet_sender_seed);
         } else {
 
-            protocol = context.getResources().getString(R.string.testnet_protocol);
-            host = context.getResources().getString(R.string.testnet_host);
-            port = context.getResources().getString(R.string.testnet_port);
+            providers = context.getResources().getStringArray(R.array.testnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.testnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.testnet_explorer_host);
             toAddress = context.getResources().getString(R.string.testnet_to_address);
             senderSeed = context.getResources().getString(R.string.testnet_sender_seed);
         }
 
-        System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance()
-                .format(new Date()));
-        Iota iota = new Iota(protocol, host, port, senderSeed);
-        System.out.println("new IOTA [done]: " + DateFormat.getDateTimeInstance()
-                .format(new Date()) );
+        System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
+        boolean nodeUp = false;
+        Iota iota = null;
+
+        for(int i = 0; i < providers.length; i++) {
+            try {
+                iota = new Iota(providers[i], senderSeed);
+                iota.minWeightMagnitude = minWeightMagnitude;
+
+                nodeUp = iota.isNodeUp();
+
+            } catch (Throwable e) {
+                System.err.println("\nERROR: Something went wrong: " + e.getMessage());
+                e.printStackTrace();
+            }
+
+            if(nodeUp) {
+                break;
+            }
+        }
+        System.out.println("new IOTA [done]: " + DateFormat.getDateTimeInstance().format(new Date()));
 
         iota.minWeightMagnitude = minWeightMagnitude;
         return iota;
