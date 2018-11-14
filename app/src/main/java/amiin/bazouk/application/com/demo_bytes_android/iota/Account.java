@@ -29,7 +29,7 @@ public class Account {
     private static String toAddress;
     private static String senderSeed;
 
-    public static String paySeller(Context context){
+    public static String paySeller(Context context) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
@@ -51,7 +51,7 @@ public class Account {
         double consumptionInBytes = 1000;
         long amountIni = 0;
 
-        List<String> tails = new ArrayList<String>();
+        List<String> tails;
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
@@ -65,38 +65,58 @@ public class Account {
         } catch(Throwable e) {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
-            return "";
+            throw new AccountException("ACCOUNT_ERROR", e);
         }
         return tails.get(0);
     }
 
-    public static float getPriceUSD() throws IOException, ParseException {
-        float tickerPrice = price.get("IOT");
+    public static float getPriceUSD() throws AccountException {
+        float tickerPrice = 0;
+        try {
+            tickerPrice = price.get("IOT");
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AccountException("ACCOUNT_ERROR", e);
+        }
         System.out.println(tickerPrice);
         return tickerPrice;
     }
 
-    public static String getCurrentAddress(Context context) throws ArgumentException {
+    public static String getCurrentAddress(Context context) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
         }
 
-        return iota.getCurrentAddress();
+        String address;
+        try {
+            address = iota.getCurrentAddress();
+        } catch (ArgumentException e) {
+            e.printStackTrace();
+            throw new AccountException("ACCOUNT_ERROR", e);
+        }
+        return address;
     }
 
-    public static ResponseGetBalance getBalance(Context context) throws ArgumentException, IOException, ParseException {
+    public static ResponseGetBalance getBalance(Context context) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
         }
 
-        long balanceInI = iota.getBalance();
-        double balanceInUsd = balanceInI * getPriceUSD();
+        double balanceInUsd = 0;
+        long balanceInI = 0;
+        try {
+            balanceInUsd = balanceInI * getPriceUSD();
+            balanceInI = iota.getBalance();
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new AccountException("ACCOUNT_ERROR", e);
+        }
         return new ResponseGetBalance(balanceInI, balanceInUsd);
     }
 
-    public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) {
+    public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
@@ -108,6 +128,7 @@ public class Account {
         } catch(Throwable e) {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
+            throw new AccountException("ACCOUNT_ERROR", e);
         }
 
         String hash = tails.get(0);
@@ -115,17 +136,22 @@ public class Account {
         return new ResponsePayOut(hash, link, "Pending");
     }
 
-    public static List<TxData> getTransactionHistory(Context context) throws ArgumentException {
+    public static List<TxData> getTransactionHistory(Context context) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
         }
 
-        List<Transaction> transactions = iota.getTransactions();
+        List<Transaction> transactions = null;
+        try {
+            transactions = iota.getTransactions();
+        } catch (ArgumentException e) {
+            e.printStackTrace();
+            throw new AccountException("ACCOUNT_ERROR", e);
+        }
         List<TxData> txs = new ArrayList<>();
 
         for(Transaction tx: transactions) {
-
             txs.add(new TxData(tx, explorerHost));
         }
         return txs;
@@ -151,22 +177,19 @@ public class Account {
         }
 
         System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
-        boolean nodeUp = false;
-        Iota iota = null;
 
+        Iota iota = null;
         for(int i = 0; i < providers.length; i++) {
             try {
                 iota = new Iota(providers[i], senderSeed);
                 iota.minWeightMagnitude = minWeightMagnitude;
-
-                nodeUp = iota.isNodeUp();
 
             } catch (Throwable e) {
                 System.err.println("\nERROR: Something went wrong: " + e.getMessage());
                 e.printStackTrace();
             }
 
-            if(nodeUp) {
+            if(iota.isNodeUp()) {
                 break;
             }
         }

@@ -117,9 +117,8 @@ public class MainActivity extends PermissionsActivity {
                     editor.putFloat(PREF_MIOTA_USD,  miotUSD);
                     editor.apply();
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
+                } catch (AccountException e) {
+                    System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
                 }
             }
@@ -252,15 +251,7 @@ public class MainActivity extends PermissionsActivity {
             public void onClick(View v) {
                 System.out.println("wallet btn click");
 
-                try {
-                    getBalance();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (ArgumentException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                getBalance();
             }
         });
     }
@@ -755,16 +746,26 @@ public class MainActivity extends PermissionsActivity {
 
     private void paySeller() {
         System.out.println("Start the transaction");
-        Account.paySeller(this);
+        try {
+            Account.paySeller(this);
+        } catch (AccountException e) {
+            System.out.println("Failed due to " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
-    private void getBalance() throws ParseException, ArgumentException, IOException {
+    private void getBalance() {
         System.out.println("getBalance");
-//        Account.paySeller(this, 1);
-        System.out.println("getCurrentAddress: "+Account.getCurrentAddress(this));
-        ResponseGetBalance responseGetBalance = Account.getBalance(this);
-        System.out.println(responseGetBalance.miota);
-        System.out.println(responseGetBalance.usd);
+        try {
+            System.out.println("getCurrentAddress: "+Account.getCurrentAddress(this));
+
+            ResponseGetBalance responseGetBalance = Account.getBalance(this);
+            System.out.println(responseGetBalance.miota);
+            System.out.println(responseGetBalance.usd);
+        } catch (AccountException e) {
+            System.out.println("Failed due to " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 
     private void checkIfConnectedToWifi() {

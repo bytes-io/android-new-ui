@@ -23,6 +23,7 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
+import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
 import jota.error.ArgumentException;
 
@@ -43,11 +44,8 @@ public class crypto_fragment extends Fragment {
                 try {
                     address = Account.getCurrentAddress(getContext());
                     currentBalance = "Current balance: $"+String.valueOf(Account.getBalance(getContext()).usd);
-                } catch (ArgumentException e) {
-                    e.printStackTrace();
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (AccountException e) {
+                    System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
                 }
                 if(address == null){
@@ -129,7 +127,13 @@ public class crypto_fragment extends Fragment {
                             }
                             return;
                         }
-                        ResponsePayOut responsePayOut = Account.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
+                        ResponsePayOut responsePayOut = null;
+                        try {
+                            responsePayOut = Account.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
+                        } catch (AccountException e) {
+                            System.out.println("Failed due to " + e.getMessage());
+                            e.printStackTrace();
+                        }
                         String hash;
                         String link;
                         hash = responsePayOut.hash;
