@@ -68,11 +68,8 @@ public class Payment extends AppCompatActivity {
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
-        setTitle("Payment");
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_back_arrow); // Set the icon
-
-        // Icon click listener
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

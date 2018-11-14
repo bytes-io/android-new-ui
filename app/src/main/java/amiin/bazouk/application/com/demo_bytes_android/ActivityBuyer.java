@@ -31,6 +31,8 @@ public class ActivityBuyer extends AppCompatActivity {
         setContentView(R.layout.activity_buyer);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
@@ -41,8 +43,13 @@ public class ActivityBuyer extends AppCompatActivity {
             }
         }
         setSupportActionBar(toolbar);
-
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        toolbar.setNavigationIcon(R.drawable.ic_back_arrow);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
         float maxPrice = Float.parseFloat(preferences.getString(
                 PREF_MAX_PRICE,
                 this.getResources().getString(R.string.default_pref_max_price)
@@ -104,10 +111,5 @@ public class ActivityBuyer extends AppCompatActivity {
     private void enableSetMaxPrice() {
         findViewById(R.id.set_max_price).setAlpha(1);
         findViewById(R.id.set_max_price).setEnabled(true);
-    }
-
-    @Override
-    public void onBackPressed() {
-        finish();
     }
 }
