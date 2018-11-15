@@ -62,7 +62,7 @@ public class Account {
             System.out.println(tails);
             System.out.println("\n\n see it here " + explorerHost + "/transaction/" + tails.get(0) + " \n\n" );
 
-        } catch(Throwable e) {
+        } catch(Exception e) {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
@@ -125,7 +125,7 @@ public class Account {
         List<String> tails = new ArrayList<String>();
         try {
             tails = iota.makeTx(payOutAddress, amountIni);
-        } catch(Throwable e) {
+        } catch(Exception e) {
             System.err.println("\nERROR: Something went wrong: " + e.getMessage());
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
