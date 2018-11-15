@@ -91,7 +91,7 @@ public class Account {
         String address;
         try {
             address = iota.getCurrentAddress();
-        } catch (ArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
@@ -145,7 +145,7 @@ public class Account {
         List<Transaction> transactions = null;
         try {
             transactions = iota.getTransactions();
-        } catch (ArgumentException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
@@ -184,7 +184,7 @@ public class Account {
                 iota = new Iota(providers[i], senderSeed);
                 iota.minWeightMagnitude = minWeightMagnitude;
 
-            } catch (Throwable e) {
+            } catch (Exception e) {
                 System.err.println("\nERROR: Something went wrong: " + e.getMessage());
                 e.printStackTrace();
             }
