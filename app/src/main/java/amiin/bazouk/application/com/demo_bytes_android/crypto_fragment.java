@@ -43,16 +43,21 @@ public class crypto_fragment extends Fragment {
             public void run() {
                 try {
                     address = Account.getCurrentAddress(getContext());
+                } catch (AccountException e) {
+                    System.out.println("Failed due to " + e.getMessage());
+                    e.printStackTrace();
+                }
+                try {
                     currentBalance = "Current balance: $"+String.valueOf(Account.getBalance(getContext()).usd);
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
                 }
                 if(address == null){
-                    address = "You do not have an account yet";
+                    address = "Unable to show the information. Please Look at your internet connection";
                 }
                 if(currentBalance == null){
-                    currentBalance = "Current balance: $0";
+                    currentBalance = "Unable to show the information. Please Look at your internet connection";
                 }
                 FragmentActivity fragmentActivity= getActivity();
                 if(fragmentActivity!=null) {
@@ -127,17 +132,34 @@ public class crypto_fragment extends Fragment {
                             }
                             return;
                         }
-                        ResponsePayOut responsePayOut = null;
+                        FragmentActivity fragmentActivity = getActivity();
+                        ResponsePayOut responsePayOut;
                         try {
                             responsePayOut = Account.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
+                            if(fragmentActivity!=null) {
+                                fragmentActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        builder.setTitle(R.string.withdrawal_confirmation)
+                                                .setMessage("Failed due to " + e.getMessage())
+                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                                                    public void onClick(DialogInterface dialog, int which) {
+                                                    }
+                                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                                    }
+                                });
+                            }
                             e.printStackTrace();
+                            return;
                         }
-                        String hash;
-                        String link;
-                        hash = responsePayOut.hash;
-                        link = responsePayOut.link;
+                        String hash = null;
+                        String link = null;
+                        if(responsePayOut!=null) {
+                            hash = responsePayOut.hash;
+                            link = responsePayOut.link;
+                        }
                         long time = System.currentTimeMillis();
                         while(true){
                             if (!((hash == null && link == null) || System.currentTimeMillis() < time + 10000))
@@ -149,12 +171,11 @@ public class crypto_fragment extends Fragment {
                         else{
                             messageBuilder = "Hash: "+hash+"\n \n Link: "+link;
                         }
-                        FragmentActivity fragmentActivity = getActivity();
                         if(fragmentActivity!=null) {
                             fragmentActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    builder.setTitle(R.string.withdrawal_confirmed)
+                                    builder.setTitle(R.string.withdrawal_confirmation)
                                             .setMessage(messageBuilder)
                                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                                 public void onClick(DialogInterface dialog, int which) {
