@@ -4,19 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 
-import amiin.bazouk.application.com.demo_bytes_android.ActivityBuyer;
-import amiin.bazouk.application.com.demo_bytes_android.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import jota.error.ArgumentException;
 import jota.model.Transaction;
 
 public class Account {

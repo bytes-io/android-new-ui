@@ -33,6 +33,7 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/earned_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eur 104.86"
@@ -49,7 +50,8 @@
         android:orientation="horizontal"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -61,6 +63,7 @@
             android:textSize="20sp" />
 
         <TextView
+            android:id="@+id/spent_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Eur 20.01"
@@ -70,5 +73,22 @@
             android:textSize="20sp"/>
 
     </RelativeLayout>
+
+    <include layout="@layout/header"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp" />
+
+    <ListView
+        android:id="@+id/list_view_transactions"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:divider="@color/red"
+        android:dividerHeight="2dp">
+
+    </ListView>
 
 </LinearLayout>

@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="MainActivity"
+            android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -34,11 +34,11 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ActivityBuyer"
+            android:name=".activities.ActivityBuyer"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
-            android:name=".Payment"
+            android:name=".activities.Payment"
             android:screenOrientation="portrait"
             android:label="@string/title_activity_payment"
             android:theme="@style/AppTheme.NoActionBar">
