@@ -174,9 +174,7 @@ public class MainActivity extends PermissionsActivity {
                 }
 
                 if(server!=null) {
-                    //Remove it
-                    ((TextView)findViewById(R.id.data_seller)).setText(String.valueOf(res[0]+res[1]));
-
+                    ((TextView)findViewById(R.id.data_seller)).setText(String.valueOf(((double)(res[0]+res[1]))/1000000)+"MB");
                     mHandler.postDelayed(mRunnableServer, 10000);
                 }
             }
@@ -187,9 +185,7 @@ public class MainActivity extends PermissionsActivity {
                 long [] res = new long[2];
                 res[0] = TrafficStats.getTotalTxBytes()- mStartTXClient;
                 res[1] = TrafficStats.getTotalRxBytes()- mStartRXClient;
-
-                ((TextView)findViewById(R.id.data_buyer)).setText(String.valueOf(res[0]+res[1]));
-
+                ((TextView)findViewById(R.id.data_buyer)).setText(String.valueOf(((double)(res[0]+res[1]))/1000000)+"MB");
                 mHandler.postDelayed(mRunnableClient, 10000);
             }
         };
@@ -305,7 +301,7 @@ public class MainActivity extends PermissionsActivity {
                     makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_sell));
                     changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
                     ((TextView)findViewById(R.id.number_of_clients)).setText("0");
-                    ((TextView)findViewById(R.id.data_seller)).setText("0");
+                    ((TextView)findViewById(R.id.data_seller)).setText("0MB");
                     mStartTXServer = 0;
                     mStartRXServer = 0;
                 }
@@ -431,6 +427,7 @@ public class MainActivity extends PermissionsActivity {
                         changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
                         makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_buy));
                         changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
+                        ((TextView)findViewById(R.id.data_buyer)).setText("0MB");
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_client_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
