@@ -54,10 +54,10 @@ public class crypto_fragment extends Fragment {
                     e.printStackTrace();
                 }
                 if(address == null){
-                    address = "Unable to show the information. Please Look at your internet connection";
+                    address = "Unable to show the your wallet information. Please check your internet connection";
                 }
                 if(currentBalance == null){
-                    currentBalance = "Unable to show the information. Please Look at your internet connection";
+                    currentBalance = "Current balance: $--";
                 }
                 FragmentActivity fragmentActivity= getActivity();
                 if(fragmentActivity!=null) {
