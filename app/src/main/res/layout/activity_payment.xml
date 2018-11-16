@@ -22,7 +22,7 @@
             android:layout_weight="1"
             app:layout_scrollFlags="scroll|enterAlways"
             app:popupTheme="@style/AppTheme.PopupOverlay"
-            app:title="@string/app_name">
+            app:title="@string/title_activity_payment">
 
         </android.support.v7.widget.Toolbar>
 

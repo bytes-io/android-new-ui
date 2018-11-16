@@ -262,7 +262,7 @@ public class MainActivity extends PermissionsActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.settings :
-                intent = new Intent(MainActivity.this,ActivityBuyer.class);
+                intent = new Intent(MainActivity.this,SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.payment :

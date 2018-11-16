@@ -30,6 +30,9 @@
     <string name="check_your_wallet">CHECK YOUR WALLET</string>
     <string name="selling">Selling</string>
     <string name="title_activity_payment">Payment</string>
+    <string name="title_activity_settings">Settings</string>
+    <string name="title_activity_buyer">Settings-Buyer</string>
+    <string name="title_activity_seller">Settings-Seller</string>
     <string name="tab_text_1">Credit Card</string>
     <string name="tab_text_2">Crypto</string>
     <string name="tab_text_3">History</string>
