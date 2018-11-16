@@ -44,7 +44,7 @@
                 android:paddingStart="10dp"
                 android:paddingLeft="10dp"
                 android:layout_alignParentBottom="true"
-                android:text="Buyer:"/>
+                android:text="BUYER"/>
 
         </RelativeLayout>
 
@@ -70,15 +70,27 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/textview_max_price_buyer"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/textview_max_price_buyer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/go_to_max_price_buyer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -103,14 +115,25 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="List Item 2"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List item 2"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -135,14 +158,25 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lit Item 3"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="list item 3"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -175,7 +209,7 @@
                 android:paddingStart="10dp"
                 android:paddingLeft="10dp"
                 android:layout_alignParentBottom="true"
-                android:text="Seller:"/>
+                android:text="SELLER"/>
 
         </RelativeLayout>
 
@@ -201,15 +235,27 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
-                android:id="@+id/textview_max_price_seller"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="4"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:id="@+id/textview_max_price_seller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:id="@+id/go_to_max_price_seller"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -234,14 +280,25 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="List Item 2"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List item 2"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
@@ -266,14 +323,25 @@
                 android:textColor="@android:color/black"
                 android:textSize="20sp" />
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Lit Item 3"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:textSize="20sp"/>
+                android:layout_centerVertical="true">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="List item 3"
+                    android:textSize="20sp"/>
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/ic_go_to"/>
+
+            </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
