@@ -12,11 +12,15 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_margin = "20dp">
+
             <ListView
+                android:id="@+id/list_view_credit_cards"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
             </ListView>
+
             <TextView
+                android:id="@+id/add_credit_card_textview"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="20dp"
@@ -26,5 +30,7 @@
                 android:layout_marginTop="15dp"
                 android:textSize="18sp"/>
         </LinearLayout>
+
     </ScrollView>
+
 </LinearLayout>

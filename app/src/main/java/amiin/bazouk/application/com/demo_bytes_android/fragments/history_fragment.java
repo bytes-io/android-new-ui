@@ -36,7 +36,7 @@ public class history_fragment extends Fragment {
         ArrayList<Map<String, String>> listMapOfEachTransaction = new ArrayList<>();
         //View header = getLayoutInflater().inflate(R.layout.header, null);
         //listViewTransactions.addHeaderView(header);
-        SimpleAdapter adapterAlarms = new SimpleAdapterWithScrollbarsOnViews(getContext(), listMapOfEachTransaction, R.layout.items_transactions,
+        SimpleAdapter adapterTransactions = new SimpleAdapterWithScrollbarsOnViews(getContext(), listMapOfEachTransaction, R.layout.items_transactions,
                 new String[]{"address", "hash", "link","value","date"}, new int[]{R.id.address, R.id.hash, R.id.link,R.id.value,R.id.date});
         Thread getTransactionsThread = new Thread(new Runnable() {
             @Override
@@ -62,7 +62,7 @@ public class history_fragment extends Fragment {
                         @Override
                         public void run() {
                             //((TextView)getLayoutInflater().inflate(R.layout.items_transactions, null).findViewById(R.id.address)).setMovementMethod(new ScrollingMovementMethod());
-                            listViewTransactions.setAdapter(adapterAlarms);
+                            listViewTransactions.setAdapter(adapterTransactions);
                         }
                     });
                 }

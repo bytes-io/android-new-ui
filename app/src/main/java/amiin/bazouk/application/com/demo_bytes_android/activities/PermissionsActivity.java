@@ -21,6 +21,7 @@ public abstract class PermissionsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         settingPermissionTurnOnHotspot();
         settingPermissionCheckHotspot();
+        //settingPermissionReadDataPhone();
     }
 
     private void settingPermissionCheckHotspot() {
@@ -32,13 +33,20 @@ public abstract class PermissionsActivity extends AppCompatActivity {
         }
     }
 
-
     private void settingPermissionTurnOnHotspot() {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!Settings.System.canWrite(getApplicationContext())) {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_WRITE_SETTINGS, Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, MY_PERMISSIONS_MANAGE_WRITE_SETTINGS);
+            }
+        }
+    }
+
+    private void settingPermissionReadDataPhone() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if(isNotAccessGranted()) {
+                Intent intent = new Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS);
+                startActivityForResult(intent, MY_PERMISSIONS_USAGE_ACCESS_SETTINGS);
             }
         }
     }

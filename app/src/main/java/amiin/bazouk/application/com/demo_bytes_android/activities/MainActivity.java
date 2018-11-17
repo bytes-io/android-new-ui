@@ -1,6 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.activities;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
@@ -26,7 +27,9 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -35,6 +38,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+
+import com.android.dx.command.Main;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -62,7 +67,8 @@ import okhttp3.WebSocketListener;
 
 public class MainActivity extends PermissionsActivity {
 
-    private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11 ;
+    private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11;
+    private static final int PERMISSION_ACCESS_READ_PHONE_STATS_CODE = 12;
     private static final int UID_TETHERING = -5;
     public static final String IS_SELLER = "is_seller";
     public static final String IS_BUYER = "is_buyer";
@@ -90,8 +96,7 @@ public class MainActivity extends PermissionsActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (android.os.Build.VERSION.SDK_INT > 9)
-        {
+        if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new
                     StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -113,7 +118,7 @@ public class MainActivity extends PermissionsActivity {
                 try {
                     float miotUSD = Account.getPriceUSD();
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putFloat(PREF_MIOTA_USD,  miotUSD);
+                    editor.putFloat(PREF_MIOTA_USD, miotUSD);
                     editor.apply();
 
                 } catch (AccountException e) {
@@ -125,21 +130,27 @@ public class MainActivity extends PermissionsActivity {
         conversionThread.start();
 
         mRunnableServer = new Runnable() {
+            @SuppressLint("MissingPermission")
             public void run() {
-                long [] res = new long[2];
+                long[] res = new long[2];
                 NetworkStatsManager networkStatsManager;
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     networkStatsManager = getApplicationContext().getSystemService(NetworkStatsManager.class);
                     NetworkStats networkStatsWifi = null;
                     NetworkStats networkStatsMobile = null;
+                    String suscriberId = "";
+                    TelephonyManager tm = (TelephonyManager) MainActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
+                    if (tm != null) {
+                        suscriberId = tm.getSubscriberId();
+                    }
                     try {
                         Calendar calendar = Calendar.getInstance();
                         calendar.add(Calendar.DATE, 1);
                         if (networkStatsManager != null) {
                             networkStatsWifi = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_WIFI,
-                                    "", 0, calendar.getTimeInMillis(), UID_TETHERING);
+                                    suscriberId, 0, calendar.getTimeInMillis(), UID_TETHERING);
                             networkStatsMobile = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_MOBILE,
-                                    "", 0, calendar.getTimeInMillis(), UID_TETHERING);
+                                    suscriberId, 0, calendar.getTimeInMillis(), UID_TETHERING);
                         }
                     } catch (RemoteException e) {
                         e.printStackTrace();
@@ -162,18 +173,20 @@ public class MainActivity extends PermissionsActivity {
                             res[1] += bucket.getRxBytes();
                         }
                     }
-                    if(networkStatsMobile != null || networkStatsWifi != null) {
+                    if (networkStatsMobile != null || networkStatsWifi != null) {
                         res[0] -= mStartTXServer;
                         res[1] -= mStartRXServer;
                     }
-                }
-                else {
-                    res[0] = TrafficStats.getUidTxBytes(UID_TETHERING)- mStartTXServer;
-                    res[1] = TrafficStats.getUidRxBytes(UID_TETHERING)- mStartRXServer;
+                } else {
+                    res[0] = TrafficStats.getUidTxBytes(UID_TETHERING) - mStartTXServer;
+                    res[1] = TrafficStats.getUidRxBytes(UID_TETHERING) - mStartRXServer;
                 }
 
-                if(server!=null) {
-                    ((TextView)findViewById(R.id.data_seller)).setText(String.valueOf(((double)(res[0]+res[1]))/1000000)+"MB");
+                System.out.println("Value of Rx: " + res[0]);
+                System.out.println("Value of Tx: " + res[1]);
+
+                if (server != null) {
+                    ((TextView) findViewById(R.id.data_seller)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
                     mHandler.postDelayed(mRunnableServer, 10000);
                 }
             }
@@ -181,10 +194,14 @@ public class MainActivity extends PermissionsActivity {
 
         mRunnableClient = new Runnable() {
             public void run() {
-                long [] res = new long[2];
-                res[0] = TrafficStats.getTotalTxBytes()- mStartTXClient;
-                res[1] = TrafficStats.getTotalRxBytes()- mStartRXClient;
-                ((TextView)findViewById(R.id.data_buyer)).setText(String.valueOf(((double)(res[0]+res[1]))/1000000)+"MB");
+                long[] res = new long[2];
+                res[0] = TrafficStats.getTotalTxBytes() - mStartTXClient;
+                res[1] = TrafficStats.getTotalRxBytes() - mStartRXClient;
+
+                System.out.println("Value of Rx: " + res[0]);
+                System.out.println("Value of Tx: " + res[1]);
+
+                ((TextView) findViewById(R.id.data_buyer)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
                 mHandler.postDelayed(mRunnableClient, 10000);
             }
         };
@@ -195,18 +212,14 @@ public class MainActivity extends PermissionsActivity {
                 Thread serverThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if(server==null) {
-                            startServer();
-                            if(server!=null){
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        getNetworkStatsServer();
-                                    }
-                                });
+                        if (server == null) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission( Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_ACCESS_READ_PHONE_STATS_CODE);
                             }
-                        }
-                        else{
+                            else {
+                                startSelling();
+                            }
+                        } else {
                             stopServer();
                         }
                     }
@@ -218,25 +231,21 @@ public class MainActivity extends PermissionsActivity {
         findViewById(R.id.buy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Thread clientThread;
-                if(client == null) {
-                    findViewById(R.id.sell_button).setEnabled(false);
-                    findViewById(R.id.buy_button).setEnabled(false);
-                    clientThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            startClient();
+                Thread clientThread = new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (client == null) {
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION_CODE);
+                            }
+                            else {
+                                startBuying();
+                            }
+                        } else {
+                            webSocketClient.close(CLIENT_DISCONNECTED_CODE, "");
                         }
-                    });
-                }
-                else{
-                    clientThread = new Thread(new Runnable() {
-                        @Override
-                        public void run() {
-                            webSocketClient.close(CLIENT_DISCONNECTED_CODE,"");
-                        }
-                    });
-                }
+                    }
+                });
                 clientThread.start();
             }
         });
@@ -251,6 +260,29 @@ public class MainActivity extends PermissionsActivity {
         });
     }
 
+    private void startBuying() {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                findViewById(R.id.sell_button).setEnabled(false);
+                findViewById(R.id.buy_button).setEnabled(false);
+            }
+        });
+        startClient();
+    }
+
+    private void startSelling() {
+        startServer();
+        if (server != null) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getNetworkStatsServer();
+                }
+            });
+        }
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.buying_menu, menu);
@@ -261,17 +293,17 @@ public class MainActivity extends PermissionsActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         Intent intent;
         switch (item.getItemId()) {
-            case R.id.settings :
-                intent = new Intent(MainActivity.this,SettingsActivity.class);
+            case R.id.settings:
+                intent = new Intent(MainActivity.this, SettingsActivity.class);
                 startActivity(intent);
                 break;
-            case R.id.payment :
-                intent = new Intent(MainActivity.this,Payment.class);
+            case R.id.payment:
+                intent = new Intent(MainActivity.this, Payment.class);
                 startActivity(intent);
                 break;
-            case R.id.history :
-                intent = new Intent(MainActivity.this,Payment.class);
-                intent.putExtra("is_history_intent",true);
+            case R.id.history:
+                intent = new Intent(MainActivity.this, Payment.class);
+                intent.putExtra("is_history_intent", true);
                 startActivity(intent);
                 break;
         }
@@ -281,13 +313,13 @@ public class MainActivity extends PermissionsActivity {
     private void stopServer() {
         try {
             turnOffHotspot();
-            if(server!=null) {
+            if (server != null) {
                 server.stop();
             }
-            server=null;
+            server = null;
             mHandler.removeCallbacks(mRunnableServer);
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(IS_SELLER,false);
+            editor.putBoolean(IS_SELLER, false);
             editor.apply();
             runOnUiThread(new Runnable() {
                 @Override
@@ -297,10 +329,10 @@ public class MainActivity extends PermissionsActivity {
                     Button sellButton = findViewById(R.id.sell_button);
                     sellButton.setBackgroundDrawable(buyButton.getBackground());
                     changeButtonCharacteristics(sellButton, R.string.sell, buyButton.getTextColors().getDefaultColor());
-                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_sell));
-                    changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
-                    ((TextView)findViewById(R.id.number_of_clients)).setText("0");
-                    ((TextView)findViewById(R.id.data_seller)).setText("0MB");
+                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_sell));
+                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
+                    ((TextView) findViewById(R.id.number_of_clients)).setText("0");
+                    ((TextView) findViewById(R.id.data_seller)).setText("0MB");
                     mStartTXServer = 0;
                     mStartRXServer = 0;
                 }
@@ -316,13 +348,13 @@ public class MainActivity extends PermissionsActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             MyOreoWifiManager myOreoWifiManager = new MyOreoWifiManager(this);
             myOreoWifiManager.stopTethering();
-        }
-        else{
-            if(mWifiManager == null){
+        } else {
+            if (mWifiManager == null) {
                 mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
             }
-            if(mWifiManager != null) {
+            if (mWifiManager != null) {
                 mWifiManager.setWifiEnabled(true);
+                mWifiManager.setWifiEnabled(false);
             }
         }
     }
@@ -335,21 +367,10 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void startClient() {
-        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION_CODE);
-            }
-            else{
-                getWifiList();
-            }
-        }
-        else{
-            getWifiList();
-        }
-        if(connectToHotspot()) {
+        getWifiList();
+        if (connectToHotspot()) {
             connectToServer();
-        }
-        else{
+        } else {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -373,7 +394,7 @@ public class MainActivity extends PermissionsActivity {
             public void onOpen(WebSocket webSocket, Response response) {
 
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_BUYER,true);
+                editor.putBoolean(IS_BUYER, true);
                 editor.apply();
                 runOnUiThread(new Runnable() {
                     @Override
@@ -389,9 +410,9 @@ public class MainActivity extends PermissionsActivity {
                         Button buyButton = findViewById(R.id.buy_button);
                         buyButton.setEnabled(true);
                         buyButton.setBackgroundColor(getResources().getColor(R.color.red));
-                        changeButtonCharacteristics(buyButton,R.string.disconnect,getResources().getColor(android.R.color.white));
-                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy),findViewById(R.id.layout_main));
-                        changeMenuColorAndTitle(R.string.buying,R.color.green);
+                        changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
+                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
+                        changeMenuColorAndTitle(R.string.buying, R.color.green);
                     }
                 });
                 Thread startPaymentThread = new Thread(new Runnable() {
@@ -424,9 +445,9 @@ public class MainActivity extends PermissionsActivity {
                         Button buyButton = findViewById(R.id.buy_button);
                         buyButton.setBackgroundResource(android.R.drawable.btn_default);
                         changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
-                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main),findViewById(R.id.layout_buy));
-                        changeMenuColorAndTitle(R.string.Bytes,R.color.colorPrimary);
-                        ((TextView)findViewById(R.id.data_buyer)).setText("0MB");
+                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
+                        changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
+                        ((TextView) findViewById(R.id.data_buyer)).setText("0MB");
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_client_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -436,7 +457,7 @@ public class MainActivity extends PermissionsActivity {
                     }
                 });
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_BUYER,false);
+                editor.putBoolean(IS_BUYER, false);
                 editor.apply();
                 mStartTXClient = 0;
                 mStartRXClient = 0;
@@ -485,34 +506,34 @@ public class MainActivity extends PermissionsActivity {
             builder = new AlertDialog.Builder(this);
         }
         long time = System.currentTimeMillis();
-        while(System.currentTimeMillis()<time+15000){
-            if(wifiList.size()>0){
+        while (System.currentTimeMillis() < time + 15000) {
+            if (wifiList.size() > 0) {
                 break;
             }
         }
         boolean isConnected = false;
-        for(ScanResult scanResult: wifiList){
+        for (ScanResult scanResult : wifiList) {
             String ssid = scanResult.SSID;
-            if(ssid.length()>=6 && ssid.substring(0,6).equals("bytes-")){
-                connect(ssid,scanResult.capabilities);
+            if (ssid.length() >= 6 && ssid.substring(0, 6).equals("bytes-")) {
+                connect(ssid, scanResult.capabilities);
                 time = System.currentTimeMillis();
-                while(System.currentTimeMillis()<time+15000){
-                    if(isConnectedToInternet(getApplicationContext())){
+                while (System.currentTimeMillis() < time + 15000) {
+                    if (isConnectedToInternet(getApplicationContext())) {
                         isConnected = true;
                         break;
                     }
                 }
             }
-            if(isConnected){
+            if (isConnected) {
                 break;
             }
         }
-        if(mWifiScanReceiver!=null) {
+        if (mWifiScanReceiver != null) {
             unregisterReceiver(mWifiScanReceiver);
         }
         mWifiScanReceiver = null;
         wifiList = new ArrayList<>();
-        if(!isConnected){
+        if (!isConnected) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -528,11 +549,11 @@ public class MainActivity extends PermissionsActivity {
         return isConnected;
     }
 
-    private void connect(String ssid,String capabilities) {
-        if(mWifiManager == null) {
+    private void connect(String ssid, String capabilities) {
+        if (mWifiManager == null) {
             mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         }
-        if(mWifiManager!=null) {
+        if (mWifiManager != null) {
             mWifiManager.setWifiEnabled(true);
             WifiConfiguration conf = new WifiConfiguration();
             conf.SSID = String.format("\"%s\"", ssid);
@@ -590,7 +611,7 @@ public class MainActivity extends PermissionsActivity {
 
             int netId = mWifiManager.addNetwork(conf);
             if (netId == -1) {
-                netId = getExistingNetworkId(conf.SSID,mWifiManager);
+                netId = getExistingNetworkId(conf.SSID, mWifiManager);
             }
 
             mWifiManager.disconnect();
@@ -618,7 +639,7 @@ public class MainActivity extends PermissionsActivity {
         } else {
             builder = new AlertDialog.Builder(this);
         }
-        if(!isConnectedToInternet(getApplicationContext())){
+        if (!isConnectedToInternet(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -635,13 +656,13 @@ public class MainActivity extends PermissionsActivity {
         turnOnHotspot();
         long time = System.currentTimeMillis();
         boolean isHotspotTurnOn = false;
-        while(System.currentTimeMillis()<time+15000){
-            if(isHotspotOn()){
-               isHotspotTurnOn = true;
-               break;
+        while (System.currentTimeMillis() < time + 15000) {
+            if (isHotspotOn()) {
+                isHotspotTurnOn = true;
+                break;
             }
         }
-        if(!isHotspotTurnOn){
+        if (!isHotspotTurnOn) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -658,13 +679,13 @@ public class MainActivity extends PermissionsActivity {
 
         boolean isHotspotCorrect = isIpHotspotCorrect();
         time = System.currentTimeMillis();
-        while(System.currentTimeMillis()<time+15000){
-            if(isIpHotspotCorrect()){
+        while (System.currentTimeMillis() < time + 15000) {
+            if (isIpHotspotCorrect()) {
                 isHotspotCorrect = true;
                 break;
             }
         }
-        if(!isHotspotCorrect){
+        if (!isHotspotCorrect) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -680,14 +701,14 @@ public class MainActivity extends PermissionsActivity {
         }
 
         String ipAddress = "192.168.43.1";
-        InetSocketAddress inetSockAddress = new InetSocketAddress(ipAddress,38301);
-        server = new WebSocketServer(inetSockAddress){
+        InetSocketAddress inetSockAddress = new InetSocketAddress(ipAddress, 38301);
+        server = new WebSocketServer(inetSockAddress) {
             @Override
             public void onOpen(org.java_websocket.WebSocket conn, ClientHandshake handshake) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView)findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                        ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
                         builder.setTitle(getResources().getString(R.string.new_client_connected))
                                 .setMessage(getResources().getString(R.string.new_client_connected))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -697,12 +718,13 @@ public class MainActivity extends PermissionsActivity {
                     }
                 });
             }
+
             @Override
             public void onClose(org.java_websocket.WebSocket conn, int code, String reason, boolean remote) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView)findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                        ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
                         builder.setTitle(getResources().getString(R.string.connection_closed))
                                 .setMessage(getResources().getString(R.string.connection_of_server_closed))
                                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
@@ -729,14 +751,14 @@ public class MainActivity extends PermissionsActivity {
                 Button sellButton = findViewById(R.id.sell_button);
                 sellButton.setBackgroundColor(getResources().getColor(R.color.red));
                 changeButtonCharacteristics(sellButton, R.string.stop_selling, getResources().getColor(android.R.color.white));
-                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell),findViewById(R.id.layout_main));
-                changeMenuColorAndTitle(R.string.selling,R.color.green);
+                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
+                changeMenuColorAndTitle(R.string.selling, R.color.green);
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_SELLER,true);
+                editor.putBoolean(IS_SELLER, true);
                 editor.apply();
             }
         });
-        paySeller();
+        //paySeller();
         checkIfConnectedToWifi();
     }
 
@@ -753,7 +775,7 @@ public class MainActivity extends PermissionsActivity {
     private void getBalance() {
         System.out.println("getBalance");
         try {
-            System.out.println("getCurrentAddress: "+Account.getCurrentAddress(this));
+            System.out.println("getCurrentAddress: " + Account.getCurrentAddress(this));
 
             ResponseGetBalance responseGetBalance = Account.getBalance(this);
             System.out.println(responseGetBalance.miota);
@@ -768,8 +790,8 @@ public class MainActivity extends PermissionsActivity {
         Thread checkIfConnectedToWifiThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                while(true){
-                    if(!isConnectedToInternet(getApplicationContext())){
+                while (true) {
+                    if (!isConnectedToInternet(getApplicationContext())) {
                         stopServer();
                         return;
                     }
@@ -781,7 +803,7 @@ public class MainActivity extends PermissionsActivity {
 
     public static boolean isConnectedToInternet(Context context) {
         final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if(connectivityManager!=null) {
+        if (connectivityManager != null) {
             NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
             return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
         }
@@ -789,7 +811,7 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void turnOnHotspot() {
-        if(mWifiManager == null){
+        if (mWifiManager == null) {
             mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         }
         WifiConfiguration wifiCon = new WifiConfiguration();
@@ -798,8 +820,7 @@ public class MainActivity extends PermissionsActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             MyOreoWifiManager myOreoWifiManager = new MyOreoWifiManager(this);
             myOreoWifiManager.startTethering();
-        }
-        else{
+        } else {
             try {
                 Method method = mWifiManager.getClass().getMethod("setWifiApEnabled", WifiConfiguration.class, Boolean.TYPE);
                 method.invoke(mWifiManager, wifiCon, true);
@@ -811,11 +832,11 @@ public class MainActivity extends PermissionsActivity {
 
     private boolean isIpHotspotCorrect() {
         try {
-            for(Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements();){
+            for (Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces(); en.hasMoreElements(); ) {
                 NetworkInterface intf = en.nextElement();
-                for(Enumeration<InetAddress> enumIpAdress = intf.getInetAddresses(); enumIpAdress.hasMoreElements();){
+                for (Enumeration<InetAddress> enumIpAdress = intf.getInetAddresses(); enumIpAdress.hasMoreElements(); ) {
                     InetAddress inetAddress = enumIpAdress.nextElement();
-                    if(inetAddress.getHostAddress().equals("192.168.43.1")){
+                    if (inetAddress.getHostAddress().equals("192.168.43.1")) {
                         return true;
                     }
                 }
@@ -826,7 +847,7 @@ public class MainActivity extends PermissionsActivity {
         return false;
     }
 
-    private boolean isHotspotOn(){
+    private boolean isHotspotOn() {
         return new WifiApManager().isWifiApEnabled();
     }
 
@@ -842,7 +863,7 @@ public class MainActivity extends PermissionsActivity {
         private final WifiManager mWifiManager;
 
         WifiApManager() {
-            mWifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+            mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
         }
 
         /*the following method is for getting the wifi hotspot state*/
@@ -875,6 +896,7 @@ public class MainActivity extends PermissionsActivity {
         }
     }
 
+    @SuppressLint("MissingPermission")
     private void getNetworkStatsServer() {
         NetworkStatsManager networkStatsManager;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -884,11 +906,16 @@ public class MainActivity extends PermissionsActivity {
             try {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DATE, 1);
+                String suscriberId = "";
+                TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+                if (tm != null) {
+                    suscriberId = tm.getSubscriberId();
+                }
                 if (networkStatsManager != null) {
                     networkStatsWifi = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_WIFI,
-                            "", 0, calendar.getTimeInMillis(), UID_TETHERING);
+                            suscriberId, 0, calendar.getTimeInMillis(), UID_TETHERING);
                     networkStatsMobile = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_MOBILE,
-                            "", 0, calendar.getTimeInMillis(), UID_TETHERING);
+                            suscriberId, 0, calendar.getTimeInMillis(), UID_TETHERING);
                 }
             } catch (RemoteException e) {
                 e.printStackTrace();
@@ -904,14 +931,12 @@ public class MainActivity extends PermissionsActivity {
                 }
             }
 
-            if (networkStatsWifi != null) {
-                if (networkStatsMobile != null) {
-                    while (networkStatsMobile.hasNextBucket()) {
-                        bucket = new NetworkStats.Bucket();
-                        networkStatsMobile.getNextBucket(bucket);
-                        mStartTXServer += bucket.getTxBytes();
-                        mStartRXServer += bucket.getRxBytes();
-                    }
+            if (networkStatsMobile != null) {
+                while (networkStatsMobile.hasNextBucket()) {
+                    bucket = new NetworkStats.Bucket();
+                    networkStatsMobile.getNextBucket(bucket);
+                    mStartTXServer += bucket.getTxBytes();
+                    mStartRXServer += bucket.getRxBytes();
                 }
             }
         }
@@ -947,10 +972,23 @@ public class MainActivity extends PermissionsActivity {
         switch (requestCode) {
             case PERMISSION_ACCESS_COARSE_LOCATION_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    getWifiList();
-                    if(connectToHotspot()) {
-                        connectToServer();
-                    }
+                    Thread startBuyingThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startBuying();
+                        }
+                    });
+                    startBuyingThread.start();
+                }
+            case PERMISSION_ACCESS_READ_PHONE_STATS_CODE:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Thread startSellingThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            startSelling();
+                        }
+                    });
+                    startSellingThread.start();
                 }
         }
     }

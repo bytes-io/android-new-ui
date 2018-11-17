@@ -25,8 +25,6 @@ public class ActivityBuyer extends AppCompatActivity {
         setContentView(R.layout.activity_buyer);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
 
         if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
