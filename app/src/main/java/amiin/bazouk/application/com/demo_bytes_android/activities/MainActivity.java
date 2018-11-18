@@ -68,7 +68,7 @@ import okhttp3.WebSocketListener;
 public class MainActivity extends PermissionsActivity {
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11;
-    private static final int PERMISSION_ACCESS_READ_PHONE_STATS_CODE = 12;
+    //private static final int PERMISSION_ACCESS_READ_PHONE_STATS_CODE = 12;
     private static final int UID_TETHERING = -5;
     public static final String IS_SELLER = "is_seller";
     public static final String IS_BUYER = "is_buyer";
@@ -213,12 +213,13 @@ public class MainActivity extends PermissionsActivity {
                     @Override
                     public void run() {
                         if (server == null) {
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission( Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission( Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_ACCESS_READ_PHONE_STATS_CODE);
                             }
                             else {
                                 startSelling();
-                            }
+                            }*/
+                            startSelling();
                         } else {
                             stopServer();
                         }
@@ -980,7 +981,7 @@ public class MainActivity extends PermissionsActivity {
                     });
                     startBuyingThread.start();
                 }
-            case PERMISSION_ACCESS_READ_PHONE_STATS_CODE:
+            /*case PERMISSION_ACCESS_READ_PHONE_STATS_CODE:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Thread startSellingThread = new Thread(new Runnable() {
                         @Override
@@ -989,7 +990,7 @@ public class MainActivity extends PermissionsActivity {
                         }
                     });
                     startSellingThread.start();
-                }
+                }*/
         }
     }
 

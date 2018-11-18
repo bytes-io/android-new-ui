@@ -6,8 +6,8 @@ android {
         applicationId "amiin.bazouk.application.com.demo_bytes_android"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 11
-        versionName "11.0"
+        versionCode 12
+        versionName "12.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }

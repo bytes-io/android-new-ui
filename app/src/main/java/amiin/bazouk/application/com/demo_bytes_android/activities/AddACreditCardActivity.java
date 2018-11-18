@@ -9,10 +9,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.EditText;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class AddACreditCardActivity extends AppCompatActivity {
+
+    private static final String CREDIT_CARD_NUMBER = "credit_card_number";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +48,15 @@ public class AddACreditCardActivity extends AppCompatActivity {
         findViewById(R.id.ok_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Set<String> setCreditCard = preferences.getStringSet(CREDIT_CARD_NUMBER,new HashSet<>());
+                String creditCardString = ((EditText)findViewById(R.id.credit_card_number)).getText().toString()+"-"+((EditText)findViewById(R.id.credit_card_date)).getText().toString()+"-"+((EditText)findViewById(R.id.credit_card_cvv)).getText().toString();
+                setCreditCard.add(creditCardString);
+                SharedPreferences.Editor editor= preferences.edit();
+                editor.putStringSet(CREDIT_CARD_NUMBER,setCreditCard);
+                editor.apply();
                 finish();
             }
         });
+        findViewById(R.id.ok_button).setEnabled(false);
     }
 }

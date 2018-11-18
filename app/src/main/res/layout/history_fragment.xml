@@ -9,9 +9,11 @@
         android:layout_height="wrap_content"
         android:text="Last Week:"
         android:textSize="15sp"
-        android:layout_marginTop="10dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginTop="10dp"
         android:layout_marginBottom="30dp"/>
 
     <RelativeLayout
@@ -20,8 +22,9 @@
         android:orientation="horizontal"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="10dp">
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:layout_width="wrap_content"
@@ -47,10 +50,11 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
         android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal"
         android:layout_marginBottom="20dp">
 
         <TextView
@@ -74,18 +78,21 @@
 
     </RelativeLayout>
 
-    <include layout="@layout/header"
+    <TextView
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp" />
+        android:layout_width="wrap_content"
+        android:textSize="20dp"
+        android:text="TRANSACTION HISTORY"
+        android:layout_gravity="center" />
 
     <ListView
         android:id="@+id/list_view_transactions"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:divider="@color/red"
         android:dividerHeight="2dp">
 
