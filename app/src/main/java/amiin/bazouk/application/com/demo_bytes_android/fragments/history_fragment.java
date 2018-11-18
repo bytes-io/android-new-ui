@@ -1,24 +1,19 @@
 package amiin.bazouk.application.com.demo_bytes_android.fragments;
 
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.text.method.ScrollingMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -32,6 +27,8 @@ import amiin.bazouk.application.com.demo_bytes_android.iota.TxData;
 
 public class history_fragment extends Fragment {
 
+    List<TxData> listTransactions;
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -43,7 +40,7 @@ public class history_fragment extends Fragment {
         Thread getTransactionsThread = new Thread(new Runnable() {
             @Override
             public void run() {
-                List<TxData> listTransactions = new ArrayList<>();
+                listTransactions = new ArrayList<>();
                 try {
                     listTransactions = Account.getTransactionHistory(getContext());
                 } catch (AccountException e) {
@@ -88,8 +85,14 @@ public class history_fragment extends Fragment {
                     } else {
                         builder = new AlertDialog.Builder(getContext());
                     }
+                    String address = listTransactions.get(position).address;
+                    String hash = listTransactions.get(position).hash;
+                    String link = listTransactions.get(position).link;
+                    String message = "Address: "+"..."+address.substring(address.length()-4)+"\n"
+                            +"Hash: "+"..."+hash.substring(hash.length()-4)+"\n"
+                            +"Link: "+link;
                     builder.setTitle("Information Transaction")
-                            .setMessage("Information about the transaction")
+                            .setMessage(message)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
                                 }
