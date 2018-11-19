@@ -16,7 +16,7 @@ import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price";
+    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
 
     @Override

@@ -16,7 +16,6 @@ import android.widget.EditText;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class ActivityBuyer extends AppCompatActivity {
-    public static final String PREF_MAX_PRICE = "pref_max_price";
     private SharedPreferences preferences;
 
     @Override
@@ -43,7 +42,7 @@ public class ActivityBuyer extends AppCompatActivity {
             }
         });
         float maxPrice = Float.parseFloat(preferences.getString(
-                PREF_MAX_PRICE,
+                SettingsActivity.PREF_MAX_PRICE_BUYER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
 
@@ -58,7 +57,7 @@ public class ActivityBuyer extends AppCompatActivity {
 
                 // save to pref
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(PREF_MAX_PRICE,  maxPriceText);
+                editor.putString(SettingsActivity.PREF_MAX_PRICE_BUYER,  maxPriceText);
                 editor.apply();
 
                 finish();

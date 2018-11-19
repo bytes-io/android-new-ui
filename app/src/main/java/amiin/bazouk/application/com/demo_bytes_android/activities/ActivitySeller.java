@@ -16,15 +16,12 @@ import android.widget.EditText;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class ActivitySeller extends AppCompatActivity {
-    public static final String PREF_MAX_PRICE = "pref_max_price_seller";
     private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_seller);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
-
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar);
@@ -45,7 +42,7 @@ public class ActivitySeller extends AppCompatActivity {
             }
         });
         float maxPrice = Float.parseFloat(preferences.getString(
-                PREF_MAX_PRICE,
+                SettingsActivity.PREF_MAX_PRICE_SELLER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
 
@@ -60,7 +57,7 @@ public class ActivitySeller extends AppCompatActivity {
 
                 // save to pref
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(PREF_MAX_PRICE,  maxPriceText);
+                editor.putString(SettingsActivity.PREF_MAX_PRICE_SELLER,  maxPriceText);
                 editor.apply();
 
                 finish();
