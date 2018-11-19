@@ -22,7 +22,7 @@ public class Account {
     private static String toAddress;
     private static String senderSeed;
 
-    public static String paySeller(Context context) throws AccountException {
+    public static String paySeller(Context context, float amountIni,String address) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
@@ -42,13 +42,13 @@ public class Account {
 
         // assumptions
         double consumptionInBytes = 1000;
-        long amountIni = 0;
 
         List<String> tails;
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
-            tails = iota.makeTx(toAddress, amountIni);
+            //ADRIEN : float cast to long
+            tails = iota.makeTx(address, (long)amountIni);
             System.out.println("after makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
 

@@ -391,13 +391,16 @@ public class MainActivity extends PermissionsActivity {
     private void connectToServer() {
         client = new OkHttpClient();
         WebSocketListener webSocketListener = new WebSocketListener() {
+
+            private float maxPriceSeller = 0;
+
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
                 Thread startPaymentThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
                         if (isConnectedToInternet(getApplicationContext())) {
-                            paySeller();
+                            //paySeller();
                         }
                         /*while(webSocketClient!=null){
                             long t = System.currentTimeMillis();
@@ -413,38 +416,44 @@ public class MainActivity extends PermissionsActivity {
 
             @Override
             public void onMessage(WebSocket webSocket, String message) {
-                float maxPriceSeller = Float.valueOf(message);
-                float maxPriceBuyer = Float.parseFloat(preferences.getString(
-                        PREF_MAX_PRICE_BUYER,
-                        getResources().getString(R.string.default_pref_max_price)
-                ));
-                if(maxPriceSeller<= maxPriceBuyer){
-                    System.out.println("Price Seller: "+maxPriceSeller);
-                    System.out.println("Price Buyer: "+maxPriceBuyer);
-                    System.out.println("The transaction will be made");
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(IS_BUYER, true);
-                    editor.apply();
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setAlertDialogBuilder(getResources().getString(R.string.connected_to_server),getResources().getString(R.string.connected_to_server));
-                            getNetworkStatsClient();
-                            findViewById(R.id.sell_button).setEnabled(false);
-                            Button buyButton = findViewById(R.id.buy_button);
-                            buyButton.setEnabled(true);
-                            buyButton.setBackgroundColor(getResources().getColor(R.color.red));
-                            changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
-                            makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
-                            changeMenuColorAndTitle(R.string.buying, R.color.green);
-                        }
-                    });
-                    webSocket.send(CONNECTION_OPENED);
-                    paySeller();
+                if(message.substring(0,5).equals("price")) {
+                    float maxPriceSeller = Float.valueOf(message.substring(5));
+                    float maxPriceBuyer = Float.parseFloat(preferences.getString(
+                            PREF_MAX_PRICE_BUYER,
+                            getResources().getString(R.string.default_pref_max_price)
+                    ));
+                    if (maxPriceSeller <= maxPriceBuyer) {
+                        System.out.println("Price Seller: " + maxPriceSeller);
+                        System.out.println("Price Buyer: " + maxPriceBuyer);
+                        System.out.println("The transaction will be made");
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(IS_BUYER, true);
+                        editor.apply();
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setAlertDialogBuilder(getResources().getString(R.string.connected_to_server), getResources().getString(R.string.connected_to_server));
+                                getNetworkStatsClient();
+                                findViewById(R.id.sell_button).setEnabled(false);
+                                Button buyButton = findViewById(R.id.buy_button);
+                                buyButton.setEnabled(true);
+                                buyButton.setBackgroundColor(getResources().getColor(R.color.red));
+                                changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
+                                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
+                                changeMenuColorAndTitle(R.string.buying, R.color.green);
+                            }
+                        });
+                        webSocket.send(CONNECTION_OPENED);
+                        this.maxPriceSeller = maxPriceSeller;
+                    } else {
+                        System.out.println("The transaction wont be made");
+                        webSocketClient.close(CLIENT_DISCONNECTED_CODE, PRICE_NOT_FOUND);
+                    }
                 }
-                else{
-                    System.out.println("The transaction wont be made");
-                    webSocketClient.close(CLIENT_DISCONNECTED_CODE,PRICE_NOT_FOUND);
+                else if(message.substring(0,7).equals("address")){
+                    String address = message.substring(7);
+                    System.out.println("address: " + address);
+                    paySeller(maxPriceSeller,address);
                 }
             }
 
@@ -697,7 +706,7 @@ public class MainActivity extends PermissionsActivity {
                                 getResources().getString(R.string.default_pref_max_price)
                         );
                         System.out.print("The price for the seller is: " +maxPriceSeller);
-                        conn.send(maxPriceSeller);
+                        conn.send("price"+maxPriceSeller);
                     }
                 });
             }
@@ -705,6 +714,11 @@ public class MainActivity extends PermissionsActivity {
             @Override
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
                 if(message.equals(CONNECTION_OPENED)) {
+                    try {
+                        conn.send("address"+Account.getCurrentAddressTemp(getApplicationContext()));
+                    } catch (AccountException e) {
+                        e.printStackTrace();
+                    }
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -751,10 +765,10 @@ public class MainActivity extends PermissionsActivity {
         checkIfConnectedToWifi();
     }
 
-    private void paySeller() {
+    private void paySeller(float amountIni,String address) {
         System.out.println("Start the transaction");
         try {
-            Account.paySeller(this);
+            Account.paySeller(this, amountIni,address);
         } catch (AccountException e) {
             System.out.println("Failed due to " + e.getMessage());
             e.printStackTrace();
