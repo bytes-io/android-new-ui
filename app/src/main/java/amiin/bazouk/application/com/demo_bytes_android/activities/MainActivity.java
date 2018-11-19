@@ -24,6 +24,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.StrictMode;
+import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
@@ -51,6 +52,7 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -72,6 +74,8 @@ public class MainActivity extends PermissionsActivity {
     private static final int UID_TETHERING = -5;
     public static final String IS_SELLER = "is_seller";
     public static final String IS_BUYER = "is_buyer";
+    private static final String PRICE_NOT_FOUND = "Price not found";
+    private static final String CONNECTION_OPENED = "connection_opened";
     private WebSocketServer server;
     private OkHttpClient client;
     private WebSocket webSocketClient;
@@ -90,6 +94,8 @@ public class MainActivity extends PermissionsActivity {
     private AppBarLayout appBar;
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
+    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price";
+    public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
     private static SharedPreferences preferences;
 
     @Override
@@ -139,10 +145,10 @@ public class MainActivity extends PermissionsActivity {
                     NetworkStats networkStatsWifi = null;
                     NetworkStats networkStatsMobile = null;
                     String suscriberId = "";
-                    TelephonyManager tm = (TelephonyManager) MainActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
+                    /*TelephonyManager tm = (TelephonyManager) MainActivity.this.getSystemService(Context.TELEPHONY_SERVICE);
                     if (tm != null) {
                         suscriberId = tm.getSubscriberId();
-                    }
+                    }*/
                     try {
                         Calendar calendar = Calendar.getInstance();
                         calendar.add(Calendar.DATE, 1);
@@ -383,39 +389,10 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void connectToServer() {
-        final AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
         client = new OkHttpClient();
         WebSocketListener webSocketListener = new WebSocketListener() {
             @Override
             public void onOpen(WebSocket webSocket, Response response) {
-
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_BUYER, true);
-                editor.apply();
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        builder.setTitle(getResources().getString(R.string.connected_to_server))
-                                .setMessage(getResources().getString(R.string.connected_to_server))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
-                        getNetworkStatsClient();
-                        findViewById(R.id.sell_button).setEnabled(false);
-                        Button buyButton = findViewById(R.id.buy_button);
-                        buyButton.setEnabled(true);
-                        buyButton.setBackgroundColor(getResources().getColor(R.color.red));
-                        changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
-                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
-                        changeMenuColorAndTitle(R.string.buying, R.color.green);
-                    }
-                });
                 Thread startPaymentThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -431,39 +408,82 @@ public class MainActivity extends PermissionsActivity {
                         }*/
                     }
                 });
-                startPaymentThread.start();
+                //startPaymentThread.start();
+            }
+
+            @Override
+            public void onMessage(WebSocket webSocket, String message) {
+                float maxPriceSeller = Float.valueOf(message);
+                float maxPriceBuyer = Float.parseFloat(preferences.getString(
+                        PREF_MAX_PRICE_BUYER,
+                        getResources().getString(R.string.default_pref_max_price)
+                ));
+                if(maxPriceSeller<= maxPriceBuyer){
+                    System.out.println("Price Seller: "+maxPriceSeller);
+                    System.out.println("Price Buyer: "+maxPriceBuyer);
+                    System.out.println("The transaction will be made");
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(IS_BUYER, true);
+                    editor.apply();
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            setAlertDialogBuilder(getResources().getString(R.string.connected_to_server),getResources().getString(R.string.connected_to_server));
+                            getNetworkStatsClient();
+                            findViewById(R.id.sell_button).setEnabled(false);
+                            Button buyButton = findViewById(R.id.buy_button);
+                            buyButton.setEnabled(true);
+                            buyButton.setBackgroundColor(getResources().getColor(R.color.red));
+                            changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
+                            makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
+                            changeMenuColorAndTitle(R.string.buying, R.color.green);
+                        }
+                    });
+                    webSocket.send(CONNECTION_OPENED);
+                    paySeller();
+                }
+                else{
+                    System.out.println("The transaction wont be made");
+                    webSocketClient.close(CLIENT_DISCONNECTED_CODE,PRICE_NOT_FOUND);
+                }
             }
 
             @Override
             public void onClosed(WebSocket webSocket, int code, String reason) {
                 mWifiManager.setWifiEnabled(false);
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mHandler.removeCallbacks(mRunnableClient);
-                        Button sellButton = findViewById(R.id.sell_button);
-                        sellButton.setEnabled(true);
-                        Button buyButton = findViewById(R.id.buy_button);
-                        buyButton.setBackgroundResource(android.R.drawable.btn_default);
-                        changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
-                        makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
-                        changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
-                        ((TextView) findViewById(R.id.data_buyer)).setText("0MB");
-                        builder.setTitle(getResources().getString(R.string.connection_closed))
-                                .setMessage(getResources().getString(R.string.connection_of_client_closed))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
-                    }
-                });
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_BUYER, false);
-                editor.apply();
-                mStartTXClient = 0;
-                mStartRXClient = 0;
-                client = null;
-                webSocketClient = null;
+                if(!reason.equals(PRICE_NOT_FOUND)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mHandler.removeCallbacks(mRunnableClient);
+                            Button sellButton = findViewById(R.id.sell_button);
+                            sellButton.setEnabled(true);
+                            Button buyButton = findViewById(R.id.buy_button);
+                            buyButton.setBackgroundResource(android.R.drawable.btn_default);
+                            changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
+                            makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
+                            changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
+                            ((TextView) findViewById(R.id.data_buyer)).setText("0MB");
+                            setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
+                        }
+                    });
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putBoolean(IS_BUYER, false);
+                    editor.apply();
+                    mStartTXClient = 0;
+                    mStartRXClient = 0;
+                    client = null;
+                    webSocketClient = null;
+                }
+                else{
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            findViewById(R.id.sell_button).setEnabled(true);
+                            findViewById(R.id.buy_button).setEnabled(true);
+                        }
+                    });
+                }
             }
 
             @Override
@@ -480,12 +500,7 @@ public class MainActivity extends PermissionsActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            builder.setTitle(getResources().getString(R.string.connection_failed))
-                                    .setMessage(getResources().getString(R.string.connection_of_client_failed))
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                        }
-                                    }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                            setAlertDialogBuilder(getResources().getString(R.string.connection_failed),getResources().getString(R.string.connection_of_client_failed));
                         }
                     });
                 }
@@ -500,12 +515,6 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private boolean connectToHotspot() {
-        final AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
         long time = System.currentTimeMillis();
         while (System.currentTimeMillis() < time + 15000) {
             if (wifiList.size() > 0) {
@@ -538,12 +547,7 @@ public class MainActivity extends PermissionsActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    builder.setTitle(getResources().getString(R.string.connection_not_found))
-                            .setMessage(getResources().getString(R.string.connection_cannot_be_found))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                    setAlertDialogBuilder(getResources().getString(R.string.connection_not_found),getResources().getString(R.string.connection_cannot_be_found));
                 }
             });
         }
@@ -634,22 +638,11 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void startServer() {
-        final AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
         if (!isConnectedToInternet(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    builder.setTitle(getResources().getString(R.string.not_connected_to_internet))
-                            .setMessage(getResources().getString(R.string.you_are_not_connected_to_internet))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                    setAlertDialogBuilder(getResources().getString(R.string.not_connected_to_internet),getResources().getString(R.string.not_connected_to_internet));
                 }
             });
             return;
@@ -667,12 +660,7 @@ public class MainActivity extends PermissionsActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    builder.setTitle(getResources().getString(R.string.turn_on_hotspot))
-                            .setMessage(getResources().getString(R.string.turn_on_hotspot))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                    setAlertDialogBuilder(getResources().getString(R.string.turn_on_hotspot),getResources().getString(R.string.turn_on_hotspot));
                 }
             });
             return;
@@ -690,12 +678,7 @@ public class MainActivity extends PermissionsActivity {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    builder.setTitle(getResources().getString(R.string.change_hotspot_address))
-                            .setMessage(getResources().getString(R.string.change_hotspot_address_to_default_address))
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                    setAlertDialogBuilder(getResources().getString(R.string.change_hotspot_address),getResources().getString(R.string.change_hotspot_address_to_default_address));
                 }
             });
             return;
@@ -709,35 +692,40 @@ public class MainActivity extends PermissionsActivity {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
-                        builder.setTitle(getResources().getString(R.string.new_client_connected))
-                                .setMessage(getResources().getString(R.string.new_client_connected))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
-                    }
-                });
-            }
-
-            @Override
-            public void onClose(org.java_websocket.WebSocket conn, int code, String reason, boolean remote) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
-                        builder.setTitle(getResources().getString(R.string.connection_closed))
-                                .setMessage(getResources().getString(R.string.connection_of_server_closed))
-                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int which) {
-                                    }
-                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                        String maxPriceSeller = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(
+                                PREF_MAX_PRICE_SELLER,
+                                getResources().getString(R.string.default_pref_max_price)
+                        );
+                        System.out.print("The price for the seller is: " +maxPriceSeller);
+                        conn.send(maxPriceSeller);
                     }
                 });
             }
 
             @Override
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
+                if(message.equals(CONNECTION_OPENED)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            setAlertDialogBuilder(getResources().getString(R.string.new_client_connected), getResources().getString(R.string.new_client_connected));
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onClose(org.java_websocket.WebSocket conn, int code, String reason, boolean remote) {
+                if(!reason.equals(PRICE_NOT_FOUND)) {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_server_closed));
+                        }
+                    });
+                }
             }
 
             @Override
@@ -897,7 +885,7 @@ public class MainActivity extends PermissionsActivity {
         }
     }
 
-    @SuppressLint("MissingPermission")
+    //@SuppressLint("MissingPermission")
     private void getNetworkStatsServer() {
         NetworkStatsManager networkStatsManager;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -908,10 +896,10 @@ public class MainActivity extends PermissionsActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.add(Calendar.DATE, 1);
                 String suscriberId = "";
-                TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+                /*TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
                 if (tm != null) {
                     suscriberId = tm.getSubscriberId();
-                }
+                }*/
                 if (networkStatsManager != null) {
                     networkStatsWifi = networkStatsManager.queryDetailsForUid(ConnectivityManager.TYPE_WIFI,
                             suscriberId, 0, calendar.getTimeInMillis(), UID_TETHERING);
@@ -1012,6 +1000,20 @@ public class MainActivity extends PermissionsActivity {
         }
     }
 
+    private void setAlertDialogBuilder(String title, String message){
+        final AlertDialog.Builder builder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
+        } else {
+            builder = new AlertDialog.Builder(this);
+        }
+        builder.setTitle(title)
+                .setMessage(message)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+    }
 
     @Override
     public void onPause(){
