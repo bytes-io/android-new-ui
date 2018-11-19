@@ -91,6 +91,15 @@ public class Account {
         return address;
     }
 
+    public static String getCurrentAddressTemp(Context context) throws AccountException {
+
+        if (iota == null) {
+            iota = createIota(context);
+        }
+
+        return toAddress;
+    }
+
     public static ResponseGetBalance getBalance(Context context) throws AccountException {
 
         if (iota == null) {
