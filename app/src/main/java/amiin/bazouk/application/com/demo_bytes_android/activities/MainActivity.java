@@ -94,7 +94,7 @@ public class MainActivity extends PermissionsActivity {
     private AppBarLayout appBar;
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
-    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price";
+    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
     private static SharedPreferences preferences;
 
@@ -223,9 +223,9 @@ public class MainActivity extends PermissionsActivity {
                                 requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE}, PERMISSION_ACCESS_READ_PHONE_STATS_CODE);
                             }
                             else {
-                                startSelling();
+                                startServer();
                             }*/
-                            startSelling();
+                            startServer();
                         } else {
                             stopServer();
                         }
@@ -271,23 +271,13 @@ public class MainActivity extends PermissionsActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                findViewById(R.id.sell_button).setEnabled(false);
-                findViewById(R.id.buy_button).setEnabled(false);
+                Button sellButton =  findViewById(R.id.sell_button);
+                Button buyButton =  findViewById(R.id.buy_button);
+                sellButton.setEnabled(false);
+                buyButton.setEnabled(false);
             }
         });
-        startClient();
-    }
-
-    private void startSelling() {
-        startServer();
-        if (server != null) {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getNetworkStatsServer();
-                }
-            });
-        }
+        //startClient();
     }
 
     @Override
@@ -324,13 +314,15 @@ public class MainActivity extends PermissionsActivity {
                 server.stop();
             }
             server = null;
-            mHandler.removeCallbacks(mRunnableServer);
             SharedPreferences.Editor editor = preferences.edit();
             editor.putBoolean(IS_SELLER, false);
             editor.apply();
+            mStartTXServer = 0;
+            mStartRXServer = 0;
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
+                    mHandler.removeCallbacks(mRunnableServer);
                     Button buyButton = findViewById(R.id.buy_button);
                     buyButton.setEnabled(true);
                     Button sellButton = findViewById(R.id.sell_button);
@@ -340,8 +332,6 @@ public class MainActivity extends PermissionsActivity {
                     changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
                     ((TextView) findViewById(R.id.number_of_clients)).setText("0");
                     ((TextView) findViewById(R.id.data_seller)).setText("0MB");
-                    mStartTXServer = 0;
-                    mStartRXServer = 0;
                 }
             });
         } catch (IOException e) {
@@ -453,7 +443,13 @@ public class MainActivity extends PermissionsActivity {
                 else if(message.substring(0,7).equals("address")){
                     String address = message.substring(7);
                     System.out.println("address: " + address);
-                    paySeller(maxPriceSeller,address);
+                    Thread paySellerThread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            paySeller(maxPriceSeller,address);
+                        }
+                    });
+                    paySellerThread.start();
                 }
             }
 
@@ -488,6 +484,7 @@ public class MainActivity extends PermissionsActivity {
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
+                            setAlertDialogBuilder("Seller not found","None seller was found for this price");
                             findViewById(R.id.sell_button).setEnabled(true);
                             findViewById(R.id.buy_button).setEnabled(true);
                         }
@@ -747,6 +744,9 @@ public class MainActivity extends PermissionsActivity {
             }
         };
         server.start();
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putBoolean(IS_SELLER, true);
+        editor.apply();
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -756,9 +756,7 @@ public class MainActivity extends PermissionsActivity {
                 changeButtonCharacteristics(sellButton, R.string.stop_selling, getResources().getColor(android.R.color.white));
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
                 changeMenuColorAndTitle(R.string.selling, R.color.green);
-                SharedPreferences.Editor editor = preferences.edit();
-                editor.putBoolean(IS_SELLER, true);
-                editor.apply();
+                getNetworkStatsServer();
             }
         });
         //paySeller();
@@ -988,7 +986,7 @@ public class MainActivity extends PermissionsActivity {
                     Thread startSellingThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            startSelling();
+                            startServer();
                         }
                     });
                     startSellingThread.start();
