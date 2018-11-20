@@ -10,23 +10,24 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import jota.model.Transaction;
 
 public class Account {
-    private static Iota iota = null;
+    private static Iota sellerIota = null;
+    private static Iota buyerIota = null;
     private static Prices price = new Prices();
 
     private static String[] providers;
     private static int minWeightMagnitude;
     private static String explorerHost;
-    private static String toAddress;
-    private static String senderSeed;
+    private static String sellerSeed;
+    private static String buyerSeed;
+    private static SharedPreferences preferences;
 
     public static String paySeller(Context context, float amountIni,String address) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         /*float maxPrice = Float.parseFloat(
@@ -77,9 +78,7 @@ public class Account {
 
     public static String getCurrentAddress(Context context) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
         String address;
         try {
@@ -93,18 +92,14 @@ public class Account {
 
     public static String getCurrentAddressTemp(Context context) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
-        return toAddress;
+        return "to implemnet";
     }
 
     public static ResponseGetBalance getBalance(Context context) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
         double balanceInUsd = 0;
         long balanceInI = 0;
@@ -120,9 +115,7 @@ public class Account {
 
     public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
         List<String> tails = new ArrayList<String>();
         try {
@@ -140,9 +133,7 @@ public class Account {
 
     public static List<TxData> getTransactionHistory(Context context) throws AccountException {
 
-        if (iota == null) {
-            iota = createIota(context);
-        }
+        Iota iota = getIota(context);
 
         List<Transaction> transactions = null;
         try {
@@ -159,7 +150,23 @@ public class Account {
         return txs;
     }
 
-    private static Iota createIota(Context context) {
+    private static Iota getIota(Context context) {
+        preferences = PreferenceManager.getDefaultSharedPreferences(context);
+
+        if(preferences.getBoolean(MainActivity.IS_BUYER,false)) {
+            if (buyerIota == null) {
+                buyerIota = createIota(context, "buyer");
+            }
+            return buyerIota;
+        } else {
+            if (sellerIota == null) {
+                sellerIota = createIota(context, "seller");
+            }
+            return sellerIota;
+        }
+    }
+
+    private static Iota createIota(Context context, String accountType) {
         String network = context.getResources().getString(R.string.network);
 
         if (network.equals("mainnet")) {
@@ -167,23 +174,28 @@ public class Account {
             providers = context.getResources().getStringArray(R.array.mainnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
-            toAddress = context.getResources().getString(R.string.mainnet_to_address);
-            senderSeed = context.getResources().getString(R.string.mainnet_sender_seed);
+            sellerSeed = context.getResources().getString(R.string.mainnet_seller_seed);
+            buyerSeed = context.getResources().getString(R.string.mainnet_buyer_seed);
         } else {
 
             providers = context.getResources().getStringArray(R.array.testnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.testnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.testnet_explorer_host);
-            toAddress = context.getResources().getString(R.string.testnet_to_address);
-            senderSeed = context.getResources().getString(R.string.testnet_sender_seed);
+            sellerSeed = context.getResources().getString(R.string.mainnet_seller_seed);
+            buyerSeed = context.getResources().getString(R.string.mainnet_buyer_seed);
         }
-
         System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
 
         Iota iota = null;
+        String seed;
+        if(accountType == "buyer") {
+            seed = buyerSeed;
+        } else {
+            seed = sellerSeed;
+        }
         for(int i = 0; i < providers.length; i++) {
             try {
-                iota = new Iota(providers[i], senderSeed);
+                iota = new Iota(providers[i], seed);
                 iota.minWeightMagnitude = minWeightMagnitude;
 
             } catch (Exception e) {

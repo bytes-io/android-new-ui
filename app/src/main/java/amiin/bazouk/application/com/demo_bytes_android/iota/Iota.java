@@ -1,15 +1,16 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.net.URL;
 
 import jota.IotaAPI;
 import jota.dto.response.GetBalancesAndFormatResponse;
+import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.GetNodeInfoResponse;
 import jota.dto.response.GetTransferResponse;
 import jota.error.ArgumentException;
@@ -131,11 +132,32 @@ public class Iota {
         GetTransferResponse getTransferResponse = iotaAPI.getTransfers(seed, security, start, end, inclusionStates);
         Bundle[] bundles = getTransferResponse.getTransfers();
         List<Transaction> transactions = new ArrayList<Transaction>();
-        for (Bundle b : bundles) {
-            transactions.add(b.getTransactions().get(0));
+        for(Bundle b : bundles) {
+            for(Transaction tx: b.getTransactions()) {
+                transactions.add(tx);
+            }
         }
 
         return transactions;
+    }
+
+    public List<String> getAddresses() throws ArgumentException {
+        List<String> addresses = new ArrayList<String>();
+
+        int i = -1;
+        while (true) {
+            i++;
+            String newAddress = this.getAddress(i);
+            if (iotaAPI.findTransactionsByAddresses(new String[] { newAddress }).getHashes().length == 0) {
+                return addresses;
+            } else {
+                addresses.add(newAddress);
+            }
+        }
+    }
+
+    public List<Transaction> findTransactionsObjectsByHashes(String[] hashes) throws ArgumentException {
+        return iotaAPI.findTransactionsObjectsByHashes(hashes);
     }
 
     public Integer getAvailableAddressIndex(Integer lastKnownAddressIndex) throws ArgumentException {
