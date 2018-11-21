@@ -54,7 +54,7 @@ public class Account {
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
-            tails = iota.makeTx(address, amountIni);
+            tails = iota.makeTx(address, 0);
             System.out.println("after makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
 
