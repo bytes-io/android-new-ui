@@ -13,6 +13,7 @@ import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
@@ -24,13 +25,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.RemoteException;
 import android.os.StrictMode;
-import android.preference.Preference;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -39,8 +37,6 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
-
-import com.android.dx.command.Main;
 
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
@@ -52,7 +48,6 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
-import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -92,6 +87,9 @@ public class MainActivity extends PermissionsActivity {
     private BroadcastReceiver mWifiScanReceiver = null;
     private Toolbar toolbar;
     private AppBarLayout appBar;
+    private Drawable resBackgroundToGoBack;
+    private int resTextColorToGoBack;
+
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
@@ -277,7 +275,7 @@ public class MainActivity extends PermissionsActivity {
                 buyButton.setEnabled(false);
             }
         });
-        //startClient();
+        startClient();
     }
 
     @Override
@@ -323,11 +321,7 @@ public class MainActivity extends PermissionsActivity {
                 @Override
                 public void run() {
                     mHandler.removeCallbacks(mRunnableServer);
-                    Button buyButton = findViewById(R.id.buy_button);
-                    buyButton.setEnabled(true);
-                    Button sellButton = findViewById(R.id.sell_button);
-                    sellButton.setBackgroundDrawable(buyButton.getBackground());
-                    changeButtonCharacteristics(sellButton, R.string.sell, buyButton.getTextColors().getDefaultColor());
+                    enableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),R.string.sell);
                     makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_sell));
                     changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
                     ((TextView) findViewById(R.id.number_of_clients)).setText("0");
@@ -424,11 +418,7 @@ public class MainActivity extends PermissionsActivity {
                             public void run() {
                                 setAlertDialogBuilder(getResources().getString(R.string.connected_to_server), getResources().getString(R.string.connected_to_server));
                                 getNetworkStatsClient();
-                                findViewById(R.id.sell_button).setEnabled(false);
-                                Button buyButton = findViewById(R.id.buy_button);
-                                buyButton.setEnabled(true);
-                                buyButton.setBackgroundColor(getResources().getColor(R.color.red));
-                                changeButtonCharacteristics(buyButton, R.string.disconnect, getResources().getColor(android.R.color.white));
+                                disableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button),getResources().getColor(R.color.red),R.string.disconnect, getResources().getColor(android.R.color.white));
                                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
                                 changeMenuColorAndTitle(R.string.buying, R.color.green);
                             }
@@ -461,11 +451,7 @@ public class MainActivity extends PermissionsActivity {
                         @Override
                         public void run() {
                             mHandler.removeCallbacks(mRunnableClient);
-                            Button sellButton = findViewById(R.id.sell_button);
-                            sellButton.setEnabled(true);
-                            Button buyButton = findViewById(R.id.buy_button);
-                            buyButton.setBackgroundResource(android.R.drawable.btn_default);
-                            changeButtonCharacteristics(buyButton, R.string.connect, sellButton.getTextColors().getDefaultColor());
+                            enableButtons(findViewById(R.id.sell_button),findViewById(R.id.buy_button),R.string.connect);
                             makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
                             changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
                             ((TextView) findViewById(R.id.data_buyer)).setText("0MB");
@@ -518,6 +504,23 @@ public class MainActivity extends PermissionsActivity {
         Request request = new Request.Builder().url("ws://192.168.43.1:38301").build();
         webSocketClient = client.newWebSocket(request, webSocketListener);
         client.dispatcher().executorService().shutdown();
+    }
+
+    private void disableButtons(Button buttonToDisable, Button buttonToChange,int resBackgroundToChange, int resTextToChange, int resTextColorToChange ) {
+        buttonToDisable.setEnabled(false);
+        buttonToChange.setEnabled(true);
+        resBackgroundToGoBack = buttonToChange.getBackground();
+        resTextColorToGoBack = buttonToChange.getTextColors().getDefaultColor();
+        buttonToChange.setBackgroundColor(resBackgroundToChange);
+        changeButtonCharacteristics(buttonToChange,resTextToChange, resTextColorToChange);
+    }
+
+    private void enableButtons(Button buttonToEnable, Button buttonToChange, int resTextToChange ) {
+        buttonToEnable.setEnabled(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            buttonToChange.setBackground(resBackgroundToGoBack);
+        }
+        changeButtonCharacteristics(buttonToChange,resTextToChange,resTextColorToGoBack);
     }
 
     private boolean connectToHotspot() {
@@ -750,10 +753,7 @@ public class MainActivity extends PermissionsActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                findViewById(R.id.buy_button).setEnabled(false);
-                Button sellButton = findViewById(R.id.sell_button);
-                sellButton.setBackgroundColor(getResources().getColor(R.color.red));
-                changeButtonCharacteristics(sellButton, R.string.stop_selling, getResources().getColor(android.R.color.white));
+                disableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),getResources().getColor(R.color.red), R.string.stop_selling, getResources().getColor(android.R.color.white));
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
                 changeMenuColorAndTitle(R.string.selling, R.color.green);
                 getNetworkStatsServer();
