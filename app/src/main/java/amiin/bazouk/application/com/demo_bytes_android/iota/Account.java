@@ -11,6 +11,7 @@ import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
+import amiin.bazouk.application.com.demo_bytes_android.activities.SettingsActivity;
 import jota.model.Transaction;
 
 public class Account {
@@ -25,31 +26,35 @@ public class Account {
     private static String buyerSeed;
     private static SharedPreferences preferences;
 
-    public static String paySeller(Context context, float amountIni,String address) throws AccountException {
+    public static String paySeller(Context context, float maxPriceSeller, String address) throws AccountException {
 
         Iota iota = getIota(context);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        /*float maxPrice = Float.parseFloat(
+        float maxPriceBuyerInGB = Float.parseFloat(
                 preferences.getString(
-                        ActivityBuyer.PREF_MAX_PRICE,
+                        SettingsActivity.PREF_MAX_PRICE_BUYER,
                         context.getResources().getString(R.string.default_pref_max_price)
                 ));
         float miotaUSD = Float.parseFloat(
                 preferences.getString(
                         MainActivity.PREF_MIOTA_USD,
                         context.getResources().getString(R.string.default_pref_miota_usd)
-                ));*/
+                ));
 
-        // assumptions
-        double consumptionInBytes = 1000;
+        int consumptionInMB = 1; // assumption
+
+        double costPerMB = maxPriceBuyerInGB / 1024;
+        double toPayIn$ = costPerMB * consumptionInMB;
+
+        long amountIni = Math.round((toPayIn$ / (miotaUSD / 1000))) ;
+        System.out.println("amountIni:" + amountIni);
 
         List<String> tails;
         try {
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
-            //ADRIEN : float cast to long
-            tails = iota.makeTx(address, (long)amountIni);
+            tails = iota.makeTx(address, amountIni);
             System.out.println("after makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
 
@@ -88,13 +93,6 @@ public class Account {
             throw new AccountException("ACCOUNT_ERROR", e);
         }
         return address;
-    }
-
-    public static String getCurrentAddressTemp(Context context) throws AccountException {
-
-        Iota iota = getIota(context);
-
-        return "to implemnet";
     }
 
     public static ResponseGetBalance getBalance(Context context) throws AccountException {
@@ -188,7 +186,7 @@ public class Account {
 
         Iota iota = null;
         String seed;
-        if(accountType == "buyer") {
+        if(accountType.equals("buyer")) {
             seed = buyerSeed;
         } else {
             seed = sellerSeed;

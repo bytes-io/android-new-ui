@@ -445,6 +445,7 @@ public class MainActivity extends PermissionsActivity {
                         }
                     });
                     paySellerThread.start();
+
                 }
             }
 
@@ -719,7 +720,7 @@ public class MainActivity extends PermissionsActivity {
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
                 if(message.equals(CONNECTION_OPENED)) {
                     try {
-                        conn.send("address"+Account.getCurrentAddressTemp(getApplicationContext()));
+                        conn.send("address"+Account.getCurrentAddress(getApplicationContext()));
                     } catch (AccountException e) {
                         e.printStackTrace();
                     }
@@ -767,10 +768,10 @@ public class MainActivity extends PermissionsActivity {
         checkIfConnectedToWifi();
     }
 
-    private void paySeller(float amountIni,String address) {
+    private void paySeller(float maxPriceSeller, String address) {
         System.out.println("Start the transaction");
         try {
-            Account.paySeller(this, amountIni,address);
+            Account.paySeller(this, maxPriceSeller, address);
         } catch (AccountException e) {
             System.out.println("Failed due to " + e.getMessage());
             e.printStackTrace();
