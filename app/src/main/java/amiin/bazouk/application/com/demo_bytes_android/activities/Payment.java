@@ -94,7 +94,7 @@ public class Payment extends AppCompatActivity {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.settings :
-                intent = new Intent(Payment.this,ActivityBuyer.class);
+                intent = new Intent(Payment.this,SettingsActivity.class);
                 startActivity(intent);
                 break;
             case R.id.payment :

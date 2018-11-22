@@ -12,6 +12,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
@@ -87,8 +88,6 @@ public class MainActivity extends PermissionsActivity {
     private BroadcastReceiver mWifiScanReceiver = null;
     private Toolbar toolbar;
     private AppBarLayout appBar;
-    private Drawable resBackgroundToGoBack;
-    private int resTextColorToGoBack;
 
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
@@ -436,7 +435,13 @@ public class MainActivity extends PermissionsActivity {
                     Thread paySellerThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            paySeller(maxPriceSeller,address);
+                            while(webSocketClient!=null) {
+                                long t = System.currentTimeMillis();
+                                while(true){
+                                    if (!(System.currentTimeMillis() < t + 60000)) break;
+                                }
+                                paySeller(maxPriceSeller, address);
+                            }
                         }
                     });
                     paySellerThread.start();
@@ -509,18 +514,17 @@ public class MainActivity extends PermissionsActivity {
     private void disableButtons(Button buttonToDisable, Button buttonToChange,int resBackgroundToChange, int resTextToChange, int resTextColorToChange ) {
         buttonToDisable.setEnabled(false);
         buttonToChange.setEnabled(true);
-        resBackgroundToGoBack = buttonToChange.getBackground();
-        resTextColorToGoBack = buttonToChange.getTextColors().getDefaultColor();
         buttonToChange.setBackgroundColor(resBackgroundToChange);
-        changeButtonCharacteristics(buttonToChange,resTextToChange, resTextColorToChange);
+        buttonToChange.setText(getResources().getString(resTextToChange));
+        buttonToChange.setTextColor(resTextColorToChange);
     }
 
     private void enableButtons(Button buttonToEnable, Button buttonToChange, int resTextToChange ) {
         buttonToEnable.setEnabled(true);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            buttonToChange.setBackground(resBackgroundToGoBack);
-        }
-        changeButtonCharacteristics(buttonToChange,resTextToChange,resTextColorToGoBack);
+        buttonToChange.setBackgroundResource(R.drawable.selector_background_buttons);
+        buttonToChange.setText(getResources().getString(resTextToChange));
+        ColorStateList colorStates = getResources().getColorStateList(R.color.selector_text_color_buttons);
+        buttonToChange.setTextColor(colorStates);
     }
 
     private boolean connectToHotspot() {
@@ -992,11 +996,6 @@ public class MainActivity extends PermissionsActivity {
                     startSellingThread.start();
                 }*/
         }
-    }
-
-    private void changeButtonCharacteristics(Button buttonCharacteristicsToChange, int resTextToChange, int resTextColorToChange){
-        buttonCharacteristicsToChange.setText(getResources().getString(resTextToChange));
-        buttonCharacteristicsToChange.setTextColor(resTextColorToChange);
     }
 
     private void makeLayoutsVisibleAndInvisible(LinearLayout layoutVisible, LinearLayout layoutInvisible){

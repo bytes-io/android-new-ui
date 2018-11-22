@@ -6,4 +6,5 @@
     <color name="red">#C42425</color>
     <color name="grey">#C9C9C9</color>
     <color name="green">#1AB658</color>
+    <color name="color_disabled_background_buttons">#EBEBE4</color>
 </resources>

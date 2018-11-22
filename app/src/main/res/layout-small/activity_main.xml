@@ -258,6 +258,8 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="1"
+                        android:textColor="@color/selector_text_color_buttons"
+                        android:background="@drawable/selector_background_buttons"
                         android:text="@string/buy_data" />
 
                     <Button
@@ -267,6 +269,8 @@
                         android:layout_marginLeft="20dp"
                         android:layout_marginRight="20dp"
                         android:layout_weight="1"
+                        android:textColor="@color/selector_text_color_buttons"
+                        android:background="@drawable/selector_background_buttons"
                         android:text="@string/sell_data" />
 
                 </LinearLayout>
