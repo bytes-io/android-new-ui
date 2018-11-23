@@ -2,6 +2,7 @@ package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
@@ -209,5 +210,57 @@ public class Account {
 
         iota.minWeightMagnitude = minWeightMagnitude;
         return iota;
+    }
+}
+
+class IotaData {
+    public void IotaData(Iota iota) {
+
+    }
+
+    public void getAddresses(Iota iota) {
+        new GetAddresses(iota).execute();
+    }
+}
+
+
+class GetAddresses extends AsyncTask<String, Integer, String> {
+    private Iota iota;
+
+    // a constructor so that you can pass the object and use
+    GetAddresses(Iota iota){
+        this.iota = iota;
+    }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+    }
+
+    @Override
+    protected String doInBackground(String... params) {
+        // get the string from params, which is an array
+        String myString = params[0];
+
+        // Do something that takes a long time, for example:
+        for (int i = 0; i <= 100; i++) {
+
+            // Do things
+
+            // Call this to update your progress
+            publishProgress(i);
+        }
+
+        return "this string is passed to onPostExecute";
+    }
+
+    @Override
+    protected void onProgressUpdate(Integer... values) {
+        super.onProgressUpdate(values);
+    }
+
+    @Override
+    protected void onPostExecute(String result) {
+        super.onPostExecute(result);
     }
 }
