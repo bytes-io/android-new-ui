@@ -18,20 +18,16 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
-
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
-import jota.error.ArgumentException;
 
 public class crypto_fragment extends Fragment {
 
     String address;
     String currentBalance;
+    private AlertDialog alertDialog;
 
     @Nullable
     @Override
@@ -49,7 +45,7 @@ public class crypto_fragment extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    currentBalance = "Current balance: $"+String.valueOf(Account.getBalance(getContext()).usd);
+                    currentBalance = "$"+String.valueOf(Account.getBalance(getContext()).usd);
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
@@ -88,29 +84,46 @@ public class crypto_fragment extends Fragment {
             }
         });
 
-        result.findViewById(R.id.make_withdrawal).setOnClickListener(new View.OnClickListener() {
+        result.findViewById(R.id.withdrawBtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 final TextView addressEmptyTextView =  result.findViewById(R.id.address_empty);
                 addressEmptyTextView.setText("");
                 final TextView amountEmptyTextView = result.findViewById(R.id.amount_empty);
                 amountEmptyTextView.setText("");
+                AlertDialog.Builder builder;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FragmentActivity fragmentActivity = getActivity();
+                            if(fragmentActivity!=null) {
+                                fragmentActivity.finish();
+                            }
+                        }
+                    });
+                } else {
+                    builder = new AlertDialog.Builder(getContext()).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            FragmentActivity fragmentActivity = getActivity();
+                            if(fragmentActivity!=null) {
+                                fragmentActivity.finish();
+                            }
+                        }
+                    });
+                }
                 Thread makeWithdrawalThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        final AlertDialog.Builder builder;
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                            builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
-                        } else {
-                            builder = new AlertDialog.Builder(getContext());
-                        }
                         String messageBuilder;
                         EditText iotaAddressEditText = result.findViewById(R.id.iota_address_withdraw);
                         EditText amountWithdrawEditText = result.findViewById(R.id.amount_withdraw);
                         String iotaAddress = iotaAddressEditText.getText().toString();
                         String amountWithdraw = amountWithdrawEditText.getText().toString();
+                        FragmentActivity fragmentActivity;
                         if(iotaAddress.isEmpty()){
-                            FragmentActivity fragmentActivity = getActivity();
+                            fragmentActivity = getActivity();
                             if(fragmentActivity!=null) {
                                 fragmentActivity.runOnUiThread(new Runnable() {
                                     @Override
@@ -122,7 +135,7 @@ public class crypto_fragment extends Fragment {
                             return;
                         }
                         else if (amountWithdraw.isEmpty()){
-                            FragmentActivity fragmentActivity = getActivity();
+                            fragmentActivity = getActivity();
                             if(fragmentActivity!=null) {
                                 fragmentActivity.runOnUiThread(new Runnable() {
                                     @Override
@@ -133,22 +146,29 @@ public class crypto_fragment extends Fragment {
                             }
                             return;
                         }
-                        FragmentActivity fragmentActivity = getActivity();
+                        fragmentActivity = getActivity();
+                        if(fragmentActivity!=null) {
+                            fragmentActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    alertDialog = builder.setMessage("Loading...").create();
+                                    alertDialog.show();
+                                }
+                            });
+                        }
                         ResponsePayOut responsePayOut;
                         try {
                             responsePayOut = Account.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
-                            if(fragmentActivity!=null) {
+                            if(alertDialog!=null && alertDialog.isShowing()) {
+                                fragmentActivity = getActivity();
                                 fragmentActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        builder.setTitle(R.string.withdrawal_confirmation)
-                                                .setMessage("Failed due to " + e.getMessage())
-                                                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog, int which) {
-                                                    }
-                                                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                                        if(alertDialog.isShowing()) {
+                                            alertDialog.setMessage("Failed due to " + e.getMessage());
+                                        }
                                     }
                                 });
                             }
@@ -172,16 +192,14 @@ public class crypto_fragment extends Fragment {
                         else{
                             messageBuilder = "Hash: "+hash+"\n \n Link: "+link;
                         }
+                        fragmentActivity = getActivity();
                         if(fragmentActivity!=null) {
                             fragmentActivity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    builder.setTitle(R.string.withdrawal_confirmation)
-                                            .setMessage(messageBuilder)
-                                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog, int which) {
-                                                }
-                                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                                    if(alertDialog.isShowing()) {
+                                        alertDialog.setMessage(messageBuilder);
+                                    }
                                 }
                             });
                         }

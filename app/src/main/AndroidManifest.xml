@@ -54,8 +54,7 @@
             android:name=".activities.Payment"
             android:label="@string/title_activity_payment"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan"/>
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity
             android:name=".activities.AddACreditCardActivity"
             android:screenOrientation="portrait"
