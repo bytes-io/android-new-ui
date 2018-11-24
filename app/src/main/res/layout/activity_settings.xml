@@ -29,20 +29,26 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="49"
+        android:paddingTop="10dp"
         android:orientation="vertical">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:background="@color/grey">
+            android:background="#F5F9FC">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:background="#D6D6D6"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
+                android:padding="8dp"
                 android:layout_alignParentBottom="true"
                 android:text="BUYER"/>
 
@@ -52,11 +58,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"/>
+            android:background="#D6D6D6"/>
+
 
         <RelativeLayout
             android:id="@+id/layout_max_price_buyer"
             android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_height="0dp"
             android:layout_weight="4">
 
@@ -94,14 +103,18 @@
 
             <View
                 android:layout_width="match_parent"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
+                android:background="#D6D6D6"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_height="0dp"
             android:layout_weight="4">
 
@@ -138,13 +151,17 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
                 android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
+                android:background="#D6D6D6"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_height="0dp"
             android:layout_weight="4">
 
@@ -178,14 +195,8 @@
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
 
         </RelativeLayout>
-
 
     </LinearLayout>
 
@@ -200,14 +211,19 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="4"
-            android:background="@color/grey">
+            android:background="#F5F9FC">
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_alignParentTop="true"
+                android:background="#D6D6D6"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="15sp"
-                android:paddingStart="10dp"
-                android:paddingLeft="10dp"
+                android:padding="8dp"
                 android:layout_alignParentBottom="true"
                 android:text="SELLER"/>
 
@@ -217,12 +233,14 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_alignParentBottom="true"
-            android:background="@android:color/holo_red_dark"/>
+            android:background="#D6D6D6"/>
 
         <RelativeLayout
             android:id="@+id/layout_max_price_seller"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_weight="4">
 
             <TextView
@@ -261,12 +279,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:background="#D6D6D6"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_height="0dp"
             android:layout_weight="4">
 
@@ -304,12 +326,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:background="#D6D6D6"/>
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
+            android:paddingStart="10dp"
+            android:paddingLeft="10dp"
             android:layout_height="0dp"
             android:layout_weight="4">
 
@@ -347,7 +373,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_alignParentBottom="true"
-                android:background="@android:color/holo_red_dark"/>
+                android:paddingStart="10dp"
+                android:paddingLeft="10dp"
+                android:background="#D6D6D6"/>
 
         </RelativeLayout>
 

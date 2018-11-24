@@ -257,9 +257,9 @@ public class MainActivity extends PermissionsActivity {
         findViewById(R.id.wallet_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                System.out.println("wallet btn click");
-
-                getBalance();
+                Intent intent = new Intent(MainActivity.this, Payment.class);
+                intent.putExtra("is_crypto_fragment", true);
+                startActivity(intent);
             }
         });
     }
@@ -1012,18 +1012,12 @@ public class MainActivity extends PermissionsActivity {
     }
 
     private void setAlertDialogBuilder(String title, String message){
-        final AlertDialog.Builder builder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            builder = new AlertDialog.Builder(this, android.R.style.Theme_Material_Dialog_Alert);
-        } else {
-            builder = new AlertDialog.Builder(this);
-        }
-        builder.setTitle(title)
+        new AlertDialog.Builder(this).setTitle(title)
                 .setMessage(message)
-                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                .setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                     }
-                }).setIcon(android.R.drawable.ic_dialog_alert).show();
+                }).show();
     }
 
     @Override

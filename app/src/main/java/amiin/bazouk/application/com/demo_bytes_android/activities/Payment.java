@@ -68,6 +68,9 @@ public class Payment extends AppCompatActivity {
         if(getIntent().getBooleanExtra("is_history_intent",false)) {
             mViewPager.setCurrentItem(2);
         }
+        else if(getIntent().getBooleanExtra("is_crypto_fragment",false)){
+            mViewPager.setCurrentItem(1);
+        }
 
         TabLayout tabLayout = findViewById(R.id.tabs);
 

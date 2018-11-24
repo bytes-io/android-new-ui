@@ -11,6 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,32 +96,15 @@ public class crypto_fragment extends Fragment {
                 addressEmptyTextView.setText("");
                 final TextView amountEmptyTextView = result.findViewById(R.id.amount_empty);
                 amountEmptyTextView.setText("");
-                AlertDialog.Builder builder;
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FragmentActivity fragmentActivity = getActivity();
-                            if(fragmentActivity!=null) {
-                                fragmentActivity.finish();
-                            }
-                        }
-                    });
-                } else {
-                    builder = new AlertDialog.Builder(getContext()).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            FragmentActivity fragmentActivity = getActivity();
-                            if(fragmentActivity!=null) {
-                                fragmentActivity.finish();
-                            }
-                        }
-                    });
-                }
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
                 Thread makeWithdrawalThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        String messageBuilder;
+                        String message;
                         EditText iotaAddressEditText = result.findViewById(R.id.iota_address_withdraw);
                         EditText amountWithdrawEditText = result.findViewById(R.id.amount_withdraw);
                         String iotaAddress = iotaAddressEditText.getText().toString();
@@ -162,46 +150,58 @@ public class crypto_fragment extends Fragment {
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
                             if(alertDialog!=null && alertDialog.isShowing()) {
-                                fragmentActivity = getActivity();
-                                fragmentActivity.runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        if(alertDialog.isShowing()) {
-                                            alertDialog.setMessage("Failed due to " + e.getMessage());
+                                if(fragmentActivity!=null) {
+                                    fragmentActivity.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (alertDialog.isShowing()) {
+                                                alertDialog.setMessage("Failed due to " + e.getMessage());
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
                             }
                             e.printStackTrace();
                             return;
                         }
-                        String hash = null;
-                        String link = null;
-                        if(responsePayOut!=null) {
-                            hash = responsePayOut.hash;
-                            link = responsePayOut.link;
-                        }
+                        String hash = responsePayOut.hash;
+                        String link = responsePayOut.link;
                         long time = System.currentTimeMillis();
                         while(true){
                             if (!((hash == null && link == null) || System.currentTimeMillis() < time + 10000))
                                 break;
                         }
+
                         if(hash == null || link == null){
-                            messageBuilder = "Problem with withdrawal";
+                            message = "Problem with withdrawal";
+                            fragmentActivity = getActivity();
+                            if(fragmentActivity!=null) {
+                                fragmentActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(alertDialog.isShowing()) {
+                                            alertDialog.setMessage(message);
+                                        }
+                                    }
+                                });
+                            }
                         }
                         else{
-                            messageBuilder = "Hash: "+hash+"\n \n Link: "+link;
-                        }
-                        fragmentActivity = getActivity();
-                        if(fragmentActivity!=null) {
-                            fragmentActivity.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if(alertDialog.isShowing()) {
-                                        alertDialog.setMessage(messageBuilder);
+                            message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">Link</a></p>";
+                            Spanned messageWithLink = Html.fromHtml(message);
+
+                            fragmentActivity = getActivity();
+                            if(fragmentActivity!=null) {
+                                fragmentActivity.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(alertDialog.isShowing()) {
+                                            alertDialog.setMessage(messageWithLink);
+                                            ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+                                        }
                                     }
-                                }
-                            });
+                                });
+                            }
                         }
                     }
                 });
