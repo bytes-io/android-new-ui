@@ -14,7 +14,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
@@ -29,7 +28,11 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
+import android.support.design.widget.NavigationView;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -63,7 +66,7 @@ import okhttp3.Response;
 import okhttp3.WebSocket;
 import okhttp3.WebSocketListener;
 
-public class MainActivity extends PermissionsActivity {
+public class MainActivity extends PermissionsActivity implements NavigationView.OnNavigationItemSelectedListener{
 
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11;
     //private static final int PERMISSION_ACCESS_READ_PHONE_STATS_CODE = 12;
@@ -98,7 +101,7 @@ public class MainActivity extends PermissionsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.drawer_layout);
         if (android.os.Build.VERSION.SDK_INT > 9) {
             StrictMode.ThreadPolicy policy = new
                     StrictMode.ThreadPolicy.Builder().permitAll().build();
@@ -109,6 +112,14 @@ public class MainActivity extends PermissionsActivity {
         appBar = findViewById(R.id.appbar);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+
+        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView.setNavigationItemSelectedListener(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(IS_SELLER, false);
@@ -279,7 +290,7 @@ public class MainActivity extends PermissionsActivity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.buying_menu, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
@@ -856,6 +867,35 @@ public class MainActivity extends PermissionsActivity {
         return new WifiApManager().isWifiApEnabled();
     }
 
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        Intent intent;
+        int id = item.getItemId();
+        if (id == R.id.settings) {
+            intent = new Intent(MainActivity.this, SettingsActivity.class);
+            startActivity(intent);
+        } else if (id == R.id.payment) {
+            intent = new Intent(MainActivity.this, Payment.class);
+            startActivity(intent);
+        } else if (id == R.id.history) {
+            intent = new Intent(MainActivity.this, Payment.class);
+            intent.putExtra("is_history_intent", true);
+            startActivity(intent);
+        } else if (id == R.id.terms_privacy_policy) {
+
+        } else if (id == R.id.help_support) {
+
+        } else if (id == R.id.faq) {
+
+        } else if (id == R.id.visit_us_online) {
+
+        }
+
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
+        drawer.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
     enum WIFI_AP_STATE {
         WIFI_AP_STATE_DISABLING,
         WIFI_AP_STATE_DISABLED,
@@ -1009,6 +1049,7 @@ public class MainActivity extends PermissionsActivity {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this,resColor));
         }
+        findViewById(R.id.nav_header).setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
     }
 
     private void setAlertDialogBuilder(String title, String message){

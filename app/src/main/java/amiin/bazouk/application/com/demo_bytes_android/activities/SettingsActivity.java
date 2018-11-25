@@ -9,6 +9,8 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -70,6 +72,33 @@ public class SettingsActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        Intent intent;
+        switch (item.getItemId()) {
+            case R.id.settings:
+                intent = new Intent(SettingsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.payment:
+                intent = new Intent(SettingsActivity.this, Payment.class);
+                startActivity(intent);
+                break;
+            case R.id.history:
+                intent = new Intent(SettingsActivity.this, Payment.class);
+                intent.putExtra("is_history_intent", true);
+                startActivity(intent);
+                break;
+        }
+        return true;
     }
 
     @Override
