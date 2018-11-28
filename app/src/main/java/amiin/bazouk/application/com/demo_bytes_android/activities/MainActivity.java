@@ -17,6 +17,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.TrafficStats;
+import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
 import android.net.wifi.WifiManager;
@@ -97,6 +98,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
     private static SharedPreferences preferences;
+    private NavigationView navigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -118,7 +120,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        NavigationView navigationView = findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
@@ -200,7 +202,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 System.out.println("Value of Tx: " + res[1]);
 
                 if (server != null) {
-                    ((TextView) findViewById(R.id.data_seller)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
+                    //((TextView) findViewById(R.id.data_seller)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
                     mHandler.postDelayed(mRunnableServer, 10000);
                 }
             }
@@ -215,7 +217,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 System.out.println("Value of Rx: " + res[0]);
                 System.out.println("Value of Tx: " + res[1]);
 
-                ((TextView) findViewById(R.id.data_buyer)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
+                //((TextView) findViewById(R.id.data_buyer)).setText(String.valueOf(((double) (res[0] + res[1])) / 1048576) + "MB");
                 mHandler.postDelayed(mRunnableClient, 10000);
             }
         };
@@ -333,9 +335,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     mHandler.removeCallbacks(mRunnableServer);
                     enableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),R.string.sell);
                     makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_sell));
-                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
+                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.selector_text_drawer,R.color.selector_icon_drawer);
                     ((TextView) findViewById(R.id.number_of_clients)).setText("0");
-                    ((TextView) findViewById(R.id.data_seller)).setText("0MB");
+                    //((TextView) findViewById(R.id.data_seller)).setText("0MB");
                 }
             });
         } catch (IOException e) {
@@ -430,7 +432,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 getNetworkStatsClient();
                                 disableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button),getResources().getColor(R.color.red),R.string.disconnect, getResources().getColor(android.R.color.white));
                                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
-                                changeMenuColorAndTitle(R.string.buying, R.color.green);
+                                changeMenuColorAndTitle(R.string.buying, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                             }
                         });
                         webSocket.send(CONNECTION_OPENED);
@@ -469,8 +471,8 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                             mHandler.removeCallbacks(mRunnableClient);
                             enableButtons(findViewById(R.id.sell_button),findViewById(R.id.buy_button),R.string.connect);
                             makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
-                            changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary);
-                            ((TextView) findViewById(R.id.data_buyer)).setText("0MB");
+                            changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.selector_text_drawer,R.color.selector_icon_drawer);
+                            //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
                             setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
                         }
                     });
@@ -770,7 +772,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             public void run() {
                 disableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),getResources().getColor(R.color.red), R.string.stop_selling, getResources().getColor(android.R.color.white));
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
-                changeMenuColorAndTitle(R.string.selling, R.color.green);
+                changeMenuColorAndTitle(R.string.selling, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                 getNetworkStatsServer();
             }
         });
@@ -882,13 +884,25 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             intent.putExtra("is_history_intent", true);
             startActivity(intent);
         } else if (id == R.id.terms_privacy_policy) {
+            Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
+            startActivity(visitUsOnlineIntent);
 
         } else if (id == R.id.help_support) {
+            Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/#team"));
+            startActivity(visitUsOnlineIntent);
+
 
         } else if (id == R.id.faq) {
+            Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
+            startActivity(visitUsOnlineIntent);
 
         } else if (id == R.id.visit_us_online) {
-
+            Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
+            startActivity(visitUsOnlineIntent);
         }
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
@@ -1043,13 +1057,17 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         layoutInvisible.setVisibility(View.INVISIBLE);
     }
 
-    private void changeMenuColorAndTitle(int resTitle, int resColor){
+    private void changeMenuColorAndTitle(int resTitle, int resColor, int selectorTextDrawer, int selectorIconDrawer){
         toolbar.setTitle(resTitle);
         appBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(ContextCompat.getColor(this,resColor));
         }
         findViewById(R.id.nav_header).setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
+        ColorStateList colorStatesListText = getResources().getColorStateList(selectorTextDrawer);
+        ColorStateList colorStatesListIcon = getResources().getColorStateList(selectorIconDrawer);
+        navigationView.setItemTextColor(colorStatesListText);
+        navigationView.setItemIconTintList(colorStatesListIcon);
     }
 
     private void setAlertDialogBuilder(String title, String message){
@@ -1067,6 +1085,12 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         if(mWifiScanReceiver!=null) {
             unregisterReceiver(mWifiScanReceiver);
         }
+    }
+
+    @Override
+    public void onResume(){
+        super.onResume();
+        navigationView.getMenu().getItem(0).setChecked(true);
     }
 
     @Override

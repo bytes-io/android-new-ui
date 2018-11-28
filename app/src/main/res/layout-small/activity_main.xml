@@ -88,7 +88,7 @@
                 android:text="Good" />
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="0MB" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="EUR 10.42 / 200" />
+                android:text="EUR 2.20" />
         </LinearLayout>
 
     </LinearLayout>
@@ -162,7 +162,7 @@
                 android:text="Good" />
         </LinearLayout>
 
-        <LinearLayout
+        <!--<LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -181,7 +181,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="end"
                 android:text="0MB" />
-        </LinearLayout>
+        </LinearLayout>-->
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="EUR 10.42 / 200" />
+                android:text="EUR 2.20" />
         </LinearLayout>
 
     </LinearLayout>
