@@ -440,6 +440,8 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     } else {
                         System.out.println("The transaction wont be made");
                         webSocketClient.close(CLIENT_DISCONNECTED_CODE, PRICE_NOT_FOUND);
+                        webSocketClient = null;
+                        client = null;
                     }
                 }
                 else if(message.substring(0,7).equals("address")){
