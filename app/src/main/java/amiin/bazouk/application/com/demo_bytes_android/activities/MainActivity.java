@@ -56,7 +56,9 @@ import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
@@ -76,6 +78,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public static final String IS_BUYER = "is_buyer";
     private static final String PRICE_NOT_FOUND = "Price not found";
     private static final String CONNECTION_OPENED = "connection_opened";
+    private static final String CLIENT_CLOSE_THE_CONNECTION = "client_close_the_connection";
     private WebSocketServer server;
     private OkHttpClient client;
     private WebSocket webSocketClient;
@@ -87,12 +90,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private long mStartRXServer = 0;
     private long mStartTXClient = 0;
     private long mStartRXClient = 0;
-    private List<ScanResult> wifiList = new ArrayList<>();
     private WifiManager mWifiManager;
     private BroadcastReceiver mWifiScanReceiver = null;
     private Toolbar toolbar;
     private AppBarLayout appBar;
-
+    private int counterException = 0;
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
@@ -111,6 +113,36 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        mWifiScanReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context c, Intent intent) {
+                if (intent.getAction()!= null && intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
+                    List<ScanResult> wifiList = new ArrayList<>();
+                    mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+                    if(mWifiManager!=null) {
+                        wifiList = mWifiManager.getScanResults();
+                        for (Iterator<ScanResult> iterator = wifiList.iterator(); iterator.hasNext(); ) {
+                            ScanResult scanResult = iterator.next();
+                            if (scanResult.SSID.length() <= 5 || !scanResult.SSID.substring(0, 6).equals("bytes-")) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                    if (connectToHotspot(wifiList)) {
+                        connectToServer();
+                    } else {
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                findViewById(R.id.sell_button).setEnabled(true);
+                                findViewById(R.id.buy_button).setEnabled(true);
+                            }
+                        });
+                    }
+                    unregisterReceiver(mWifiScanReceiver);
+                }
+            }
+        };
         appBar = findViewById(R.id.appbar);
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -259,7 +291,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 startBuying();
                             }
                         } else {
-                            webSocketClient.close(CLIENT_DISCONNECTED_CODE, "");
+                            webSocketClient.close(CLIENT_DISCONNECTED_CODE, CLIENT_CLOSE_THE_CONNECTION);
                         }
                     }
                 });
@@ -370,17 +402,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private void startClient() {
-        getWifiList();
-        if (connectToHotspot()) {
-            connectToServer();
-        } else {
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    findViewById(R.id.sell_button).setEnabled(true);
-                    findViewById(R.id.buy_button).setEnabled(true);
-                }
-            });
+        registerReceiver(mWifiScanReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
+        mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+        if(mWifiManager!=null){
+            mWifiManager.setWifiEnabled(true);
+            mWifiManager.startScan();
         }
     }
 
@@ -440,7 +466,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     } else {
                         System.out.println("The transaction wont be made");
                         webSocketClient.close(CLIENT_DISCONNECTED_CODE, PRICE_NOT_FOUND);
-                        webSocketClient = null;
                         client = null;
                     }
                 }
@@ -450,16 +475,23 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     Thread paySellerThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            while(webSocketClient!=null) {
+                            while(client!=null) {
                                 long t = System.currentTimeMillis();
                                 while(true){
-                                    if (!(System.currentTimeMillis() < t + 60000)) break;
+                                    if (client==null|| !(System.currentTimeMillis() < t + 60000)) break;
                                 }
                                 paySeller(maxPriceSeller, address);
                             }
                         }
                     });
                     paySellerThread.start();
+                }
+            }
+
+            @Override
+            public void onClosing(WebSocket webSocket, int code, String reason){
+                if(!reason.equals(CLIENT_CLOSE_THE_CONNECTION)&&!reason.equals(PRICE_NOT_FOUND)) {
+                    onClosed(webSocket, code, reason);
                 }
             }
 
@@ -484,7 +516,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     mStartTXClient = 0;
                     mStartRXClient = 0;
                     client = null;
-                    webSocketClient = null;
                 }
                 else{
                     runOnUiThread(new Runnable() {
@@ -500,28 +531,38 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, final Response response) {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        findViewById(R.id.sell_button).setEnabled(true);
-                        findViewById(R.id.buy_button).setEnabled(true);
-                    }
-                });
                 if (t.getClass() == ConnectException.class) {
-                    mWifiManager.setWifiEnabled(false);
+                    if(counterException<5){
+                        connectToServer();
+                        counterException++;
+                    }
+                    else {
+                        counterException=0;
+                        mWifiManager.setWifiEnabled(false);
+                        client = null;
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                findViewById(R.id.sell_button).setEnabled(true);
+                                findViewById(R.id.buy_button).setEnabled(true);
+                                setAlertDialogBuilder(getResources().getString(R.string.connection_failed), getResources().getString(R.string.connection_of_client_failed));
+                            }
+                        });
+                    }
+                }
+                else{
+                    onClosed(webSocket, CLIENT_DISCONNECTED_CODE, "");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setAlertDialogBuilder(getResources().getString(R.string.connection_failed),getResources().getString(R.string.connection_of_client_failed));
+                            findViewById(R.id.sell_button).setEnabled(true);
+                            findViewById(R.id.buy_button).setEnabled(true);
                         }
                     });
                 }
-                if (t.getClass() == SocketException.class) {
-                    onClosed(webSocket, CLIENT_DISCONNECTED_CODE, "");
-                }
             }
         };
-        Request request = new Request.Builder().url("ws://192.168.43.1:38301").build();
+        Request request = new Request.Builder().url("ws://192.168.43.1:8080").build();
         webSocketClient = client.newWebSocket(request, webSocketListener);
         client.dispatcher().executorService().shutdown();
     }
@@ -542,34 +583,30 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         buttonToChange.setTextColor(colorStates);
     }
 
-    private boolean connectToHotspot() {
-        long time = System.currentTimeMillis();
-        while (System.currentTimeMillis() < time + 15000) {
-            if (wifiList.size() > 0) {
-                break;
-            }
+    private boolean connectToHotspot(List<ScanResult> wifiList) {
+        if(wifiList.size()==0){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    setAlertDialogBuilder("No wifi around","List of wifis around is empty");
+                }
+            });
+            return false;
         }
         boolean isConnected = false;
         for (ScanResult scanResult : wifiList) {
-            String ssid = scanResult.SSID;
-            if (ssid.length() >= 6 && ssid.substring(0, 6).equals("bytes-")) {
-                connect(ssid, scanResult.capabilities);
-                time = System.currentTimeMillis();
-                while (System.currentTimeMillis() < time + 15000) {
-                    if (isConnectedToInternet(getApplicationContext())) {
-                        isConnected = true;
-                        break;
-                    }
+            connect(scanResult.SSID, scanResult.capabilities);
+            long time = System.currentTimeMillis();
+            while (System.currentTimeMillis() < time + 15000) {
+                if (isConnectedToInternet(getApplicationContext())) {
+                    isConnected = true;
+                    break;
                 }
             }
             if (isConnected) {
                 break;
             }
         }
-        if (mWifiScanReceiver != null) {
-            unregisterReceiver(mWifiScanReceiver);
-        }
-        mWifiScanReceiver = null;
         wifiList = new ArrayList<>();
         if (!isConnected) {
             runOnUiThread(new Runnable() {
@@ -591,6 +628,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             WifiConfiguration conf = new WifiConfiguration();
             conf.SSID = String.format("\"%s\"", ssid);
             String password = "12345678";
+
             conf.status = WifiConfiguration.Status.ENABLED;
             conf.priority = 40;
             if (capabilities.equals("WEP")) {
@@ -648,8 +686,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
 
             mWifiManager.disconnect();
-            mWifiManager.enableNetwork(netId, true);
-            mWifiManager.reconnect();
+            boolean a = mWifiManager.enableNetwork(netId, true);
+            boolean b = mWifiManager.reconnect();
+            int c  = 0;
+            c = 3;
+            c++;
         }
     }
 
@@ -713,7 +754,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
 
         String ipAddress = "192.168.43.1";
-        InetSocketAddress inetSockAddress = new InetSocketAddress(ipAddress, 38301);
+        InetSocketAddress inetSockAddress = new InetSocketAddress(ipAddress, 8080);
         server = new WebSocketServer(inetSockAddress) {
             @Override
             public void onOpen(org.java_websocket.WebSocket conn, ClientHandshake handshake) {
@@ -1009,25 +1050,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         mHandler.postDelayed(mRunnableServer, 1000);
     }
 
-    private void getWifiList() {
-        if(mWifiManager!=null) {
-            mWifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-        }
-        if(mWifiManager!=null){
-            mWifiManager.setWifiEnabled(true);
-            mWifiScanReceiver = new BroadcastReceiver() {
-                @Override
-                public void onReceive(Context c, Intent intent) {
-                    if (intent.getAction()!= null && intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-                        wifiList = mWifiManager.getScanResults();
-                    }
-                }
-            };
-            registerReceiver(mWifiScanReceiver,new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-            mWifiManager.startScan();
-        }
-    }
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         switch (requestCode) {
@@ -1085,7 +1107,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public void onPause(){
         super.onPause();
         if(mWifiScanReceiver!=null) {
-            unregisterReceiver(mWifiScanReceiver);
         }
     }
 
@@ -1098,16 +1119,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     @Override
     public void finish(){
         super.finish();
-        if(mWifiScanReceiver!=null) {
-            unregisterReceiver(mWifiScanReceiver);
-        }
     }
 
     @Override
     public void onDestroy(){
         super.onDestroy();
-        if(mWifiScanReceiver!=null) {
-            unregisterReceiver(mWifiScanReceiver);
-        }
     }
 }
