@@ -6,8 +6,8 @@ android {
         applicationId "amiin.bazouk.application.com.demo_bytes_android"
         minSdkVersion 15
         targetSdkVersion 27
-        versionCode 17
-        versionName "17.0"
+        versionCode 18
+        versionName "18.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
@@ -33,7 +33,6 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation 'com.linkedin.dexmaker:dexmaker-mockito:2.12.1'
     implementation 'com.github.iotaledger:iota-java:1.0.0-beta1'
-    implementation 'com.squareup.okhttp3:okhttp:3.11.0'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'

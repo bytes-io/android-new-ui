@@ -131,6 +131,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     if (connectToHotspot(wifiList)) {
                         connectToServer();
                     } else {
+                        mWifiManager.setWifiEnabled(false);
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -490,13 +491,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
             @Override
             public void onClosing(WebSocket webSocket, int code, String reason){
-                if(!reason.equals(CLIENT_CLOSE_THE_CONNECTION)&&!reason.equals(PRICE_NOT_FOUND)) {
-                    onClosed(webSocket, code, reason);
-                }
-            }
-
-            @Override
-            public void onClosed(WebSocket webSocket, int code, String reason) {
                 mWifiManager.setWifiEnabled(false);
                 if(!reason.equals(PRICE_NOT_FOUND)) {
                     runOnUiThread(new Runnable() {
@@ -551,7 +545,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     }
                 }
                 else{
-                    onClosed(webSocket, CLIENT_DISCONNECTED_CODE, "");
+                    onClosing(webSocket, CLIENT_DISCONNECTED_CODE, "");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -607,7 +601,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 break;
             }
         }
-        wifiList = new ArrayList<>();
         if (!isConnected) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -686,11 +679,8 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
 
             mWifiManager.disconnect();
-            boolean a = mWifiManager.enableNetwork(netId, true);
-            boolean b = mWifiManager.reconnect();
-            int c  = 0;
-            c = 3;
-            c++;
+            mWifiManager.enableNetwork(netId, true);
+            mWifiManager.reconnect();
         }
     }
 
@@ -782,7 +772,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            if(server!=null) {
+                                ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            }
                             setAlertDialogBuilder(getResources().getString(R.string.new_client_connected), getResources().getString(R.string.new_client_connected));
                         }
                     });
