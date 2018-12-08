@@ -515,7 +515,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            setAlertDialogBuilder("Seller not found","None seller was found for this price");
+                            setAlertDialogBuilder("Seller not found","Please reduce the buyer price if you want to match a seller price (go to settings)");
                             findViewById(R.id.sell_button).setEnabled(true);
                             findViewById(R.id.buy_button).setEnabled(true);
                         }
@@ -526,7 +526,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             @Override
             public void onFailure(WebSocket webSocket, Throwable t, final Response response) {
                 if (t.getClass() == ConnectException.class) {
-                    if(counterException<5){
+                    if(counterException<10){
                         connectToServer();
                         counterException++;
                     }
