@@ -42,8 +42,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
-
+import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ClientHandshake;
+import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
@@ -53,6 +54,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Enumeration;
@@ -63,11 +66,6 @@ import java.util.Random;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
 import amiin.bazouk.application.com.demo_bytes_android.iota.*;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import okhttp3.WebSocket;
-import okhttp3.WebSocketListener;
 
 public class MainActivity extends PermissionsActivity implements NavigationView.OnNavigationItemSelectedListener{
 
@@ -80,8 +78,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private static final String CONNECTION_OPENED = "connection_opened";
     private static final String CLIENT_CLOSE_THE_CONNECTION = "client_close_the_connection";
     private WebSocketServer server;
-    private OkHttpClient client;
-    private WebSocket webSocketClient;
+    private WebSocketClient webSocketClient;
     private int CLIENT_DISCONNECTED_CODE = 1000;
     private Runnable mRunnableServer;
     private Runnable mRunnableClient;
@@ -129,7 +126,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         }
                     }
                     if (connectToHotspot(wifiList)) {
-                        connectToServer();
+                        try {
+                            connectToServer();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         mWifiManager.setWifiEnabled(false);
                         runOnUiThread(new Runnable() {
@@ -284,7 +285,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 Thread clientThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        if (client == null) {
+                        if (webSocketClient == null) {
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
                                 requestPermissions(new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, PERMISSION_ACCESS_COARSE_LOCATION_CODE);
                             }
@@ -292,7 +293,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 startBuying();
                             }
                         } else {
-                            webSocketClient.close(CLIENT_DISCONNECTED_CODE, CLIENT_CLOSE_THE_CONNECTION);
+                            webSocketClient.close();
                         }
                     }
                 });
@@ -411,34 +412,17 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
     }
 
-    private void connectToServer() {
-        client = new OkHttpClient();
-        WebSocketListener webSocketListener = new WebSocketListener() {
+    private void connectToServer() throws URISyntaxException {
+        webSocketClient = new WebSocketClient(new URI( "ws://192.168.43.1:8080" )) {
 
             private float maxPriceSeller = 0;
 
             @Override
-            public void onOpen(WebSocket webSocket, Response response) {
-                Thread startPaymentThread = new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isConnectedToInternet(getApplicationContext())) {
-                            //paySeller();
-                        }
-                        /*while(webSocketClient!=null){
-                            long t = System.currentTimeMillis();
-                            while(true){
-                                if (!(System.currentTimeMillis() < t + 60000)) break;
-                            }
-                            //pay();
-                        }*/
-                    }
-                });
-                //startPaymentThread.start();
+            public void onOpen(ServerHandshake handshakedata) {
             }
 
             @Override
-            public void onMessage(WebSocket webSocket, String message) {
+            public void onMessage(String message) {
                 if(message.substring(0,5).equals("price")) {
                     float maxPriceSeller = Float.valueOf(message.substring(5));
                     float maxPriceBuyer = Float.parseFloat(preferences.getString(
@@ -462,12 +446,12 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 changeMenuColorAndTitle(R.string.buying, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                             }
                         });
-                        webSocket.send(CONNECTION_OPENED);
+                        webSocketClient.send(CONNECTION_OPENED);
                         this.maxPriceSeller = maxPriceSeller;
                     } else {
                         System.out.println("The transaction wont be made");
-                        webSocketClient.close(CLIENT_DISCONNECTED_CODE, PRICE_NOT_FOUND);
-                        client = null;
+                        getConnection().close(CLIENT_DISCONNECTED_CODE, PRICE_NOT_FOUND);
+                        webSocketClient = null;
                     }
                 }
                 else if(message.substring(0,7).equals("address")){
@@ -476,10 +460,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     Thread paySellerThread = new Thread(new Runnable() {
                         @Override
                         public void run() {
-                            while(client!=null) {
+                            while(webSocketClient!=null) {
                                 long t = System.currentTimeMillis();
                                 while(true){
-                                    if (client==null|| !(System.currentTimeMillis() < t + 60000)) break;
+                                    if (webSocketClient==null|| !(System.currentTimeMillis() < t + 60000)) break;
                                 }
                                 paySeller(maxPriceSeller, address);
                             }
@@ -490,8 +474,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
 
             @Override
-            public void onClosing(WebSocket webSocket, int code, String reason){
-                mWifiManager.setWifiEnabled(false);
+            public void onClose(int code, String reason, boolean remote){
                 if(!reason.equals(PRICE_NOT_FOUND)) {
                     runOnUiThread(new Runnable() {
                         @Override
@@ -509,7 +492,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     editor.apply();
                     mStartTXClient = 0;
                     mStartRXClient = 0;
-                    client = null;
                 }
                 else{
                     runOnUiThread(new Runnable() {
@@ -521,19 +503,25 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         }
                     });
                 }
+                mWifiManager.setWifiEnabled(false);
+                webSocketClient = null;
             }
 
             @Override
-            public void onFailure(WebSocket webSocket, Throwable t, final Response response) {
-                if (t.getClass() == ConnectException.class) {
-                    if(counterException<10){
-                        connectToServer();
+            public void onError(Exception ex) {
+                if (ex.getClass() == ConnectException.class) {
+                    /*if(counterException<10){
+                        try {
+                            connectToServer();
+                        } catch (URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                         counterException++;
                     }
-                    else {
+                    else {*/
                         counterException=0;
                         mWifiManager.setWifiEnabled(false);
-                        client = null;
+                        webSocketClient = null;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -542,10 +530,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 setAlertDialogBuilder(getResources().getString(R.string.connection_failed), getResources().getString(R.string.connection_of_client_failed));
                             }
                         });
-                    }
+                    //}
                 }
                 else{
-                    onClosing(webSocket, CLIENT_DISCONNECTED_CODE, "");
+                    getConnection().close(CLIENT_DISCONNECTED_CODE, "");
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
@@ -556,9 +544,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 }
             }
         };
-        Request request = new Request.Builder().url("ws://192.168.43.1:8080").build();
-        webSocketClient = client.newWebSocket(request, webSocketListener);
-        client.dispatcher().executorService().shutdown();
+        webSocketClient.connect();
     }
 
     private void disableButtons(Button buttonToDisable, Button buttonToChange,int resBackgroundToChange, int resTextToChange, int resTextColorToChange ) {
@@ -697,7 +683,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private void startServer() {
-        if (!isConnectedToInternet(getApplicationContext())) {
+        /*if (!isConnectedToInternet(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -705,7 +691,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 }
             });
             return;
-        }
+        }*/
         turnOnHotspot();
         long time = System.currentTimeMillis();
         boolean isHotspotTurnOn = false;
@@ -787,7 +773,12 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            if(server!=null) {
+                                ((TextView) findViewById(R.id.number_of_clients)).setText(String.valueOf(server.connections().size()));
+                            }
+                            else{
+                                ((TextView) findViewById(R.id.number_of_clients)).setText("0");
+                            }
                             setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_server_closed));
                         }
                     });
@@ -812,7 +803,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
         });
         //paySeller();
-        checkIfConnectedToWifi();
+        //checkIfConnectedToWifi();
     }
 
     private void paySeller(float amountIni,String address) {
