@@ -13,10 +13,12 @@
     <uses-permission
         android:name="android.permission.PACKAGE_USAGE_STATS"
         tools:ignore="ProtectedPermissions" />
-    <!--<uses-permission
+    <!--
+        <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
         tools:node="replace"
-        tools:remove="android:maxSdkVersion" />-->
+        tools:remove="android:maxSdkVersion" />
+    -->
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
         tools:ignore="ProtectedPermissions" />
@@ -32,11 +34,6 @@
             android:name=".activities.MainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
         </activity>
         <activity
             android:name=".activities.SettingsActivity"
@@ -54,11 +51,17 @@
             android:name=".activities.Payment"
             android:label="@string/title_activity_payment"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activities.AddACreditCardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".activities.firsttimesactivities.JoinActivity"><intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+        </activity>
+        <activity android:name=".activities.firsttimesactivities.CodeActivity"></activity>
     </application>
 
 </manifest>

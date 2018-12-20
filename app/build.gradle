@@ -4,12 +4,16 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "amiin.bazouk.application.com.demo_bytes_android"
-        minSdkVersion 15
+        minSdkVersion 17
         targetSdkVersion 27
-        versionCode 18
-        versionName "18.0"
+        versionCode 19
+        versionName "19.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
+        packagingOptions {
+            exclude 'META-INF/mimetypes.default'
+            exclude 'META-INF/mailcap.default'
+        }
     }
     buildTypes {
         release {
@@ -25,6 +29,9 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    implementation files ('libs/activation.jar')
+    implementation files ('libs/mail.jar')
+    implementation files ('libs/additionnal.jar')
     implementation 'com.android.support:appcompat-v7:27.1.1'
     implementation 'com.android.support:design:27.1.1'
     implementation 'com.android.support.constraint:constraint-layout:1.1.3'

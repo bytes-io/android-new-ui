@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.firsttimesactivities.JoinActivity">
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:src="@mipmap/bytes"/>
+
+    <amiin.bazouk.application.com.demo_bytes_android.Pinview
+        android:layout_centerInParent="true"
+        android:id="@+id/pinview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cursorVisible="false"
+        app:hint=""
+        app:inputType="number"
+        app:forceKeyboard="true"
+        app:password="false"
+        app:pinBackground="@drawable/background_space_code"
+        app:pinHeight="40dp"
+        app:pinLength="6"
+        app:pinWidth="40dp" />
+
+
+
+</RelativeLayout>

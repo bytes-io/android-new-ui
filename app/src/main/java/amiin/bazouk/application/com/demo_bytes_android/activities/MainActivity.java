@@ -20,10 +20,12 @@ import android.net.TrafficStats;
 import android.net.Uri;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiConfiguration;
+import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.HandlerThread;
 import android.os.RemoteException;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -58,6 +60,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
@@ -125,12 +129,34 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                             }
                         }
                     }
-                    if (connectToHotspot(wifiList)) {
-                        try {
-                            connectToServer();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
+                    Collections.sort(wifiList, new Comparator<ScanResult>() {
+                        @Override
+                        public int compare(ScanResult o1, ScanResult o2) {
+                            if(Math.abs(o1.level)>Math.abs(o2.level)){
+                                return 1;
+                            }
+                            else if(Math.abs(o1.level)==Math.abs(o2.level)){
+                                return 0;
+                            }
+                            else{
+                                return -1;
+                            }
                         }
+                    });
+                    if (connectToHotspot(wifiList)) {
+                        HandlerThread handlerThread = new HandlerThread("connection to server thread");
+                        handlerThread.start();
+                        Handler handlerConnectionToServer = new Handler(handlerThread.getLooper());
+                        handlerConnectionToServer.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    connectToServer();
+                                } catch (URISyntaxException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        }, 5000);
                     } else {
                         mWifiManager.setWifiEnabled(false);
                         runOnUiThread(new Runnable() {
@@ -475,33 +501,35 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
             @Override
             public void onClose(int code, String reason, boolean remote){
-                if(!reason.equals(PRICE_NOT_FOUND)) {
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mHandler.removeCallbacks(mRunnableClient);
-                            enableButtons(findViewById(R.id.sell_button),findViewById(R.id.buy_button),R.string.connect);
-                            makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
-                            changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.selector_text_drawer,R.color.selector_icon_drawer);
-                            //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
-                            setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
-                        }
-                    });
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putBoolean(IS_BUYER, false);
-                    editor.apply();
-                    mStartTXClient = 0;
-                    mStartRXClient = 0;
-                }
-                else{
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            setAlertDialogBuilder("Seller not found","Please reduce the buyer price if you want to match a seller price (go to settings)");
-                            findViewById(R.id.sell_button).setEnabled(true);
-                            findViewById(R.id.buy_button).setEnabled(true);
-                        }
-                    });
+                switch (reason) {
+                    case PRICE_NOT_FOUND:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                setAlertDialogBuilder("Seller not found", "Please reduce the buyer price if you want to match a seller price (go to settings)");
+                                findViewById(R.id.sell_button).setEnabled(true);
+                                findViewById(R.id.buy_button).setEnabled(true);
+                            }
+                        });
+                        break;
+                    default:
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                mHandler.removeCallbacks(mRunnableClient);
+                                enableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button), R.string.connect);
+                                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
+                                changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary, R.color.selector_text_drawer, R.color.selector_icon_drawer);
+                                //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
+                                setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
+                            }
+                        });
+                        SharedPreferences.Editor editor = preferences.edit();
+                        editor.putBoolean(IS_BUYER, false);
+                        editor.apply();
+                        mStartTXClient = 0;
+                        mStartRXClient = 0;
+                        break;
                 }
                 mWifiManager.setWifiEnabled(false);
                 webSocketClient = null;
@@ -509,39 +537,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
             @Override
             public void onError(Exception ex) {
-                if (ex.getClass() == ConnectException.class) {
-                    /*if(counterException<10){
-                        try {
-                            connectToServer();
-                        } catch (URISyntaxException e) {
-                            e.printStackTrace();
-                        }
-                        counterException++;
-                    }
-                    else {*/
-                        counterException=0;
-                        mWifiManager.setWifiEnabled(false);
-                        webSocketClient = null;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                findViewById(R.id.sell_button).setEnabled(true);
-                                findViewById(R.id.buy_button).setEnabled(true);
-                                setAlertDialogBuilder(getResources().getString(R.string.connection_failed), getResources().getString(R.string.connection_of_client_failed));
-                            }
-                        });
-                    //}
-                }
-                else{
-                    getConnection().close(CLIENT_DISCONNECTED_CODE, "");
-                    runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            findViewById(R.id.sell_button).setEnabled(true);
-                            findViewById(R.id.buy_button).setEnabled(true);
-                        }
-                    });
-                }
             }
         };
         webSocketClient.connect();
@@ -578,7 +573,8 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             connect(scanResult.SSID, scanResult.capabilities);
             long time = System.currentTimeMillis();
             while (System.currentTimeMillis() < time + 15000) {
-                if (isConnectedToInternet(getApplicationContext())) {
+                String wifiName = getWifiName(getApplicationContext());
+                if (wifiName!=null && wifiName.equals(scanResult.SSID)) {
                     isConnected = true;
                     break;
                 }
@@ -659,6 +655,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 conf.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP);
             }
 
+            mWifiManager.removeNetwork(mWifiManager.getConnectionInfo().getNetworkId());
             int netId = mWifiManager.addNetwork(conf);
             if (netId == -1) {
                 netId = getExistingNetworkId(conf.SSID, mWifiManager);
@@ -683,7 +680,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private void startServer() {
-        /*if (!isConnectedToInternet(getApplicationContext())) {
+        if (!isConnectedToInternet(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -691,7 +688,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 }
             });
             return;
-        }*/
+        }
         turnOnHotspot();
         long time = System.currentTimeMillis();
         boolean isHotspotTurnOn = false;
@@ -803,7 +800,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
         });
         //paySeller();
-        //checkIfConnectedToWifi();
+        checkIfConnectedToWifi();
     }
 
     private void paySeller(float amountIni,String address) {
@@ -1057,6 +1054,19 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     startSellingThread.start();
                 }*/
         }
+    }
+
+    public String getWifiName(Context context) {
+        if (mWifiManager.isWifiEnabled()) {
+            WifiInfo wifiInfo = mWifiManager.getConnectionInfo();
+            if (wifiInfo != null) {
+                NetworkInfo.DetailedState state = WifiInfo.getDetailedStateOf(wifiInfo.getSupplicantState());
+                if (state == NetworkInfo.DetailedState.CONNECTED || state == NetworkInfo.DetailedState.OBTAINING_IPADDR) {
+                    return wifiInfo.getSSID().substring(1,wifiInfo.getSSID().length()-1);
+                }
+            }
+        }
+        return null;
     }
 
     private void makeLayoutsVisibleAndInvisible(LinearLayout layoutVisible, LinearLayout layoutInvisible){
