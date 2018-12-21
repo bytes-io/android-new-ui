@@ -148,7 +148,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                             }
                         }, 5000);
                     } else {
-                        if(wifiList.size()==0){
+                        if(wifiList.isEmpty()){
                             runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -530,26 +530,55 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         }
                         break;
                     default:
-                        mWifiManager.setWifiEnabled(false);
-                        webSocketClient = null;
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                mHandler.removeCallbacks(mRunnableClient);
-                                enableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button), R.string.connect);
-                                makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
-                                changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary, R.color.selector_text_drawer, R.color.selector_icon_drawer);
-                                //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
-                                setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
+                        if(code == -1){
+                            if(!wifiList.isEmpty() && connectToHotspot(wifiList)){
+                                HandlerThread handlerThread = new HandlerThread("connection to server thread");
+                                handlerThread.start();
+                                Handler handlerConnectionToServer = new Handler(handlerThread.getLooper());
+                                handlerConnectionToServer.postDelayed(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            connectToServer();
+                                        } catch (URISyntaxException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }, 5000);
                             }
-                        });
-                        SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean(IS_BUYER, false);
-                        editor.apply();
-                        mStartTXClient = 0;
-                        mStartRXClient = 0;
-                        if(code == SERVER_DISCONNECTED_CODE){
-                            startBuying();
+                            else{
+                                mWifiManager.setWifiEnabled(false);
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        findViewById(R.id.sell_button).setEnabled(true);
+                                        findViewById(R.id.buy_button).setEnabled(true);
+                                    }
+                                });
+                            }
+                        }
+                        else {
+                            mWifiManager.setWifiEnabled(false);
+                            webSocketClient = null;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mHandler.removeCallbacks(mRunnableClient);
+                                    enableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button), R.string.connect);
+                                    makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
+                                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary, R.color.selector_text_drawer, R.color.selector_icon_drawer);
+                                    //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
+                                    setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
+                                }
+                            });
+                            SharedPreferences.Editor editor = preferences.edit();
+                            editor.putBoolean(IS_BUYER, false);
+                            editor.apply();
+                            mStartTXClient = 0;
+                            mStartRXClient = 0;
+                            if (code == SERVER_DISCONNECTED_CODE) {
+                                startBuying();
+                            }
                         }
                         break;
                 }
