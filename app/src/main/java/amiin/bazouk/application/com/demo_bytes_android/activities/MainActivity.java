@@ -51,7 +51,6 @@ import org.java_websocket.server.WebSocketServer;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
-import java.net.ConnectException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.NetworkInterface;
@@ -65,7 +64,6 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Random;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
@@ -80,7 +78,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public static final String IS_BUYER = "is_buyer";
     private static final String PRICE_NOT_FOUND = "Price not found";
     private static final String CONNECTION_OPENED = "connection_opened";
-    private static final String CLIENT_CLOSE_THE_CONNECTION = "client_close_the_connection";
+    private static final int SERVER_DISCONNECTED_CODE = 1006;
     private WebSocketServer server;
     private WebSocketClient webSocketClient;
     private int CLIENT_DISCONNECTED_CODE = 1000;
@@ -95,13 +93,13 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private BroadcastReceiver mWifiScanReceiver = null;
     private Toolbar toolbar;
     private AppBarLayout appBar;
-    private int counterException = 0;
 
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
     private static SharedPreferences preferences;
     private NavigationView navigationView;
+    private List<ScanResult> wifiList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,11 +112,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        wifiList = new ArrayList<>();
         mWifiScanReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(Context c, Intent intent) {
                 if (intent.getAction()!= null && intent.getAction().equals(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION)) {
-                    List<ScanResult> wifiList = new ArrayList<>();
                     mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
                     if(mWifiManager!=null) {
                         wifiList = mWifiManager.getScanResults();
@@ -132,18 +130,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     Collections.sort(wifiList, new Comparator<ScanResult>() {
                         @Override
                         public int compare(ScanResult o1, ScanResult o2) {
-                            if(Math.abs(o1.level)>Math.abs(o2.level)){
-                                return 1;
-                            }
-                            else if(Math.abs(o1.level)==Math.abs(o2.level)){
-                                return 0;
-                            }
-                            else{
-                                return -1;
-                            }
+                            return Integer.compare(Math.abs(o1.level), Math.abs(o2.level));
                         }
                     });
-                    if (connectToHotspot(wifiList)) {
+                    if (!wifiList.isEmpty() && connectToHotspot(wifiList)) {
                         HandlerThread handlerThread = new HandlerThread("connection to server thread");
                         handlerThread.start();
                         Handler handlerConnectionToServer = new Handler(handlerThread.getLooper());
@@ -158,6 +148,14 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                             }
                         }, 5000);
                     } else {
+                        if(wifiList.size()==0){
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setAlertDialogBuilder("No wifi around","List of wifis around is empty");
+                                }
+                            });
+                        }
                         mWifiManager.setWifiEnabled(false);
                         runOnUiThread(new Runnable() {
                             @Override
@@ -503,16 +501,37 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             public void onClose(int code, String reason, boolean remote){
                 switch (reason) {
                     case PRICE_NOT_FOUND:
-                        runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                setAlertDialogBuilder("Seller not found", "Please reduce the buyer price if you want to match a seller price (go to settings)");
-                                findViewById(R.id.sell_button).setEnabled(true);
-                                findViewById(R.id.buy_button).setEnabled(true);
-                            }
-                        });
+                        if(!wifiList.isEmpty() && connectToHotspot(wifiList)){
+                            HandlerThread handlerThread = new HandlerThread("connection to server thread");
+                            handlerThread.start();
+                            Handler handlerConnectionToServer = new Handler(handlerThread.getLooper());
+                            handlerConnectionToServer.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    try {
+                                        connectToServer();
+                                    } catch (URISyntaxException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            }, 5000);
+                        }
+                        else {
+                            mWifiManager.setWifiEnabled(false);
+                            webSocketClient = null;
+                            runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    setAlertDialogBuilder("Seller not found", "Please reduce the buyer price if you want to match a seller price (go to settings)");
+                                    findViewById(R.id.sell_button).setEnabled(true);
+                                    findViewById(R.id.buy_button).setEnabled(true);
+                                }
+                            });
+                        }
                         break;
                     default:
+                        mWifiManager.setWifiEnabled(false);
+                        webSocketClient = null;
                         runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -529,10 +548,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         editor.apply();
                         mStartTXClient = 0;
                         mStartRXClient = 0;
+                        if(code == SERVER_DISCONNECTED_CODE){
+                            startBuying();
+                        }
                         break;
                 }
-                mWifiManager.setWifiEnabled(false);
-                webSocketClient = null;
             }
 
             @Override
@@ -559,15 +579,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private boolean connectToHotspot(List<ScanResult> wifiList) {
-        if(wifiList.size()==0){
-            runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    setAlertDialogBuilder("No wifi around","List of wifis around is empty");
-                }
-            });
-            return false;
-        }
         boolean isConnected = false;
         for (ScanResult scanResult : wifiList) {
             connect(scanResult.SSID, scanResult.capabilities);
@@ -576,6 +587,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 String wifiName = getWifiName(getApplicationContext());
                 if (wifiName!=null && wifiName.equals(scanResult.SSID)) {
                     isConnected = true;
+                    wifiList.remove(scanResult);
                     break;
                 }
             }
