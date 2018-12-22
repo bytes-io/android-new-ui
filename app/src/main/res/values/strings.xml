@@ -42,4 +42,17 @@
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="history">History</string>
+    <string name="copy_seed">Copy Seed?</string>
+    <string name="messages_copy_seed">Keep it secure and don\\\'t share it with anyone. If someone has access to your seed they can access your account. You want copy to clipboard?</string>
+    <string name="buttons_ok">OK</string>
+    <string name="buttons_cancel">CANCEL</string>
+    <string name="seed">Seed:</string>
+    <string name="messages_invalid_characters_seed">Your seed contains invalid characters. Only uppercase characters from A-Z and the number 9 are accepted.</string>
+    <string name="messages_seed_to_long">Your seed is also too long.</string>
+    <string name="messages_seed_to_short">Your seed is also too short.</string>
+    <string name="messages_mixed_seed">Your seed contains mixed case characters. Lowercase is converted to uppercase.</string>
+    <string name="messages_to_long_seed">Your seed should not contain more than 81 characters. Extra characters are ignored.</string>
+    <string name="messages_to_short_seed">Your seed does not contain enough characters. This is not secure.</string>
+    <string name="messages_empty_seed">Please enter a valid seed.</string>
+    <string name="buttons_login">Login</string>
 </resources>

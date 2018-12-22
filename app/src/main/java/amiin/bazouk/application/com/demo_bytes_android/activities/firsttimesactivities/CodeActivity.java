@@ -39,6 +39,7 @@ public class CodeActivity extends AppCompatActivity {
                     editor.putBoolean(IS_FIRST_TIME,false);
                     editor.apply();
                     startActivity(new Intent(CodeActivity.this,MainActivity.class));
+                    //finish();
                 }
             }
         });

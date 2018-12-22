@@ -12,19 +12,46 @@
         android:layout_centerHorizontal="true"
         android:src="@mipmap/bytes"/>
 
-    <EditText
+    <android.support.design.widget.TextInputEditText
         android:id="@+id/enter_your_email"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="Please enter your email here"
-        android:layout_centerInParent="true"/>
+        android:layout_centerVertical="true" t="true"/>
 
-    <ImageView
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/seed_login_seed_text_input_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/enter_your_email"
+        android:layout_marginTop="@dimen/baseline"
+        app:hintTextAppearance="@style/TextLabel"
+        app:passwordToggleEnabled="true">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/seed_login_seed_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Seed"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
+            android:inputType="textPassword" />
+
+    </android.support.design.widget.TextInputLayout>
+
+    <Button
+        android:id="@+id/generate_seed_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Generate seed"
+        android:layout_below="@+id/seed_login_seed_text_input_layout"/>
+
+    <Button
         android:id="@+id/go_to_code"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/enter_your_email"
-        android:src="@drawable/ic_go_to" />
+        android:text="LOGIN"
+        android:layout_margin="10dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"/>
 
 </RelativeLayout>
