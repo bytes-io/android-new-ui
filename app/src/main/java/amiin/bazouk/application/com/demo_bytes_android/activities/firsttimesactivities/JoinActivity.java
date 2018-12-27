@@ -19,7 +19,7 @@ public class JoinActivity extends AppCompatActivity {
 
     static final String IS_FIRST_TIME = "is_first_time";
     static final String CODE = "code";
-    private static final String SEED = "seed";
+    private static final String ENC_SEED = "enc_seed";
     private TextInputEditText seedEditText;
     private TextInputLayout seedEditTextLayout;
 
@@ -68,7 +68,7 @@ public class JoinActivity extends AppCompatActivity {
                     GMailSender sender = new GMailSender(getResources().getString(R.string.username), getResources().getString(R.string.password));
                     sender.sendMail("This is Subject",
                             code,
-                            "boukobza.adr@gmail.com",
+                            recipient,
                             recipient);
                 } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
@@ -88,8 +88,13 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         if (SeedValidator.isSeedValid(this, seed) == null) {
-            //IOTA.seed = SeedValidator.getSeed(seed).toCharArray();
-            PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(SEED,seed).apply();
+            AESCrypt aes = null;
+            try {
+                aes = new AESCrypt("12345678");
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(ENC_SEED, aes.encrypt(seed)).apply();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             login();
 
         } else {

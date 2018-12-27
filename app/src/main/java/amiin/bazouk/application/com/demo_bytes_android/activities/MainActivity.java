@@ -2,6 +2,7 @@ package amiin.bazouk.application.com.demo_bytes_android.activities;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.AlertDialog;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
@@ -1151,12 +1152,12 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     @Override
-    public void finish(){
-        super.finish();
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
+    public void onBackPressed(){
+        ActivityManager mngr = (ActivityManager) getSystemService( ACTIVITY_SERVICE );
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            if (mngr != null && mngr.getAppTasks().size() > 1) {
+                super.onBackPressed();
+            }
+        }
     }
 }
