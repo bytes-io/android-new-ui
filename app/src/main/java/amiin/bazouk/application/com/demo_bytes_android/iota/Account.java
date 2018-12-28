@@ -19,8 +19,6 @@ public class Account {
     private static String[] providers;
     private static int minWeightMagnitude;
     private static String explorerHost;
-    private static String toAddress;
-    private static String senderSeed;
 
     public static String paySeller(Context context, float amountIni,String address) throws AccountException {
 
@@ -91,15 +89,6 @@ public class Account {
         return address;
     }
 
-    public static String getCurrentAddressTemp(Context context) throws AccountException {
-
-        if (iota == null) {
-            iota = createIota(context);
-        }
-
-        return toAddress;
-    }
-
     public static ResponseGetBalance getBalance(Context context) throws AccountException {
 
         if (iota == null) {
@@ -167,23 +156,20 @@ public class Account {
             providers = context.getResources().getStringArray(R.array.mainnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
-            toAddress = context.getResources().getString(R.string.mainnet_to_address);
-            senderSeed = context.getResources().getString(R.string.mainnet_sender_seed);
         } else {
 
             providers = context.getResources().getStringArray(R.array.testnet_providers);
             minWeightMagnitude = context.getResources().getInteger(R.integer.testnet_min_weight_magnitude);
             explorerHost = context.getResources().getString(R.string.testnet_explorer_host);
-            toAddress = context.getResources().getString(R.string.testnet_to_address);
-            senderSeed = context.getResources().getString(R.string.testnet_sender_seed);
         }
 
         System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
 
         Iota iota = null;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         for(int i = 0; i < providers.length; i++) {
             try {
-                iota = new Iota(providers[i], senderSeed);
+                iota = new Iota(providers[i], preferences.getString("ENC_SEED", ""));
                 iota.minWeightMagnitude = minWeightMagnitude;
 
             } catch (Exception e) {

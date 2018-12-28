@@ -790,7 +790,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
                 if(message.equals(CONNECTION_OPENED)) {
                     try {
-                        conn.send("address"+Account.getCurrentAddressTemp(getApplicationContext()));
+                        conn.send("address"+Account.getCurrentAddress(getApplicationContext()));
                     } catch (AccountException e) {
                         e.printStackTrace();
                     }
