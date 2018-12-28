@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import amiin.bazouk.application.com.demo_bytes_android.Prices;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import jota.model.Transaction;
 
 public class Wallet {
     private static Iota iota = null;
-    private static Prices price = new Prices();
 
     private static String[] providers;
     private static int minWeightMagnitude;
@@ -35,7 +35,7 @@ public class Wallet {
         float miotaUSD = Float.parseFloat(
                 preferences.getString(
                         MainActivity.PREF_MIOTA_USD,
-                        context.getResources().getString(R.string.default_pref_miota_usd)
+                        0
                 ));*/
 
         // assumptions
@@ -61,15 +61,14 @@ public class Wallet {
         return tails.get(0);
     }
 
-    public static float getPriceUSD() throws AccountException {
+    public static float getPriceUSD(Context context) throws AccountException {
         float tickerPrice = 0;
         try {
-            tickerPrice = price.get("IOT");
+            tickerPrice = IOTAPrice.getUSD(context);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
-        System.out.println(tickerPrice);
         return tickerPrice;
     }
 
@@ -98,7 +97,7 @@ public class Wallet {
         double balanceInUsd = 0;
         long balanceInI = 0;
         try {
-            balanceInUsd = balanceInI * getPriceUSD();
+            balanceInUsd = balanceInI * getPriceUSD(context);
             balanceInI = iota.getBalance();
         } catch (Exception e) {
             e.printStackTrace();

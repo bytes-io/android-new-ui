@@ -187,10 +187,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             @Override
             public void run() {
                 try {
-                    float miotUSD = Wallet.getPriceUSD();
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putFloat(Constants.PREF_MIOTA_USD, miotUSD);
-                    editor.apply();
+                    IOTAPrice.loadPrice(getApplicationContext());
 
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
