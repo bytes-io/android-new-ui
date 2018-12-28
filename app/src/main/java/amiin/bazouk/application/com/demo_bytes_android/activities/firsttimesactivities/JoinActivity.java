@@ -14,6 +14,7 @@ import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AESCrypt;
+import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
 import jota.utils.SeedRandomGenerator;
 
@@ -87,13 +88,12 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         if (SeedValidator.isSeedValid(this, seed) == null) {
-            AESCrypt aes = null;
             try {
-                aes = new AESCrypt("12345678");
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(Constants.ENC_SEED, aes.encrypt(seed)).apply();
+                Seed.saveSeed(getApplicationContext(), seed);
             } catch (Exception e) {
                 e.printStackTrace();
             }
+
             login();
 
         } else {

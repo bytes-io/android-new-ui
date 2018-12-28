@@ -9,9 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import jota.model.Transaction;
 
 public class Wallet {
@@ -152,29 +150,26 @@ public class Wallet {
 
 
     private static Iota createIota(Context context) {
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         providers = context.getResources().getStringArray(R.array.mainnet_providers);
         minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
         explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
 
         System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
-
         Iota iota = null;
-        for(int i = 0; i < providers.length; i++) {
-            try {
-                AESCrypt aes = new AESCrypt("12345678");
-                String encSeed = preferences.getString(Constants.ENC_SEED, "");
-                String seed = aes.decrypt(encSeed);
+        try {
+            String seed = Seed.getSeed(context);
+
+            for(int i = 0; i < providers.length; i++) {
                 iota = new Iota(providers[i], seed);
 
-            } catch (Exception e) {
-                System.err.println("\nERROR: Something went wrong: " + e.getMessage());
-                e.printStackTrace();
+                if(iota.isNodeUp()) {
+                    break;
+                }
             }
 
-            if(iota.isNodeUp()) {
-                break;
-            }
+        } catch (Exception e) {
+            System.err.println("\nERROR: Something went wrong: " + e.getMessage());
+            e.printStackTrace();
         }
         System.out.println("new IOTA [done]: " + DateFormat.getDateTimeInstance().format(new Date()));
 
