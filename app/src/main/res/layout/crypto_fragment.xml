@@ -4,7 +4,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activities.Payment">
+    tools:context=".activities.Payment"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true">
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">

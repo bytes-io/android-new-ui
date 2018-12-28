@@ -19,7 +19,6 @@ public class JoinActivity extends AppCompatActivity {
 
     static final String IS_FIRST_TIME = "is_first_time";
     static final String CODE = "code";
-    private static final String ENC_SEED = "enc_seed";
     private TextInputEditText seedEditText;
     private TextInputLayout seedEditTextLayout;
 
@@ -91,7 +90,7 @@ public class JoinActivity extends AppCompatActivity {
             AESCrypt aes = null;
             try {
                 aes = new AESCrypt("12345678");
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(ENC_SEED, aes.encrypt(seed)).apply();
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(MainActivity.ENC_SEED, aes.encrypt(seed)).apply();
             } catch (Exception e) {
                 e.printStackTrace();
             }

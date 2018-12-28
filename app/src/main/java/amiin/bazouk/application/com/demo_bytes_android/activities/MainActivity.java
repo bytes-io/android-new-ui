@@ -98,6 +98,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
+    public static final String ENC_SEED = "enc_seed";
     private static SharedPreferences preferences;
     private NavigationView navigationView;
     private List<ScanResult> wifiList;
@@ -790,7 +791,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
                 if(message.equals(CONNECTION_OPENED)) {
                     try {
-                        conn.send("address"+Account.getCurrentAddress(getApplicationContext()));
+                        conn.send("address"  +Account.getCurrentAddress(getApplicationContext()));
                     } catch (AccountException e) {
                         e.printStackTrace();
                     }

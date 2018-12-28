@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import jota.model.Transaction;
 
 public class Account {
@@ -169,8 +170,7 @@ public class Account {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         for(int i = 0; i < providers.length; i++) {
             try {
-                iota = new Iota(providers[i], preferences.getString("ENC_SEED", ""));
-                iota.minWeightMagnitude = minWeightMagnitude;
+                iota = new Iota(providers[i], preferences.getString(MainActivity.ENC_SEED, ""));
 
             } catch (Exception e) {
                 System.err.println("\nERROR: Something went wrong: " + e.getMessage());
