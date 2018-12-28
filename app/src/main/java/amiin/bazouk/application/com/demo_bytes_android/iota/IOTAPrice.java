@@ -15,7 +15,7 @@ import amiin.bazouk.application.com.demo_bytes_android.Prices;
 public class IOTAPrice {
     private static Prices prices = new Prices();
 
-    public static float getUSD(Context context) throws IOException, ParseException {
+    public static float getUSD(Context context) throws IOException, ParseException, AccountException {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         float miotUSD = preferences.getFloat(Constants.PREF_MIOTA_USD, 0);
@@ -25,14 +25,14 @@ public class IOTAPrice {
 
         // get real price if invalid or lastload is > 6 hours ago
         if (miotUSD <= 0 || timeInterval > 6 * 60 * 60 * 1000) {
-            return prices.get("IOT");
+            return loadPrice(context);
         }
 
         System.out.println("Get miotUSD from cache");
         return miotUSD;
     }
 
-    public static void loadPrice(Context context) throws AccountException {
+    public static float loadPrice(Context context) throws AccountException {
         float miotUSD = 0;
         try {
             miotUSD = prices.get("IOT");
@@ -49,5 +49,6 @@ public class IOTAPrice {
                 .apply();
 
         System.out.println("Loaded miotUSD: " + miotUSD + " at " + loadTime);
+        return miotUSD;
     }
 }
