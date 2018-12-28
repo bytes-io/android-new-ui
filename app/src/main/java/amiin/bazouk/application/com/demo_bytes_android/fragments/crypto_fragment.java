@@ -184,7 +184,7 @@ public class crypto_fragment extends Fragment {
                             }
                         }
                         else{
-                            message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">Link</a></p>";
+                            message = "<p>"+"Transaction Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
                             Spanned messageWithLink = Html.fromHtml(message);
 
                             fragmentActivity = getActivity();
