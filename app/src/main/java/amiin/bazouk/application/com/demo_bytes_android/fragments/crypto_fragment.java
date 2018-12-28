@@ -5,17 +5,14 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
-import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,7 +21,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
+import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
 
@@ -44,13 +41,13 @@ public class crypto_fragment extends Fragment {
             @Override
             public void run() {
                 try {
-                    address = Account.getCurrentAddress(getContext());
+                    address = Wallet.getCurrentAddress(getContext());
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
                 }
                 try {
-                    currentBalance = "$"+String.valueOf(Account.getBalance(getContext()).usd);
+                    currentBalance = "$"+String.valueOf(Wallet.getBalance(getContext()).usd);
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
@@ -59,7 +56,7 @@ public class crypto_fragment extends Fragment {
                     address = "Unable to show the your wallet information. Please check your internet connection";
                 }
                 if(currentBalance == null){
-                    currentBalance = "Current balance: $--";
+                    currentBalance = "$--";
                 }
                 FragmentActivity fragmentActivity= getActivity();
                 if(fragmentActivity!=null) {
@@ -146,7 +143,7 @@ public class crypto_fragment extends Fragment {
                         }
                         ResponsePayOut responsePayOut;
                         try {
-                            responsePayOut = Account.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
+                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
                             if(alertDialog!=null && alertDialog.isShowing()) {

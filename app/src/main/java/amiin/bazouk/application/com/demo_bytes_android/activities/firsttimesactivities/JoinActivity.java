@@ -1,7 +1,6 @@
 package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -11,14 +10,15 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
+import amiin.bazouk.application.com.demo_bytes_android.iota.AESCrypt;
+import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
 import jota.utils.SeedRandomGenerator;
 
 public class JoinActivity extends AppCompatActivity {
 
-    static final String IS_FIRST_TIME = "is_first_time";
-    static final String CODE = "code";
     private TextInputEditText seedEditText;
     private TextInputLayout seedEditTextLayout;
 
@@ -54,7 +54,7 @@ public class JoinActivity extends AppCompatActivity {
         String code = "123456";
         sendEmailWithCode(code);
         Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
-        intent.putExtra(CODE,code);
+        intent.putExtra(Constants.CODE,code);
         startActivity(intent);
     }
 
@@ -90,7 +90,7 @@ public class JoinActivity extends AppCompatActivity {
             AESCrypt aes = null;
             try {
                 aes = new AESCrypt("12345678");
-                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(MainActivity.ENC_SEED, aes.encrypt(seed)).apply();
+                PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit().putString(Constants.ENC_SEED, aes.encrypt(seed)).apply();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -112,7 +112,7 @@ public class JoinActivity extends AppCompatActivity {
 
     protected void onStart(){
         super.onStart();
-        if(!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(IS_FIRST_TIME,true)){
+        if(!PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getBoolean(Constants.IS_FIRST_TIME,true)){
             startActivity(new Intent(this, MainActivity.class));
         }
     }

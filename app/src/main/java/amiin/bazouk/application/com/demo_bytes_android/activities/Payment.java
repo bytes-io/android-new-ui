@@ -21,6 +21,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.fragments.credit_fragment;
 import amiin.bazouk.application.com.demo_bytes_android.fragments.crypto_fragment;
@@ -50,7 +51,7 @@ public class Payment extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
+        if(preferences.getBoolean(Constants.IS_BUYER,false) || preferences.getBoolean(Constants.IS_SELLER,false)){
             findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

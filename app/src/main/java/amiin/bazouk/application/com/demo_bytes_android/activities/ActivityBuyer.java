@@ -13,10 +13,10 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.widget.EditText;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class ActivityBuyer extends AppCompatActivity {
-    final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
     private SharedPreferences preferences;
 
     @Override
@@ -27,7 +27,7 @@ public class ActivityBuyer extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
+        if(preferences.getBoolean(Constants.IS_BUYER,false) || preferences.getBoolean(Constants.IS_SELLER,false)){
             findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -43,7 +43,7 @@ public class ActivityBuyer extends AppCompatActivity {
             }
         });
         float maxPrice = Float.parseFloat(preferences.getString(
-                PREF_MAX_PRICE_BUYER,
+                Constants.PREF_MAX_PRICE_BUYER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
 

@@ -14,6 +14,7 @@ import android.widget.EditText;
 import java.util.HashSet;
 import java.util.Set;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
 public class AddACreditCardActivity extends AppCompatActivity {
@@ -29,7 +30,7 @@ public class AddACreditCardActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
 
-        if(preferences.getBoolean(MainActivity.IS_BUYER,false) || preferences.getBoolean(MainActivity.IS_SELLER,false)){
+        if(preferences.getBoolean(Constants.IS_BUYER,false) || preferences.getBoolean(Constants.IS_SELLER,false)){
             findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

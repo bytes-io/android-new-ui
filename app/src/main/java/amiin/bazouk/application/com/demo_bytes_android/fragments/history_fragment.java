@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Map;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import amiin.bazouk.application.com.demo_bytes_android.iota.Account;
+import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.TxData;
 
@@ -42,7 +42,7 @@ public class history_fragment extends Fragment {
             public void run() {
                 listTransactions = new ArrayList<>();
                 try {
-                    listTransactions = Account.getTransactionHistory(getContext());
+                    listTransactions = Wallet.getTransactionHistory(getContext());
                 } catch (AccountException e) {
                     e.printStackTrace();
                 }

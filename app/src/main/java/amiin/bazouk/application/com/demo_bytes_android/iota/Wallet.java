@@ -9,11 +9,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import jota.model.Transaction;
 
-public class Account {
+public class Wallet {
     private static Iota iota = null;
     private static Prices price = new Prices();
 
@@ -149,28 +150,22 @@ public class Account {
         return txs;
     }
 
+
     private static Iota createIota(Context context) {
-        String network = context.getResources().getString(R.string.network);
-
-        if (network.equals("mainnet")) {
-
-            providers = context.getResources().getStringArray(R.array.mainnet_providers);
-            minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
-            explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
-        } else {
-
-            providers = context.getResources().getStringArray(R.array.testnet_providers);
-            minWeightMagnitude = context.getResources().getInteger(R.integer.testnet_min_weight_magnitude);
-            explorerHost = context.getResources().getString(R.string.testnet_explorer_host);
-        }
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        providers = context.getResources().getStringArray(R.array.mainnet_providers);
+        minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
+        explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
 
         System.out.println("new IOTA [start]: " + DateFormat.getDateTimeInstance().format(new Date()));
 
         Iota iota = null;
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         for(int i = 0; i < providers.length; i++) {
             try {
-                iota = new Iota(providers[i], preferences.getString(MainActivity.ENC_SEED, ""));
+                AESCrypt aes = new AESCrypt("12345678");
+                String encSeed = preferences.getString(Constants.ENC_SEED, "");
+                String seed = aes.decrypt(encSeed);
+                iota = new Iota(providers[i], seed);
 
             } catch (Exception e) {
                 System.err.println("\nERROR: Something went wrong: " + e.getMessage());

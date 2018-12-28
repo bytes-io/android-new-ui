@@ -14,12 +14,10 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.List;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.Pinview;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
-
-import static amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities.JoinActivity.CODE;
-import static amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities.JoinActivity.IS_FIRST_TIME;
 
 public class CodeActivity extends AppCompatActivity {
 
@@ -30,13 +28,13 @@ public class CodeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_code);
 
-        code = getIntent().getStringExtra(CODE);
+        code = getIntent().getStringExtra(Constants.CODE);
         ((Pinview)findViewById(R.id.pinview)).setPinViewEventListener(new Pinview.PinViewEventListener() {
             @Override
             public void onDataEntered(Pinview pinview, boolean fromUser) {
                 if(code.equals(pinview.getValue())) {
                     SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).edit();
-                    editor.putBoolean(IS_FIRST_TIME,false);
+                    editor.putBoolean(Constants.IS_FIRST_TIME,false);
                     editor.apply();
                     startActivity(new Intent(CodeActivity.this,MainActivity.class));
                     //finish();

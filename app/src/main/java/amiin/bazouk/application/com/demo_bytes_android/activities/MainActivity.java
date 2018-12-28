@@ -66,6 +66,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.hotspot.MyOreoWifiManager;
 import amiin.bazouk.application.com.demo_bytes_android.iota.*;
@@ -75,8 +76,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private static final int PERMISSION_ACCESS_COARSE_LOCATION_CODE = 11;
     //private static final int PERMISSION_ACCESS_READ_PHONE_STATS_CODE = 12;
     private static final int UID_TETHERING = -5;
-    public static final String IS_SELLER = "is_seller";
-    public static final String IS_BUYER = "is_buyer";
     private static final String PRICE_NOT_FOUND = "Price not found";
     private static final String CONNECTION_OPENED = "connection_opened";
     private static final int SERVER_DISCONNECTED_CODE = 1006;
@@ -95,10 +94,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private Toolbar toolbar;
     private AppBarLayout appBar;
 
-    public static final String PREF_MIOTA_USD = "pref_miota_usd";
-    public static final String PREF_MAX_PRICE_BUYER = "pref_max_price_buyer";
-    public static final String PREF_MAX_PRICE_SELLER = "pref_max_price_seller";
-    public static final String ENC_SEED = "enc_seed";
     private static SharedPreferences preferences;
     private NavigationView navigationView;
     private List<ScanResult> wifiList;
@@ -184,17 +179,17 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         navigationView.setNavigationItemSelectedListener(this);
         preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(IS_SELLER, false);
-        editor.putBoolean(IS_BUYER, false);
+        editor.putBoolean(Constants.IS_SELLER, false);
+        editor.putBoolean(Constants.IS_BUYER, false);
         editor.apply();
 
         Thread conversionThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
-                    float miotUSD = Account.getPriceUSD();
+                    float miotUSD = Wallet.getPriceUSD();
                     SharedPreferences.Editor editor = preferences.edit();
-                    editor.putFloat(PREF_MIOTA_USD, miotUSD);
+                    editor.putFloat(Constants.PREF_MIOTA_USD, miotUSD);
                     editor.apply();
 
                 } catch (AccountException e) {
@@ -385,7 +380,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             }
             server = null;
             SharedPreferences.Editor editor = preferences.edit();
-            editor.putBoolean(IS_SELLER, false);
+            editor.putBoolean(Constants.IS_SELLER, false);
             editor.apply();
             mStartTXServer = 0;
             mStartRXServer = 0;
@@ -452,7 +447,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 if(message.substring(0,5).equals("price")) {
                     float maxPriceSeller = Float.valueOf(message.substring(5));
                     float maxPriceBuyer = Float.parseFloat(preferences.getString(
-                            PREF_MAX_PRICE_BUYER,
+                            Constants.PREF_MAX_PRICE_BUYER,
                             getResources().getString(R.string.default_pref_max_price)
                     ));
                     if (maxPriceSeller <= maxPriceBuyer) {
@@ -460,7 +455,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         System.out.println("Price Buyer: " + maxPriceBuyer);
                         System.out.println("The transaction will be made");
                         SharedPreferences.Editor editor = preferences.edit();
-                        editor.putBoolean(IS_BUYER, true);
+                        editor.putBoolean(Constants.IS_BUYER, true);
                         editor.apply();
                         runOnUiThread(new Runnable() {
                             @Override
@@ -574,7 +569,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 }
                             });
                             SharedPreferences.Editor editor = preferences.edit();
-                            editor.putBoolean(IS_BUYER, false);
+                            editor.putBoolean(Constants.IS_BUYER, false);
                             editor.apply();
                             mStartTXClient = 0;
                             mStartRXClient = 0;
@@ -778,7 +773,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     @Override
                     public void run() {
                         String maxPriceSeller = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(
-                                PREF_MAX_PRICE_SELLER,
+                                Constants.PREF_MAX_PRICE_SELLER,
                                 getResources().getString(R.string.default_pref_max_price)
                         );
                         System.out.print("The price for the seller is: " +maxPriceSeller);
@@ -791,7 +786,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             public void onMessage(org.java_websocket.WebSocket conn, String message) {
                 if(message.equals(CONNECTION_OPENED)) {
                     try {
-                        conn.send("address"  +Account.getCurrentAddress(getApplicationContext()));
+                        conn.send("address"  +Wallet.getCurrentAddress(getApplicationContext()));
                     } catch (AccountException e) {
                         e.printStackTrace();
                     }
@@ -831,7 +826,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         };
         server.start();
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putBoolean(IS_SELLER, true);
+        editor.putBoolean(Constants.IS_SELLER, true);
         editor.apply();
         runOnUiThread(new Runnable() {
             @Override
@@ -849,7 +844,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private void paySeller(float amountIni,String address) {
         System.out.println("Start the transaction");
         try {
-            Account.paySeller(this, amountIni,address);
+            Wallet.paySeller(this, amountIni,address);
         } catch (AccountException e) {
             System.out.println("Failed due to " + e.getMessage());
             e.printStackTrace();
@@ -859,9 +854,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     private void getBalance() {
         System.out.println("getBalance");
         try {
-            System.out.println("getCurrentAddress: " + Account.getCurrentAddress(this));
+            System.out.println("getCurrentAddress: " + Wallet.getCurrentAddress(this));
 
-            ResponseGetBalance responseGetBalance = Account.getBalance(this);
+            ResponseGetBalance responseGetBalance = Wallet.getBalance(this);
             System.out.println(responseGetBalance.miota);
             System.out.println(responseGetBalance.usd);
         } catch (AccountException e) {

@@ -1,4 +1,4 @@
-package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities;
+package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 import android.content.Context;
 
