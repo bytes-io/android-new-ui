@@ -136,7 +136,7 @@
                     android:layout_height="wrap_content"
                     android:backgroundTint="#1e000000"
                     android:inputType="number"
-                    android:hint="Amount (EUR)" />
+                    android:hint="Amount (USD)" />
                 <TextView
                     android:id="@+id/amount_empty"
                     android:layout_width="match_parent"

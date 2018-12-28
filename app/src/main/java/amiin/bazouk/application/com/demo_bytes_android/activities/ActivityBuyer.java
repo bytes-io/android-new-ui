@@ -58,7 +58,7 @@ public class ActivityBuyer extends AppCompatActivity {
 
                 // save to pref
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(SettingsActivity.PREF_MAX_PRICE_BUYER,  maxPriceText);
+                editor.putString(Constants.PREF_MAX_PRICE_BUYER,  maxPriceText);
                 editor.apply();
 
                 finish();

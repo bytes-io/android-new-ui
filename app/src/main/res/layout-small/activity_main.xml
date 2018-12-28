@@ -126,7 +126,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="EUR 2.20" />
+                android:text="USD 2.20" />
         </LinearLayout>
 
     </LinearLayout>
@@ -200,7 +200,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="end"
-                android:text="EUR 2.20" />
+                android:text="USD 2.20" />
         </LinearLayout>
 
     </LinearLayout>
