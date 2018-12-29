@@ -2,7 +2,7 @@
 
 ## Application user flow 
 
-See android-new-ui/userflow.png
+![alt text](https://raw.githubusercontent.com/bytes-io/android-new-ui/master/userflow.png)
 
 ## Contact
 
