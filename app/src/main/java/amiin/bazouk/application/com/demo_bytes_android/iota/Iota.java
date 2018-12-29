@@ -1,22 +1,27 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
-import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DateFormat;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
-import java.net.URL;
 
 import jota.IotaAPI;
 import jota.dto.response.GetBalancesAndFormatResponse;
+import jota.dto.response.GetNewAddressResponse;
 import jota.dto.response.GetNodeInfoResponse;
+import jota.dto.response.GetTransactionsToApproveResponse;
 import jota.dto.response.GetTransferResponse;
+import jota.dto.response.GetTrytesResponse;
 import jota.error.ArgumentException;
 import jota.model.Bundle;
 import jota.model.Input;
 import jota.model.Transaction;
 import jota.model.Transfer;
+import jota.utils.Checksum;
 import jota.utils.IotaAPIUtils;
 import jota.utils.StopWatch;
 
@@ -123,19 +128,93 @@ public class Iota {
         return res.getTotalBalance();
     }
 
-    public List<Transaction> getTransactions() throws ArgumentException {
+    public List<TxData> getTransactions() throws ArgumentException {
         Integer start = 0;
         Integer end = 10;
         Boolean inclusionStates = true;
 
-        GetTransferResponse getTransferResponse = iotaAPI.getTransfers(seed, security, start, end, inclusionStates);
-        Bundle[] bundles = getTransferResponse.getTransfers();
-        List<Transaction> transactions = new ArrayList<Transaction>();
-        for (Bundle b : bundles) {
-            transactions.add(b.getTransactions().get(0));
-        }
+        List<String> attachedAddresses = this.getAddresses();
+        List<TxData> txDataList = new ArrayList<>();
+        List<Address> addresses = new ArrayList<>();
 
-        return transactions;
+        long totalValue;
+        long timestamp = 0;
+        String address;
+        String hash = null;
+        Boolean persistence = null;
+        long value;
+        String tag = null;
+        String message = "";
+        String destinationAddress = null;
+        long balance;
+
+        GetTransferResponse getTransferResponse = iotaAPI.getTransfers(seed, security, start, end, inclusionStates);
+        Bundle[] transferBundle = getTransferResponse.getTransfers();
+        System.out.println(transferBundle.length);
+        if (transferBundle != null) {
+            for (Bundle aTransferBundle : transferBundle) {
+
+                totalValue = 0;
+
+                for (Transaction trx : aTransferBundle.getTransactions()) {
+
+//                	System.out.println(trx.getAddress());
+                    address = trx.getAddress();
+                    persistence = trx.getPersistence();
+                    value = trx.getValue();
+
+                    if (value != 0 && attachedAddresses.contains(Checksum.addChecksum(address)))
+                        totalValue += value;
+
+                    if (trx.getCurrentIndex() == 0) {
+                        timestamp = trx.getAttachmentTimestamp() / 1000;
+                        tag = trx.getTag();
+                        destinationAddress = address;
+                        hash = trx.getHash();
+                    }
+
+                    // check if sent transaction
+                    if (attachedAddresses.contains(Checksum.addChecksum(address))) {
+                        boolean isRemainder = (trx.getCurrentIndex() == trx.getLastIndex()) && trx.getLastIndex() != 0;
+                        if (value < 0 && !isRemainder) {
+
+                            if (addresses.contains(new Address(Checksum.addChecksum(address), false)))
+                                addresses.remove(new Address(Checksum.addChecksum(address), false));
+
+                            if (!addresses.contains(new Address(Checksum.addChecksum(address), true)))
+                                addresses.add(new Address(Checksum.addChecksum(address), true));
+                        } else {
+                            if (!addresses.contains(new Address(Checksum.addChecksum(address), true)) &&
+                                    !addresses.contains(new Address(Checksum.addChecksum(address), false)))
+                                addresses.add(new Address(Checksum.addChecksum(address), false));
+                        }
+                    }
+                }
+
+                txDataList.add(new TxData(timestamp, destinationAddress, hash, persistence, totalValue, message, tag));
+
+            }
+        }
+        return txDataList;
+    }
+
+    public List<String> getAddresses() throws ArgumentException {
+        List<String> addresses = new ArrayList<String>();
+
+        int i = -1;
+        while (true) {
+            i++;
+            String newAddress = this.getAddress(i);
+            if (iotaAPI.findTransactionsByAddresses(new String[] { newAddress }).getHashes().length == 0) {
+                return addresses;
+            } else {
+                addresses.add(newAddress);
+            }
+        }
+    }
+
+    public List<Transaction> findTransactionsObjectsByHashes(String[] hashes) throws ArgumentException {
+        return iotaAPI.findTransactionsObjectsByHashes(hashes);
     }
 
     public Integer getAvailableAddressIndex(Integer lastKnownAddressIndex) throws ArgumentException {
@@ -151,8 +230,36 @@ public class Iota {
         }
     }
 
+    public void reattachTx(String hash) throws ArgumentException, IOException {
+        iotaAPI.replayBundle(hash, depth, minWeightMagnitude, null);
+
+//		GetTransactionsToApproveResponse getTransactionsToApproveResponse = iotaAPI.getTransactionsToApprove(depth, hash);
+//		GetTrytesResponse getTrytesResponse = iotaAPI.getTrytes(hash);
+//		System.out.println("getTrunkTransaction: " + getTransactionsToApproveResponse.getTrunkTransaction());
+
+//		iotaAPI.attachToTangle(
+//				getTransactionsToApproveResponse.getTrunkTransaction(),
+//				getTransactionsToApproveResponse.getBranchTransaction(),
+//				minWeightMagnitude,
+//				getTrytesResponse.getTrytes()
+//		);
+
+
+//		Powsrvio powsrvio = new Powsrvio();
+//		String res = powsrvio.post(
+//				getTransactionsToApproveResponse.getTrunkTransaction(),
+//				getTransactionsToApproveResponse.getBranchTransaction(),
+//				minWeightMagnitude,
+//				getTrytesResponse.getTrytes()
+//		);
+//		System.out.println(res);
+
+
+
+    }
+
     private String getAddress(int index) throws ArgumentException {
-        boolean checksum = false;
+        boolean checksum = true;
 
         return IotaAPIUtils.newAddress(seed, security, index, checksum, null);
     }

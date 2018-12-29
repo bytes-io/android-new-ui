@@ -87,9 +87,8 @@ public class history_fragment extends Fragment {
                     }
                     String address = listTransactions.get(position).address;
                     String hash = listTransactions.get(position).hash;
-                    String link = listTransactions.get(position).link;
-                    String message = "Address: "+"..."+address.substring(address.length()-4)+"\n"
-                            +"Hash: "+"..."+hash.substring(hash.length()-4)+"\n"
+                    String link = Wallet.getTxLink(hash);
+                    String message = "Hash: "+hash+"\n"
                             +"Link: "+link;
                     builder.setTitle("Information Transaction")
                             .setMessage(message)
