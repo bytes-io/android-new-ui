@@ -344,7 +344,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
+//        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
