@@ -9,11 +9,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -88,14 +92,35 @@ public class history_fragment extends Fragment {
                     String address = listTransactions.get(position).address;
                     String hash = listTransactions.get(position).hash;
                     String link = Wallet.getTxLink(hash);
-                    String message = "Hash: "+hash+"\n"
-                            +"Link: "+link;
-                    builder.setTitle("Information Transaction")
-                            .setMessage(message)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                }
-                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+//                    String message = "Hash: "+hash+"\n"
+//                            +"Link: "+link;
+//                    builder.setTitle("Information Transaction")
+//                            .setMessage(message)
+//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+//                                public void onClick(DialogInterface dialog, int which) {
+//                                }
+//                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
+
+                    String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
+                    Spanned messageWithLink = Html.fromHtml(message);
+
+                    FragmentActivity fragmentActivity = getActivity();
+                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext()).setTitle("Transaction Information").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+                    if(fragmentActivity!=null) {
+                        fragmentActivity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                AlertDialog alertDialog = builder1.setMessage(messageWithLink).create();
+                                alertDialog.show();
+                                ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+                            }
+                        });
+                    }
                 }
             });
             return convertViewToReturn;
