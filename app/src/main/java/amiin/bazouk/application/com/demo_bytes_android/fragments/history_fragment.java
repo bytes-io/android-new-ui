@@ -84,37 +84,29 @@ public class history_fragment extends Fragment {
                 @Override
                 public void onClick(View v) {
                     final AlertDialog.Builder builder;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
-                    } else {
-                        builder = new AlertDialog.Builder(getContext());
-                    }
-                    String address = listTransactions.get(position).address;
+//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+//                        builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
+//                    } else {
+//                        builder = new AlertDialog.Builder(getContext());
+//                    }
+                    builder = new AlertDialog.Builder(getContext()).setTitle("Transaction Information").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                        }
+                    });
+
                     String hash = listTransactions.get(position).hash;
                     String link = Wallet.getTxLink(hash);
-//                    String message = "Hash: "+hash+"\n"
-//                            +"Link: "+link;
-//                    builder.setTitle("Information Transaction")
-//                            .setMessage(message)
-//                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-//                                public void onClick(DialogInterface dialog, int which) {
-//                                }
-//                            }).setIcon(android.R.drawable.ic_dialog_alert).show();
 
                     String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
                     Spanned messageWithLink = Html.fromHtml(message);
 
                     FragmentActivity fragmentActivity = getActivity();
-                    AlertDialog.Builder builder1 = new AlertDialog.Builder(getContext()).setTitle("Transaction Information").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
                     if(fragmentActivity!=null) {
                         fragmentActivity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                AlertDialog alertDialog = builder1.setMessage(messageWithLink).create();
+                                AlertDialog alertDialog = builder.setMessage(messageWithLink).create();
                                 alertDialog.show();
                                 ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
 
