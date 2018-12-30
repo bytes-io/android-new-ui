@@ -6,14 +6,11 @@ import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import amiin.bazouk.application.com.demo_bytes_android.Prices;
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import jota.model.Transaction;
 
 public class Wallet {
     private static Iota iota = null;

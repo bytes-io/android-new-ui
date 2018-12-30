@@ -1,4 +1,4 @@
-package amiin.bazouk.application.com.demo_bytes_android;
+package amiin.bazouk.application.com.demo_bytes_android.utils;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -11,9 +11,9 @@ import okhttp3.*;
 
 
 public class Prices {
-    private OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = new OkHttpClient();
 
-    public float get(String ticker) throws IOException, ParseException {
+    public static float get(String ticker) throws IOException, ParseException {
         String url = "https://www.bytes.io/api/prices?tickers[]=" + ticker;
         Request request = new Request.Builder()
                 .url(url)

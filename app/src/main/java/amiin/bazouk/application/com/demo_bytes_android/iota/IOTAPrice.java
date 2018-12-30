@@ -10,11 +10,9 @@ import org.json.simple.parser.ParseException;
 import java.io.IOException;
 
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
-import amiin.bazouk.application.com.demo_bytes_android.Prices;
+import amiin.bazouk.application.com.demo_bytes_android.utils.Prices;
 
 public class IOTAPrice {
-    private static Prices prices = new Prices();
-
     public static float getUSD(Context context) throws IOException, ParseException, AccountException {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
@@ -35,7 +33,7 @@ public class IOTAPrice {
     public static float loadPrice(Context context) throws AccountException {
         float miotUSD = 0;
         try {
-            miotUSD = prices.get("IOT");
+            miotUSD = Prices.get("IOT");
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
