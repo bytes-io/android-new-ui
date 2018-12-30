@@ -105,7 +105,7 @@ public class crypto_fragment extends Fragment {
                         EditText iotaAddressEditText = result.findViewById(R.id.iota_address_withdraw);
                         EditText amountWithdrawEditText = result.findViewById(R.id.amount_withdraw);
                         String iotaAddress = iotaAddressEditText.getText().toString();
-                        String amountWithdraw = amountWithdrawEditText.getText().toString();
+                        String amountWithdrawInMi = amountWithdrawEditText.getText().toString();
                         FragmentActivity fragmentActivity;
                         if(iotaAddress.isEmpty()){
                             fragmentActivity = getActivity();
@@ -119,7 +119,7 @@ public class crypto_fragment extends Fragment {
                             }
                             return;
                         }
-                        else if (amountWithdraw.isEmpty()){
+                        else if (amountWithdrawInMi.isEmpty()){
                             fragmentActivity = getActivity();
                             if(fragmentActivity!=null) {
                                 fragmentActivity.runOnUiThread(new Runnable() {
@@ -143,7 +143,9 @@ public class crypto_fragment extends Fragment {
                         }
                         ResponsePayOut responsePayOut;
                         try {
-                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdraw));
+
+                            float amountWithdrawIni = Float.parseFloat(amountWithdrawInMi) * 1000 * 1000;
+                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, (long) amountWithdrawIni);
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
                             if(alertDialog!=null && alertDialog.isShowing()) {

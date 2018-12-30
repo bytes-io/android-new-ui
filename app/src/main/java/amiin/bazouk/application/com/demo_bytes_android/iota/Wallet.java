@@ -6,12 +6,11 @@ import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import amiin.bazouk.application.com.demo_bytes_android.Prices;
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import jota.model.Transaction;
 
 public class Wallet {
     private static Iota iota = null;
@@ -122,7 +121,7 @@ public class Wallet {
         }
 
         String hash = tails.get(0);
-        String link = explorerHost + "/transaction/" + tails.get(0);
+        String link = getTxLink(tails.get(0));
         return new ResponsePayOut(hash, link, "Pending");
     }
 
@@ -132,19 +131,19 @@ public class Wallet {
             iota = createIota(context);
         }
 
-        List<Transaction> transactions = null;
+        List<TxData> txs = new ArrayList<>();
         try {
-            transactions = iota.getTransactions();
+            txs = iota.getTransactions();
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
-        List<TxData> txs = new ArrayList<>();
-
-        for(Transaction tx: transactions) {
-            txs.add(new TxData(tx, explorerHost));
-        }
+        Collections.reverse(txs);
         return txs;
+    }
+
+    public static String getTxLink(String hash) {
+        return explorerHost + "/transaction/" + hash;
     }
 
 

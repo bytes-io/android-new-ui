@@ -1,4 +1,4 @@
-package amiin.bazouk.application.com.demo_bytes_android.iota;
+package amiin.bazouk.application.com.demo_bytes_android.utils;
 
 import android.util.Base64;
 

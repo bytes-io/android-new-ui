@@ -140,8 +140,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:backgroundTint="#1e000000"
-                    android:inputType="number"
-                    android:hint="Amount (USD)" />
+                    android:inputType="number|numberDecimal"
+                    android:hint="Amount (Mi)" />
                 <TextView
                     android:id="@+id/amount_empty"
                     android:layout_width="match_parent"

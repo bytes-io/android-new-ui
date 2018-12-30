@@ -1,5 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.fragments;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -8,11 +10,15 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.text.Html;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,7 +48,27 @@ public class credit_fragment extends Fragment {
         result.findViewById(R.id.add_credit_card_textview).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getContext(), AddACreditCardActivity.class));
+//                startActivity(new Intent(getContext(), AddACreditCardActivity.class));
+
+                final AlertDialog.Builder builder;
+                builder = new AlertDialog.Builder(getContext()).setTitle("Add a new Credit Card").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                });
+                String message = "Coming soon";
+
+                FragmentActivity fragmentActivity = getActivity();
+                if(fragmentActivity!=null) {
+                    fragmentActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            AlertDialog alertDialog = builder.setMessage(message).create();
+                            alertDialog.show();
+
+                        }
+                    });
+                }
             }
         });
         return result;

@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import amiin.bazouk.application.com.demo_bytes_android.utils.AESCrypt;
 
 public class Seed {
     public static void saveSeed(Context context, String seed) throws Exception {
