@@ -1,9 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.fragments;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,6 +13,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -39,7 +38,7 @@ public class history_fragment extends Fragment {
         View result = inflater.inflate(R.layout.history_fragment, container, false);
         final ListView listViewTransactions = result.findViewById(R.id.list_view_transactions);
         ArrayList<Map<String, String>> listMapOfEachTransaction = new ArrayList<>();
-        SimpleAdapter adapterTransactions = new SimpleAdapterWithClick(getContext(), listMapOfEachTransaction, R.layout.items_transactions,
+        SimpleAdapter adapterTransactions = new SimpleAdapter(getContext(), listMapOfEachTransaction, R.layout.items_transactions,
                 new String[]{"date","value"}, new int[]{R.id.date,R.id.value});
 
         FragmentActivity activity = getActivity();
@@ -76,6 +75,39 @@ public class history_fragment extends Fragment {
                         }
                     });
                 }
+
+                listViewTransactions.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle("Transaction Information").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
+
+                        String hash = listTxData.get(position).hash;
+                        String link = Wallet.getTxLink(hash);
+                        String status = listTxData.get(position).persistence ? "Confirmed" : "Pending";
+
+                        String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"
+                                +"<p>"+"Status: "+status+"</p>"+"<br/>"
+                                +"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
+                        Spanned messageWithLink = Html.fromHtml(message);
+
+                        FragmentActivity fragmentActivity = getActivity();
+                        if(fragmentActivity!=null) {
+                            fragmentActivity.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    AlertDialog alertDialog = builder.setMessage(messageWithLink).create();
+                                    alertDialog.show();
+                                    ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
+
+                                }
+                            });
+                        }
+                    }
+                });
             }
 
             private void showNoTxMsg() {
@@ -126,56 +158,5 @@ public class history_fragment extends Fragment {
         });
         getTransactionsThread.start();
         return result;
-    }
-
-    private class SimpleAdapterWithClick extends SimpleAdapter {
-        private SimpleAdapterWithClick(Context context, List<? extends Map<String, ?>> data, int resource,
-                                                   String[] from, int[] to) {
-            super(context, data, resource, from, to);
-        }
-
-        @Override
-        public View getView(final int position, View convertView, ViewGroup parent) {
-            final View convertViewToReturn = super.getView(position, convertView, parent);
-            convertViewToReturn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    final AlertDialog.Builder builder;
-//                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-//                        builder = new AlertDialog.Builder(getContext(), android.R.style.Theme_Material_Dialog_Alert);
-//                    } else {
-//                        builder = new AlertDialog.Builder(getContext());
-//                    }
-                    builder = new AlertDialog.Builder(getContext()).setTitle("Transaction Information").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                        }
-                    });
-
-                    String hash = listTxData.get(position).hash;
-                    String link = Wallet.getTxLink(hash);
-                    String status = listTxData.get(position).persistence ? "Confirmed" : "Pending";
-
-                    String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"
-                            +"<p>"+"Status: "+status+"</p>"+"<br/>"
-                            +"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
-                    Spanned messageWithLink = Html.fromHtml(message);
-
-                    FragmentActivity fragmentActivity = getActivity();
-                    if(fragmentActivity!=null) {
-                        fragmentActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                AlertDialog alertDialog = builder.setMessage(messageWithLink).create();
-                                alertDialog.show();
-                                ((TextView)alertDialog.findViewById(android.R.id.message)).setMovementMethod(LinkMovementMethod.getInstance());
-
-                            }
-                        });
-                    }
-                }
-            });
-            return convertViewToReturn;
-        }
     }
 }
