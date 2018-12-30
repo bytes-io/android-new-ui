@@ -13,7 +13,6 @@ import android.view.View;
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
-import amiin.bazouk.application.com.demo_bytes_android.iota.AESCrypt;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
 import jota.utils.SeedRandomGenerator;
