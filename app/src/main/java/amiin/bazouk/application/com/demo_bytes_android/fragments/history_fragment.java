@@ -97,8 +97,11 @@ public class history_fragment extends Fragment {
 
                     String hash = listTransactions.get(position).hash;
                     String link = Wallet.getTxLink(hash);
+                    String status = listTransactions.get(position).persistence ? "Confirmed" : "Pending";
 
-                    String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"+"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
+                    String message = "<p>"+"Hash: "+hash+"</p>"+"<br/>"
+                            +"<p>"+"Status: "+status+"</p>"+"<br/>"
+                            +"<p>"+"<a href=\""+link+"\">View it on explorer</a></p>";
                     Spanned messageWithLink = Html.fromHtml(message);
 
                     FragmentActivity fragmentActivity = getActivity();

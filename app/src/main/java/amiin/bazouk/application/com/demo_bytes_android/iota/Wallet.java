@@ -6,6 +6,8 @@ import android.preference.PreferenceManager;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -139,7 +141,7 @@ public class Wallet {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
-
+        Collections.reverse(txs);
         return txs;
     }
 
