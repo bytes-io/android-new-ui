@@ -28,7 +28,7 @@ import jota.utils.StopWatch;
 public class Iota {
     private IotaAPI iotaAPI;
     private String seed;
-    public String provider;
+    private String provider;
 
     public int minWeightMagnitude = 14;
     public int depth = 3;
@@ -150,7 +150,7 @@ public class Iota {
 
         GetTransferResponse getTransferResponse = iotaAPI.getTransfers(seed, security, start, end, inclusionStates);
         Bundle[] transferBundle = getTransferResponse.getTransfers();
-        System.out.println(transferBundle.length);
+        System.out.println("Found " + transferBundle.length + " Bundles");
         if (transferBundle != null) {
             for (Bundle aTransferBundle : transferBundle) {
 
