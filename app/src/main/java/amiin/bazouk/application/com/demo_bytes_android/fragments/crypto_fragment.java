@@ -144,8 +144,8 @@ public class crypto_fragment extends Fragment {
                         ResponsePayOut responsePayOut;
                         try {
 
-                            long amountWithdrawIni = Long.valueOf(amountWithdrawInMi) / 1000 /1000;
-                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, Long.valueOf(amountWithdrawIni));
+                            float amountWithdrawIni = Float.parseFloat(amountWithdrawInMi) * 1000 * 1000;
+                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, (long) amountWithdrawIni);
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
                             if(alertDialog!=null && alertDialog.isShowing()) {
