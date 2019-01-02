@@ -34,7 +34,6 @@
             android:layout_height="wrap_content"
             android:hint="Seed"
             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ9"
-            android:focusable="false"
             android:longClickable="false"
             android:inputType="textPassword" />
 

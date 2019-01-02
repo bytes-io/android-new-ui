@@ -43,7 +43,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="history">History</string>
     <string name="copy_seed">Copy Seed?</string>
-    <string name="messages_copy_seed">Keep it secure and don\\\'t share it with anyone. If someone has access to your seed they can access your account. You want copy to clipboard?</string>
+    <string name="messages_copy_seed">Keep it secure and don\'t share it with anyone. If someone has access to your seed they can access your account.</string>
     <string name="buttons_ok">OK</string>
     <string name="buttons_cancel">CANCEL</string>
     <string name="seed">Seed:</string>

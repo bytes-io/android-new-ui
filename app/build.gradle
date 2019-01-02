@@ -6,8 +6,8 @@ android {
         applicationId "amiin.bazouk.application.com.demo_bytes_android"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 21
-        versionName "21.0"
+        versionCode 22
+        versionName "22.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         packagingOptions {
