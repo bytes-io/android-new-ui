@@ -104,16 +104,16 @@ public class crypto_fragment extends Fragment {
                         String message;
                         EditText iotaAddressEditText = result.findViewById(R.id.iota_address_withdraw);
                         EditText amountWithdrawEditText = result.findViewById(R.id.amount_withdraw);
-                        String iotaAddress = iotaAddressEditText.getText().toString();
-                        String amountWithdrawInMi = amountWithdrawEditText.getText().toString();
+                        String iotaAddress = iotaAddressEditText.getText().toString().trim();
+                        String amountWithdrawInMi = amountWithdrawEditText.getText().toString().trim();
                         FragmentActivity fragmentActivity;
-                        if(iotaAddress.isEmpty()){
+                        if(iotaAddress.isEmpty() || !Wallet.isAddressValid(iotaAddress)){
                             fragmentActivity = getActivity();
                             if(fragmentActivity!=null) {
                                 fragmentActivity.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
-                                        addressEmptyTextView.setText("Address empty");
+                                        addressEmptyTextView.setText("Invalid Address");
                                     }
                                 });
                             }

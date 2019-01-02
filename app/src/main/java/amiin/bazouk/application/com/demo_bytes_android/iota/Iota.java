@@ -22,8 +22,11 @@ import jota.model.Input;
 import jota.model.Transaction;
 import jota.model.Transfer;
 import jota.utils.Checksum;
+import jota.utils.Constants;
 import jota.utils.IotaAPIUtils;
 import jota.utils.StopWatch;
+
+import static jota.utils.InputValidator.isTrytes;
 
 public class Iota {
     private IotaAPI iotaAPI;
@@ -256,6 +259,10 @@ public class Iota {
 
 
 
+    }
+
+    public static boolean isAddress(String address) {
+        return (address.length() == Constants.ADDRESS_LENGTH_WITHOUT_CHECKSUM || address.length() == Constants.ADDRESS_LENGTH_WITH_CHECKSUM) && isTrytes(address, address.length());
     }
 
     private String getAddress(int index) throws ArgumentException {

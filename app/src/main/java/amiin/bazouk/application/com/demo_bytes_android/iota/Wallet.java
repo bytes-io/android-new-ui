@@ -142,6 +142,10 @@ public class Wallet {
         return txs;
     }
 
+    public static boolean isAddressValid(String address) {
+        return Iota.isAddress(address);
+    }
+
     public static String getTxLink(String hash) {
         return explorerHost + "/transaction/" + hash;
     }
