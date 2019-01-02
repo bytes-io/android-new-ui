@@ -16,6 +16,7 @@ import jota.dto.response.GetNodeInfoResponse;
 import jota.dto.response.GetTransactionsToApproveResponse;
 import jota.dto.response.GetTransferResponse;
 import jota.dto.response.GetTrytesResponse;
+import jota.dto.response.SendTransferResponse;
 import jota.error.ArgumentException;
 import jota.model.Bundle;
 import jota.model.Input;
@@ -87,6 +88,10 @@ public class Iota {
         transfers.add(new Transfer(addressTo, amountIni));
 
         String remainderAddress = this.getCurrentAddress();
+        remainderAddress = Checksum.removeChecksum(remainderAddress); // Bug in IOTA: remove checksum
+
+//        SendTransferResponse sendTransferResponse = iotaAPI.sendTransfer(seed, security, depth, minWeightMagnitude, transfers, inputs, remainderAddress, validateInputs, true, tips);
+//        List<Transaction> transactions = sendTransferResponse.getTransactions();
 
         // bundle prep for all transfers
         System.out.println("before prepareTransfers: " + DateFormat.getDateTimeInstance().format(new Date()));
@@ -120,13 +125,13 @@ public class Iota {
 
     public long getBalance() throws ArgumentException {
 
-        String currentAddress = this.getCurrentAddress();
+        List<String> addresses = this.getAddresses();
         List<String> tips = new ArrayList<String>();
         long threshold = 0;
-        int start = 2; // currentAddressIndex
+        int start = 0; // currentAddressIndex
         StopWatch stopWatch = new StopWatch();
 
-        GetBalancesAndFormatResponse res = iotaAPI.getBalanceAndFormat(Arrays.asList(currentAddress), tips, threshold,
+        GetBalancesAndFormatResponse res = iotaAPI.getBalanceAndFormat(addresses, tips, threshold,
                 start, stopWatch, security);
         return res.getTotalBalance();
     }
