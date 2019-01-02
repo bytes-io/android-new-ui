@@ -62,6 +62,10 @@
         </intent-filter>
         </activity>
         <activity android:name=".activities.firsttimesactivities.CodeActivity"></activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="5ff7630e947a463d4e71088942a6567f6a5237ac"
+            />
     </application>
 
 </manifest>
