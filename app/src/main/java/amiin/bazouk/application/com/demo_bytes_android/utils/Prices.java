@@ -9,7 +9,6 @@ import java.io.IOException;
 
 import okhttp3.*;
 
-
 public class Prices {
     private static OkHttpClient client = new OkHttpClient();
 

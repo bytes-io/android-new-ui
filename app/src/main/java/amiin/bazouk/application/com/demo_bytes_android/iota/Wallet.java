@@ -110,6 +110,7 @@ public class Wallet {
         if (iota == null) {
             iota = createIota(context);
         }
+        System.out.println("Payout:" + amountIni + " to: " + payOutAddress);
 
         List<String> tails = new ArrayList<String>();
         try {
