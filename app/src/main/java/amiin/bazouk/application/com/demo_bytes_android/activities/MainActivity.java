@@ -483,9 +483,12 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                         public void run() {
                             while(webSocketClient!=null) {
                                 long t = System.currentTimeMillis();
+                                long dataWifiAtStart = TrafficStats.getTotalTxBytes()+TrafficStats.getTotalRxBytes()-TrafficStats.getMobileRxBytes()-TrafficStats.getMobileTxBytes();
                                 while(true){
                                     if (webSocketClient==null|| !(System.currentTimeMillis() < t + 60000)) break;
                                 }
+                                long dataUsageForTheMinute = TrafficStats.getTotalTxBytes()+TrafficStats.getTotalRxBytes()-TrafficStats.getMobileRxBytes()-TrafficStats.getMobileTxBytes() - dataWifiAtStart;
+                                System.out.println("data usage: "+dataUsageForTheMinute);
                                 paySeller(maxPriceSeller, address);
                             }
                         }
@@ -727,6 +730,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             });
             return;
         }
+
         turnOnHotspot();
         long time = System.currentTimeMillis();
         boolean isHotspotTurnOn = false;
@@ -736,6 +740,16 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 break;
             }
         }
+        /*WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
+        WifiInfo wifiInfo = wifiManager.getConnectionInfo();
+        Log.d("wifiInfo HAHAHAHAHAHAHA", wifiInfo.toString());
+        Log.d("SSID",wifiInfo.getSSID());*/
+        /*ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo info = cm.getActiveNetworkInfo();
+        if (info != null && info.isConnected()) {
+            String ssid = info.getExtraInfo();
+            Log.d("LOOK HERE BRO: ", "WiFi SSID: " + ssid);
+        }*/
         if (!isHotspotTurnOn) {
             runOnUiThread(new Runnable() {
                 @Override
@@ -892,6 +906,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         }
         WifiConfiguration wifiCon = new WifiConfiguration();
+        //System.out.println("Wifi ssid: "+wifiCon.SSID);
         wifiCon.SSID = "bytes-";
         wifiCon.wepKeys[0] = "12345678";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
