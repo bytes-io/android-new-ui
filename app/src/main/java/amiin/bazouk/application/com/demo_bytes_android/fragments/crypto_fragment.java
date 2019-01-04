@@ -16,7 +16,10 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -208,5 +211,29 @@ public class crypto_fragment extends Fragment {
             }
         });
         return result;
+    }
+
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Spinner unitsSpinner = getView().findViewById(R.id.new_transfer_units_spinner);
+        initUnitsSpinner(unitsSpinner);
+    }
+
+    private void initUnitsSpinner(Spinner unitsSpinner) {
+
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
+                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.listIotaUnits));
+        unitsSpinner.setAdapter(adapter);
+        unitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
     }
 }

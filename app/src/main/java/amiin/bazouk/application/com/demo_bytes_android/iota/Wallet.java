@@ -19,7 +19,7 @@ public class Wallet {
     private static int minWeightMagnitude;
     private static String explorerHost;
 
-    public static String paySeller(Context context, float amountIni,String address) throws AccountException {
+    public static String paySeller(Context context, float amountIni, String address) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
@@ -60,17 +60,6 @@ public class Wallet {
         return tails.get(0);
     }
 
-    public static float getPriceUSD(Context context) throws AccountException {
-        float tickerPrice = 0;
-        try {
-            tickerPrice = IOTAPrice.getUSD(context);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new AccountException("ACCOUNT_ERROR", e);
-        }
-        return tickerPrice;
-    }
-
     public static String getCurrentAddress(Context context) throws AccountException {
 
         if (iota == null) {
@@ -93,16 +82,16 @@ public class Wallet {
             iota = createIota(context);
         }
 
-        double balanceInUsd = 0;
-        long balanceInI = 0;
+        double balanceInUsd;
+        double balanceInMi;
         try {
-            balanceInUsd = balanceInI * getPriceUSD(context);
-            balanceInI = iota.getBalance();
+            balanceInMi = (double)iota.getBalance() / 1000 / 1000 ;
+            balanceInUsd = balanceInMi * IOTAPrice.getUSD(context);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
-        return new ResponseGetBalance(balanceInI, balanceInUsd);
+        return new ResponseGetBalance(balanceInMi, balanceInUsd);
     }
 
     public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) throws AccountException {

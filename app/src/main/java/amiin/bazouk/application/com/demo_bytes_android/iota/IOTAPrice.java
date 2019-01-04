@@ -31,7 +31,7 @@ public class IOTAPrice {
     }
 
     public static float loadPrice(Context context) throws AccountException {
-        float miotUSD = 0;
+        float miotUSD;
         try {
             miotUSD = Prices.get("IOT");
         } catch (Exception e) {

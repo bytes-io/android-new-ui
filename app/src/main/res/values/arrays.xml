@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="listIotaUnits">
+        <item>i</item>
+        <item>Ki</item>
+        <item>Mi</item>
+        <item>Gi</item>
+        <item>Ti</item>
+        <item>Pi</item>
+    </string-array>
+</resources>

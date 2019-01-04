@@ -865,18 +865,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
     }
 
-    private void getBalance() {
-        System.out.println("getBalance Called");
-        try {
-            System.out.println("getCurrentAddress: " + Wallet.getCurrentAddress(this));
-
-            ResponseGetBalance responseGetBalance = Wallet.getBalance(this);
-        } catch (AccountException e) {
-            System.out.println("Failed due to " + e.getMessage());
-            e.printStackTrace();
-        }
-    }
-
     private void checkIfConnectedToWifi() {
         Thread checkIfConnectedToWifiThread = new Thread(new Runnable() {
             @Override

@@ -1,10 +1,10 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 public class ResponseGetBalance {
-    public long miota;
+    public double miota;
     public double usd;
 
-    public ResponseGetBalance(long miota, double usd) {
+    public ResponseGetBalance(double miota, double usd) {
         this.miota = miota;
         this.usd = usd;
     }
