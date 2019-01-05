@@ -224,7 +224,8 @@ public class crypto_fragment extends Fragment {
     private void initUnitsSpinner(Spinner unitsSpinner) {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getActivity(),
-                android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.listIotaUnits));
+                R.layout.spinner_item, getResources().getStringArray(R.array.listIotaUnits));
+        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
         unitsSpinner.setAdapter(adapter);
         unitsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
