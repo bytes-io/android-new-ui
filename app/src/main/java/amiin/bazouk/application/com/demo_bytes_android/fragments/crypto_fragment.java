@@ -24,14 +24,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import amiin.bazouk.application.com.demo_bytes_android.iota.ResponseGetBalance;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
+import jota.dto.response.GetBalancesResponse;
 import jota.utils.IotaUnits;
 
 public class crypto_fragment extends Fragment {
 
     String address;
+    String currentUSDBalance;
+    String currentIOTABalance;
     String currentBalance;
     private AlertDialog alertDialog;
 
@@ -51,7 +55,10 @@ public class crypto_fragment extends Fragment {
                     e.printStackTrace();
                 }
                 try {
-                    currentBalance = "$"+String.valueOf(Wallet.getBalance(getContext()).usd);
+                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
+                    currentUSDBalance = "$"+responseGetBalance.usd;
+                    currentIOTABalance = responseGetBalance.displayIotaBal;
+                    currentBalance = currentUSDBalance + " ("+ currentIOTABalance +")";
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
@@ -59,8 +66,8 @@ public class crypto_fragment extends Fragment {
                 if(address == null){
                     address = "Unable to show the your wallet information. Please check your internet connection";
                 }
-                if(currentBalance == null){
-                    currentBalance = "$--";
+                if(currentUSDBalance == null){
+                    currentUSDBalance = "$--";
                 }
                 FragmentActivity fragmentActivity= getActivity();
                 if(fragmentActivity!=null) {
@@ -68,11 +75,11 @@ public class crypto_fragment extends Fragment {
                         @Override
                         public void run() {
                             TextView iotaAddressDepositTextView = result.findViewById(R.id.iota_address_deposit);
-                            TextView currentBalanceTextView = result.findViewById(R.id.current_balance);
+                            TextView currentBalanceUSDTextView = result.findViewById(R.id.current_balance);
                             iotaAddressDepositTextView.setTextColor(getResources().getColor(android.R.color.black));
-                            currentBalanceTextView.setTextColor(getResources().getColor(android.R.color.black));
+                            currentBalanceUSDTextView.setTextColor(getResources().getColor(android.R.color.black));
                             iotaAddressDepositTextView.setText(address);
-                            currentBalanceTextView.setText(currentBalance);
+                            currentBalanceUSDTextView.setText(currentBalance);
                         }
                     });
                 }
