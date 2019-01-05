@@ -57,8 +57,7 @@ public class crypto_fragment extends Fragment {
                 try {
                     ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
                     currentUSDBalance = "$"+responseGetBalance.usd;
-                    currentIOTABalance = responseGetBalance.displayIotaBal;
-                    currentBalance = currentUSDBalance + " ("+ currentIOTABalance +")";
+                    currentIOTABalance = "("+responseGetBalance.displayIotaBal+")";
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
                     e.printStackTrace();
@@ -76,10 +75,12 @@ public class crypto_fragment extends Fragment {
                         public void run() {
                             TextView iotaAddressDepositTextView = result.findViewById(R.id.iota_address_deposit);
                             TextView currentBalanceUSDTextView = result.findViewById(R.id.current_balance);
+                            TextView currentBalanceIOTATextView = result.findViewById(R.id.current_balance_iota);
                             iotaAddressDepositTextView.setTextColor(getResources().getColor(android.R.color.black));
                             currentBalanceUSDTextView.setTextColor(getResources().getColor(android.R.color.black));
                             iotaAddressDepositTextView.setText(address);
-                            currentBalanceUSDTextView.setText(currentBalance);
+                            currentBalanceUSDTextView.setText(currentUSDBalance);
+                            currentBalanceIOTATextView.setText(currentIOTABalance);
                         }
                     });
                 }

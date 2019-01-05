@@ -5,13 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.Payment">
+
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="0dp"
+        android:layout_marginTop="0dp">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -29,7 +36,7 @@
 
                 <TextView
                     android:id="@+id/current_balance"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="24dp"
@@ -37,6 +44,17 @@
                     android:textColor="@android:color/black"
                     android:textSize="20sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/current_balance_iota"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginTop="24dp"
+                    android:text=""
+                    android:textColor="@android:color/darker_gray"
+                    android:textSize="20sp" />
             </LinearLayout>
 
             <TextView
@@ -50,6 +68,7 @@
                 android:textColor="#8c8c8c"
                 android:textSize="14sp"
                 android:textStyle="normal" />
+
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -61,6 +80,7 @@
                 android:textColor="#de000000"
                 android:textSize="16sp"
                 android:textStyle="normal" />
+
             <TextView
                 android:id="@+id/iota_address_deposit"
                 android:layout_width="wrap_content"
@@ -72,6 +92,7 @@
                 android:textColor="#8b000000"
                 android:textSize="14sp"
                 android:textStyle="normal" />
+
             <TextView
                 android:id="@+id/copy"
                 android:layout_width="wrap_content"
@@ -84,6 +105,7 @@
                 android:textColor="#007dda"
                 android:textSize="16sp"
                 android:textStyle="normal" />
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
@@ -103,24 +125,25 @@
                 android:textStyle="normal" />
             <!-- Dummy item to prevent TextInputEditText from receiving focus -->
             <LinearLayout
-                android:focusable="true"
-                android:focusableInTouchMode="true"
                 android:layout_width="0px"
-                android:layout_height="0px"/>
+                android:layout_height="0px"
+                android:focusable="true"
+                android:focusableInTouchMode="true" />
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="16dp"
-                android:backgroundTint="#1e000000"
-                android:layout_marginRight="17dp">
+                android:layout_marginRight="17dp"
+                android:backgroundTint="#1e000000">
 
                 <android.support.design.widget.TextInputEditText
                     android:id="@+id/iota_address_withdraw"
                     android:layout_width="match_parent"
-                    android:backgroundTint="#1e000000"
                     android:layout_height="wrap_content"
+                    android:backgroundTint="#1e000000"
                     android:hint="IOTA Address" />
+
                 <TextView
                     android:id="@+id/address_empty"
                     android:layout_width="match_parent"
@@ -133,21 +156,22 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical">
+
                 <android.support.design.widget.TextInputLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:backgroundTint="#1e000000"
                     android:layout_marginLeft="16dp"
-                    android:layout_marginRight="17dp">
+                    android:layout_marginRight="17dp"
+                    android:layout_weight="1"
+                    android:backgroundTint="#1e000000">
 
                     <android.support.design.widget.TextInputEditText
                         android:id="@+id/amount_withdraw"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:backgroundTint="#1e000000"
-                        android:inputType="number"
-                        android:hint="Amount" />
+                        android:hint="Amount"
+                        android:inputType="number" />
 
                     <TextView
                         android:id="@+id/amount_empty"
@@ -163,18 +187,19 @@
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp" />
             </LinearLayout>
+
             <Button
+                android:id="@+id/withdrawBtn"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="16dp"
-                android:textSize="16sp"
-                android:text="MAKE WITHDRAW"
                 android:background="@color/colorPrimaryDark"
                 android:fontFamily="sans-serif-medium"
-                android:textStyle="normal"
+                android:letterSpacing="0.04"
+                android:text="MAKE WITHDRAW"
                 android:textColor="#ffffff"
-                android:id="@+id/withdrawBtn"
-                android:letterSpacing="0.04"/>
+                android:textSize="16sp"
+                android:textStyle="normal" />
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>
