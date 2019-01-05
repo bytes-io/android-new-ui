@@ -27,6 +27,7 @@ import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
+import jota.utils.IotaUnits;
 
 public class crypto_fragment extends Fragment {
 
@@ -107,8 +108,9 @@ public class crypto_fragment extends Fragment {
                         String message;
                         EditText iotaAddressEditText = result.findViewById(R.id.iota_address_withdraw);
                         EditText amountWithdrawEditText = result.findViewById(R.id.amount_withdraw);
+                        Spinner unitSpinner = result.findViewById(R.id.new_transfer_units_spinner);
                         String iotaAddress = iotaAddressEditText.getText().toString().trim();
-                        String amountWithdrawInMi = amountWithdrawEditText.getText().toString().trim();
+                        String amountWithdraw = amountWithdrawEditText.getText().toString().trim();
                         FragmentActivity fragmentActivity;
                         if(iotaAddress.isEmpty() || !Wallet.isAddressValid(iotaAddress)){
                             fragmentActivity = getActivity();
@@ -122,7 +124,7 @@ public class crypto_fragment extends Fragment {
                             }
                             return;
                         }
-                        else if (amountWithdrawInMi.isEmpty()){
+                        else if (amountWithdraw.isEmpty()){
                             fragmentActivity = getActivity();
                             if(fragmentActivity!=null) {
                                 fragmentActivity.runOnUiThread(new Runnable() {
@@ -147,8 +149,8 @@ public class crypto_fragment extends Fragment {
                         ResponsePayOut responsePayOut;
                         try {
 
-                            float amountWithdrawIni = Float.parseFloat(amountWithdrawInMi) * 1000 * 1000;
-                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, (long) amountWithdrawIni);
+                            long amountWithdrawIni = amountInSelectedUnit(amountWithdraw, unitSpinner);
+                            responsePayOut = Wallet.payOut(getContext(), iotaAddress, amountWithdrawIni);
                         } catch (AccountException e) {
                             System.out.println("Failed due to " + e.getMessage());
                             if(alertDialog!=null && alertDialog.isShowing()) {
@@ -237,4 +239,41 @@ public class crypto_fragment extends Fragment {
             }
         });
     }
+
+
+    private Long amountInSelectedUnit(String inputAmount, Spinner unitsSpinner) {
+        IotaUnits unit = toIotaUnit(unitsSpinner.getSelectedItemPosition());
+        return Long.parseLong(inputAmount) * (long) Math.pow(10, unit.getValue());
+    }
+
+    private IotaUnits toIotaUnit(int unitSpinnerItemIndex) {
+        IotaUnits iotaUnits;
+
+        switch (unitSpinnerItemIndex) {
+            case 0:
+                iotaUnits = IotaUnits.IOTA;
+                break;
+            case 1:
+                iotaUnits = IotaUnits.KILO_IOTA;
+                break;
+            case 2:
+                iotaUnits = IotaUnits.MEGA_IOTA;
+                break;
+            case 3:
+                iotaUnits = IotaUnits.GIGA_IOTA;
+                break;
+            case 4:
+                iotaUnits = IotaUnits.TERA_IOTA;
+                break;
+            case 5:
+                iotaUnits = IotaUnits.PETA_IOTA;
+                break;
+            default:
+                iotaUnits = IotaUnits.IOTA;
+                break;
+        }
+
+        return iotaUnits;
+    }
+
 }
