@@ -160,7 +160,8 @@
                 <Spinner
                     android:id="@+id/new_transfer_units_spinner"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="20dp" />
             </LinearLayout>
             <Button
                 android:layout_width="match_parent"
