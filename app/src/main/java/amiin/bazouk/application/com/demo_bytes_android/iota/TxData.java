@@ -5,6 +5,7 @@ import java.util.Date;
 import com.google.gson.Gson;
 
 import jota.model.Transaction;
+import jota.utils.IotaUnitConverter;
 
 public class TxData {
     public long timestamp;
@@ -15,6 +16,7 @@ public class TxData {
     public long value;
     public String message;
     public String tag;
+    public String displayIotaBal;
 
     public TxData(long timestamp, String address, String hash, Boolean persistence,
                   long value, String message, String tag) {
@@ -29,6 +31,8 @@ public class TxData {
         Date date = new Date(timestamp*1000);
         this.date = date;
 
+
+        this.displayIotaBal = IotaUnitConverter.convertRawIotaAmountToDisplayText(value, false);
     }
 
     @Override

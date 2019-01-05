@@ -240,7 +240,6 @@ public class crypto_fragment extends Fragment {
         });
     }
 
-
     private Long amountInSelectedUnit(String inputAmount, Spinner unitsSpinner) {
         IotaUnits unit = toIotaUnit(unitsSpinner.getSelectedItemPosition());
         return Long.parseLong(inputAmount) * (long) Math.pow(10, unit.getValue());

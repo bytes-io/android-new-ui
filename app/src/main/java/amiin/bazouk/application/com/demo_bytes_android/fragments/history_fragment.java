@@ -63,7 +63,7 @@ public class history_fragment extends Fragment {
 
                 for (TxData txData : listTxData) {
                     HashMap<String, String> mapOfTheNewTransaction = new HashMap<>();
-                    mapOfTheNewTransaction.put("value", String.valueOf(txData.value) + "i");
+                    mapOfTheNewTransaction.put("value", txData.displayIotaBal);
                     mapOfTheNewTransaction.put("date", txData.date.toString());
                     listMapOfEachTransaction.add(mapOfTheNewTransaction);
                 }

@@ -1,11 +1,15 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
-public class ResponseGetBalance {
-    public double miota;
-    public double usd;
+import jota.utils.IotaUnitConverter;
 
-    public ResponseGetBalance(double miota, double usd) {
-        this.miota = miota;
+public class ResponseGetBalance {
+    public long iota;
+    public double usd;
+    public String displayIotaBal;
+
+    public ResponseGetBalance(long iota, double usd) {
+        this.iota = iota;
         this.usd = usd;
+        this.displayIotaBal = IotaUnitConverter.convertRawIotaAmountToDisplayText(iota, false);
     }
 }

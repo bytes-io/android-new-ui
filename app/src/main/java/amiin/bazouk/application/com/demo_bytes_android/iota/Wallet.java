@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import jota.utils.IotaUnits;
 
 public class Wallet {
     private static Iota iota = null;
@@ -83,15 +84,20 @@ public class Wallet {
         }
 
         double balanceInUsd;
-        double balanceInMi;
+        long balanceIni;
         try {
-            balanceInMi = (double)iota.getBalance() / 1000 / 1000 ;
+            balanceIni = iota.getBalance();
+            double balanceInMi = (double)balanceIni / 1000 / 1000;
+//            double balanceInMi = jota.utils.IotaUnitConverter.convertUnits(balanceIni, IotaUnits.IOTA, IotaUnits.MEGA_IOTA);
+
+            System.out.println("balanceIni: " +balanceIni);
+            System.out.println("balanceInMi: " +balanceInMi);
             balanceInUsd = balanceInMi * IOTAPrice.getUSD(context);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
         }
-        return new ResponseGetBalance(balanceInMi, balanceInUsd);
+        return new ResponseGetBalance(balanceIni, balanceInUsd);
     }
 
     public static ResponsePayOut payOut(Context context, String payOutAddress, long amountIni) throws AccountException {
