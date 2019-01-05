@@ -28,6 +28,7 @@ import amiin.bazouk.application.com.demo_bytes_android.iota.ResponseGetBalance;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
 import amiin.bazouk.application.com.demo_bytes_android.iota.AccountException;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponsePayOut;
+import amiin.bazouk.application.com.demo_bytes_android.utils.Round;
 import jota.dto.response.GetBalancesResponse;
 import jota.utils.IotaUnits;
 
@@ -36,7 +37,6 @@ public class crypto_fragment extends Fragment {
     String address;
     String currentUSDBalance;
     String currentIOTABalance;
-    String currentBalance;
     private AlertDialog alertDialog;
 
     @Nullable
@@ -56,7 +56,7 @@ public class crypto_fragment extends Fragment {
                 }
                 try {
                     ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
-                    currentUSDBalance = "$"+responseGetBalance.usd;
+                    currentUSDBalance = "$"+Round.round(responseGetBalance.usd, 2);
                     currentIOTABalance = "("+responseGetBalance.displayIotaBal+")";
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
