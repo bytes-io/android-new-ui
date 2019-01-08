@@ -52,6 +52,7 @@
         android:layout_height="wrap_content"
         android:text="LOGIN"
         android:layout_margin="10dp"
+        android:enabled="false"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"/>
 

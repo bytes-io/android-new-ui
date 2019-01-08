@@ -7,8 +7,11 @@ import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
@@ -21,12 +24,35 @@ public class JoinActivity extends AppCompatActivity {
 
     private TextInputEditText seedEditText;
     private TextInputLayout seedEditTextLayout;
+    private Button loginButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+        loginButton = findViewById(R.id.go_to_code);
         seedEditText = findViewById(R.id.seed_login_seed_input);
+        seedEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().isEmpty()){
+                    loginButton.setEnabled(false);
+                }
+                else{
+                    loginButton.setEnabled(true);
+                }
+            }
+        });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
 
         findViewById(R.id.generate_seed_button).setOnClickListener(new View.OnClickListener() {
@@ -36,13 +62,14 @@ public class JoinActivity extends AppCompatActivity {
                 seedEditText.setText(generatedSeed);
                 Bundle bundle = new Bundle();
                 bundle.putString("generatedSeed", generatedSeed);
+                loginButton.setEnabled(true);
                 CopySeedDialog dialog = new CopySeedDialog();
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), null);
             }
         });
 
-        findViewById(R.id.go_to_code).setOnClickListener(new View.OnClickListener() {
+        loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 loginDialog();

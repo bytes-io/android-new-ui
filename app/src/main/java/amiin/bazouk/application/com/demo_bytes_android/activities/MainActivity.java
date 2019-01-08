@@ -489,7 +489,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 }
                                 long dataUsageForTheMinute = TrafficStats.getTotalTxBytes()+TrafficStats.getTotalRxBytes()-TrafficStats.getMobileRxBytes()-TrafficStats.getMobileTxBytes() - dataWifiAtStart;
                                 System.out.println("data usage: "+dataUsageForTheMinute);
-                                paySeller(maxPriceSeller, address);
+                                paySeller(maxPriceSeller, address,dataUsageForTheMinute);
                             }
                         }
                     });
@@ -855,7 +855,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         checkIfConnectedToWifi();
     }
 
-    private void paySeller(float amountIni,String address) {
+    private void paySeller(float amountIni, String address, long dataUsageForTheMinute) {
         System.out.println("Start the transaction");
         try {
             Wallet.paySeller(this, amountIni,address);
