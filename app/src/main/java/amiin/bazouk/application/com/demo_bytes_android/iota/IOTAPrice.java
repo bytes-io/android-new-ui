@@ -13,7 +13,7 @@ import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.utils.Prices;
 
 public class IOTAPrice {
-    public static float getUSD(Context context) throws IOException, ParseException, AccountException {
+    public static float getMIOTAUSD(Context context) throws IOException, ParseException, AccountException {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
 
         float miotUSD = preferences.getFloat(Constants.PREF_MIOTA_USD, 0);

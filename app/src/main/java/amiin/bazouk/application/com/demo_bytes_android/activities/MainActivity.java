@@ -447,7 +447,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 if(message.substring(0,5).equals("price")) {
                     float maxPriceSeller = Float.valueOf(message.substring(5));
                     float maxPriceBuyer = Float.parseFloat(preferences.getString(
-                            Constants.PREF_MAX_PRICE_BUYER,
+                            Constants.PREF_MAX_GB_PRICE_BUYER,
                             getResources().getString(R.string.default_pref_max_price)
                     ));
                     if (maxPriceSeller <= maxPriceBuyer) {
@@ -787,7 +787,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     @Override
                     public void run() {
                         String maxPriceSeller = PreferenceManager.getDefaultSharedPreferences(getApplicationContext()).getString(
-                                Constants.PREF_MAX_PRICE_SELLER,
+                                Constants.PREF_MAX_GB_PRICE_SELLER,
                                 getResources().getString(R.string.default_pref_max_price)
                         );
                         System.out.print("The price for the seller is: " +maxPriceSeller);
@@ -855,10 +855,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         checkIfConnectedToWifi();
     }
 
-    private void paySeller(float amountIni, String address, long dataUsageForTheMinute) {
-        System.out.println("Start the transaction");
+    private void paySeller(float maxPriceSeller, String address, long dataUsageForTheMinute) {
+        System.out.println("Called Wallet paySeller");
         try {
-            Wallet.paySeller(this, amountIni,address);
+            Wallet.paySeller(this, maxPriceSeller ,address, dataUsageForTheMinute);
         } catch (AccountException e) {
             System.out.println("Failed due to " + e.getMessage());
             e.printStackTrace();

@@ -43,7 +43,7 @@ public class ActivityBuyer extends AppCompatActivity {
             }
         });
         float maxPrice = Float.parseFloat(preferences.getString(
-                Constants.PREF_MAX_PRICE_BUYER,
+                Constants.PREF_MAX_GB_PRICE_BUYER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
 
@@ -58,7 +58,7 @@ public class ActivityBuyer extends AppCompatActivity {
 
                 // save to pref
                 SharedPreferences.Editor editor = preferences.edit();
-                editor.putString(Constants.PREF_MAX_PRICE_BUYER,  maxPriceText);
+                editor.putString(Constants.PREF_MAX_GB_PRICE_BUYER,  maxPriceText);
                 editor.apply();
 
                 finish();

@@ -43,13 +43,13 @@ public class SettingsActivity extends AppCompatActivity {
         });
 
         float maxPriceBuyer = Float.parseFloat(preferences.getString(
-                Constants.PREF_MAX_PRICE_BUYER,
+                Constants.PREF_MAX_GB_PRICE_BUYER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
         ((TextView)findViewById(R.id.textview_max_price_buyer)).setText(Float.toString(maxPriceBuyer));
 
         float maxPriceSeller = Float.parseFloat(preferences.getString(
-                Constants.PREF_MAX_PRICE_SELLER,
+                Constants.PREF_MAX_GB_PRICE_SELLER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
         ((TextView)findViewById(R.id.textview_max_price_seller)).setText(Float.toString(maxPriceSeller));
@@ -103,12 +103,12 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         float maxPriceBuyer = Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(this).getString(
-                Constants.PREF_MAX_PRICE_BUYER,
+                Constants.PREF_MAX_GB_PRICE_BUYER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
         ((TextView)findViewById(R.id.textview_max_price_buyer)).setText(Float.toString(maxPriceBuyer));
         float maxPriceSeller = Float.parseFloat(PreferenceManager.getDefaultSharedPreferences(this).getString(
-                Constants.PREF_MAX_PRICE_SELLER,
+                Constants.PREF_MAX_GB_PRICE_SELLER,
                 this.getResources().getString(R.string.default_pref_max_price)
         ));
         ((TextView)findViewById(R.id.textview_max_price_seller)).setText(Float.toString(maxPriceSeller));

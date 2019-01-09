@@ -4,6 +4,9 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 
+import org.json.simple.parser.ParseException;
+
+import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,29 +23,18 @@ public class Wallet {
     private static int minWeightMagnitude;
     private static String explorerHost;
 
-    public static String paySeller(Context context, float amountIni, String address) throws AccountException {
+    public static String paySeller(Context context, float maxGBPriceSeller, String address, long dataUsageForTheMinute) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        /*float maxPrice = Float.parseFloat(
-                preferences.getString(
-                        ActivityBuyer.PREF_MAX_PRICE,
-                        context.getResources().getString(R.string.default_pref_max_price)
-                ));
-        float miotaUSD = Float.parseFloat(
-                preferences.getString(
-                        MainActivity.PREF_MIOTA_USD,
-                        0
-                ));*/
-
-        // assumptions
-        double consumptionInBytes = 1000;
-
         List<String> tails;
         try {
+
+            float miotaUSD = IOTAPrice.getMIOTAUSD(context);
+            long amountIni = 0;
+
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
             //ADRIEN : float cast to long
@@ -92,7 +84,7 @@ public class Wallet {
 
             System.out.println("balanceIni: " +balanceIni);
             System.out.println("balanceInMi: " +balanceInMi);
-            balanceInUsd = balanceInMi * IOTAPrice.getUSD(context);
+            balanceInUsd = balanceInMi * IOTAPrice.getMIOTAUSD(context);
         } catch (Exception e) {
             e.printStackTrace();
             throw new AccountException("ACCOUNT_ERROR", e);
