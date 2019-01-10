@@ -1,6 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -10,6 +11,9 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -34,8 +38,7 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         loginButton = findViewById(R.id.go_to_code);
-        System.out.println(
-                "loginButton" + loginButton.getBackground());
+        disableLoginButton();
         seedEditText = findViewById(R.id.seed_login_seed_input);
         seedEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -51,11 +54,28 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().isEmpty()) {
-                    loginButton.setEnabled(false);
+                    disableLoginButton();
                 }
                 else{
-                    loginButton.setEnabled(true);
+                    enableLoginButton();
                 }
+            }
+        });
+        seedEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
+
+            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            public void onDestroyActionMode(ActionMode mode) {
+            }
+
+            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+                return false;
+            }
+
+            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+                return false;
             }
         });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
@@ -75,10 +95,10 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 if(s.toString().isEmpty()) {
-                    loginButton.setEnabled(false);
+                    disableLoginButton();
                 }
                 else{
-                    loginButton.setEnabled(true);
+                    enableLoginButton();
                 }
             }
         });
@@ -104,6 +124,18 @@ public class JoinActivity extends AppCompatActivity {
                 loginDialog();
             }
         });
+    }
+
+    private void enableLoginButton() {
+        loginButton.setEnabled(true);
+        loginButton.setBackgroundColor(Color.parseColor("#FFAD6BEF"));
+        loginButton.setAlpha(1);
+    }
+
+    private void disableLoginButton() {
+        loginButton.setEnabled(false);
+        loginButton.setBackgroundColor(Color.GRAY);
+        loginButton.setAlpha(.5f);
     }
 
     private void login(){
@@ -162,11 +194,8 @@ public class JoinActivity extends AppCompatActivity {
             AlertDialog loginDialog = new AlertDialog.Builder(this)
                     .setMessage(SeedValidator.isSeedValid(this, seed))
                     .setCancelable(false)
-                    .setPositiveButton(R.string.buttons_ok, null)
-                    .setNegativeButton(R.string.buttons_cancel, null)
+                    .setNegativeButton(R.string.buttons_ok, null)
                     .create();
-
-            loginDialog.setButton(AlertDialog.BUTTON_POSITIVE, getString(R.string.buttons_login), (dialog, which) -> login());
 
             loginDialog.show();
         }
