@@ -11,9 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -96,7 +93,7 @@ public class JoinActivity extends AppCompatActivity {
                 seedEditText.setText(generatedSeed);
                 Bundle bundle = new Bundle();
                 bundle.putString("generatedSeed", generatedSeed);
-                CopySeedDialog dialog = new CopySeedDialog();
+                GenerateSeedDialog dialog = new GenerateSeedDialog();
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), null);
             }

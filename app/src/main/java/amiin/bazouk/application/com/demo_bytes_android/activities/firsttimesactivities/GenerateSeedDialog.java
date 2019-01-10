@@ -12,11 +12,11 @@ import android.widget.Button;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
 
-public class CopySeedDialog extends DialogFragment {
+public class GenerateSeedDialog extends DialogFragment {
 
     private String generatedSeed;
 
-    public CopySeedDialog() {
+    public GenerateSeedDialog() {
     }
 
     @NonNull
@@ -26,23 +26,11 @@ public class CopySeedDialog extends DialogFragment {
         generatedSeed = bundle.getString("generatedSeed");
 
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                .setTitle(R.string.copy_seed)
-                .setMessage(R.string.messages_copy_seed)
+                .setTitle(R.string.generate_seed)
+                .setMessage(R.string.message_generate_seed)
                 .setCancelable(false)
-                .setPositiveButton(R.string.buttons_ok, null)
-                .setNegativeButton(R.string.buttons_cancel, null)
+                .setNegativeButton(R.string.buttons_ok, null)
                 .create();
-
-        alertDialog.setOnShowListener(dialog -> {
-
-            Button button = alertDialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            button.setOnClickListener(view -> {
-                ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
-                ClipData clip = ClipData.newPlainText(getActivity().getString(R.string.seed), generatedSeed);
-                clipboard.setPrimaryClip(clip);
-                dialog.dismiss();
-            });
-        });
 
         alertDialog.show();
         return alertDialog;
