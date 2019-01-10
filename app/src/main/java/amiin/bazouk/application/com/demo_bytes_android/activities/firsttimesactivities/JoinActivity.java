@@ -51,12 +51,7 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().isEmpty()) {
-                    disableLoginButton();
-                }
-                else{
-                    enableLoginButton();
-                }
+                validateInputs();
             }
         });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
@@ -75,12 +70,7 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().isEmpty()) {
-                    disableLoginButton();
-                }
-                else{
-                    enableLoginButton();
-                }
+                validateInputs();
             }
         });
         emailEditTextLayout = findViewById(R.id.email_login_text_input_layout);
@@ -105,6 +95,17 @@ public class JoinActivity extends AppCompatActivity {
                 loginDialog();
             }
         });
+    }
+
+    private void validateInputs() {
+        String seed = seedEditText.getText().toString();
+        String email = emailEditText.getText().toString();
+        if(seed.isEmpty() || email.isEmpty()) {
+            disableLoginButton();
+        }
+        else{
+            enableLoginButton();
+        }
     }
 
     private void enableLoginButton() {
@@ -150,15 +151,15 @@ public class JoinActivity extends AppCompatActivity {
         String seed = seedEditText.getText().toString();
         String email = emailEditText.getText().toString();
 
-        if (SeedValidator.isSeedValid(this, seed) == null) {
-            seedEditTextLayout.setError(getString(R.string.messages_invalid_seed));
-            if (seedEditTextLayout.getError() != null)
-                return;
-        }
-
         if(!EmailValidator.isValid(email)) {
             emailEditTextLayout.setError(getString(R.string.messages_invalid_email));
             if (emailEditTextLayout.getError() != null)
+                return;
+        }
+
+        if (SeedValidator.isSeedValid(this, seed) != null) {
+            seedEditTextLayout.setError(getString(R.string.messages_invalid_seed));
+            if (seedEditTextLayout.getError() != null)
                 return;
         }
 
