@@ -39,6 +39,7 @@ public class JoinActivity extends AppCompatActivity {
         setContentView(R.layout.activity_join);
         loginButton = findViewById(R.id.go_to_code);
         disableLoginButton();
+
         seedEditText = findViewById(R.id.seed_login_seed_input);
         seedEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -59,23 +60,6 @@ public class JoinActivity extends AppCompatActivity {
                 else{
                     enableLoginButton();
                 }
-            }
-        });
-        seedEditText.setCustomSelectionActionModeCallback(new ActionMode.Callback() {
-
-            public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            public void onDestroyActionMode(ActionMode mode) {
-            }
-
-            public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-                return false;
-            }
-
-            public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-                return false;
             }
         });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
