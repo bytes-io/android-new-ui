@@ -52,6 +52,7 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable s) {
                 validateInputs();
+                seedEditTextLayout.setError(null);
             }
         });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
@@ -70,6 +71,7 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
+                emailEditTextLayout.setError(null);
                 validateInputs();
             }
         });
