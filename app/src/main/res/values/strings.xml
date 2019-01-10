@@ -53,6 +53,7 @@
     <string name="messages_mixed_seed">Your seed contains mixed case characters. Lowercase is converted to uppercase.</string>
     <string name="messages_to_long_seed">Your seed should not contain more than 81 characters. Extra characters are ignored.</string>
     <string name="messages_to_short_seed">Your seed does not contain enough characters. This is not secure.</string>
-    <string name="messages_empty_seed">Please enter a valid seed.</string>
+    <string name="messages_invalid_seed">Please enter a valid seed.</string>
+    <string name="messages_invalid_email">Please enter a valid email.</string>
     <string name="buttons_login">Login</string>
 </resources>

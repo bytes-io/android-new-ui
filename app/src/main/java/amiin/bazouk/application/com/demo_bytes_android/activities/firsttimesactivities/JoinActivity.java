@@ -18,12 +18,15 @@ import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
+import amiin.bazouk.application.com.demo_bytes_android.utils.EmailValidator;
 import jota.utils.SeedRandomGenerator;
 
 public class JoinActivity extends AppCompatActivity {
 
     private TextInputEditText seedEditText;
     private TextInputLayout seedEditTextLayout;
+    private TextInputEditText emailEditText;
+    private TextInputLayout emailEditTextLayout;
     private Button loginButton;
 
     @Override
@@ -31,6 +34,8 @@ public class JoinActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
         loginButton = findViewById(R.id.go_to_code);
+        System.out.println(
+                "loginButton" + loginButton.getBackground());
         seedEditText = findViewById(R.id.seed_login_seed_input);
         seedEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -45,7 +50,7 @@ public class JoinActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                if(s.toString().isEmpty()){
+                if(s.toString().isEmpty()) {
                     loginButton.setEnabled(false);
                 }
                 else{
@@ -55,6 +60,31 @@ public class JoinActivity extends AppCompatActivity {
         });
         seedEditTextLayout = findViewById(R.id.seed_login_seed_text_input_layout);
 
+        emailEditText = findViewById(R.id.email_input);
+        emailEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(s.toString().isEmpty()) {
+                    loginButton.setEnabled(false);
+                }
+                else{
+                    loginButton.setEnabled(true);
+                }
+            }
+        });
+        emailEditTextLayout = findViewById(R.id.email_login_text_input_layout);
+
+
         findViewById(R.id.generate_seed_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -62,7 +92,6 @@ public class JoinActivity extends AppCompatActivity {
                 seedEditText.setText(generatedSeed);
                 Bundle bundle = new Bundle();
                 bundle.putString("generatedSeed", generatedSeed);
-                loginButton.setEnabled(true);
                 CopySeedDialog dialog = new CopySeedDialog();
                 dialog.setArguments(bundle);
                 dialog.show(getFragmentManager(), null);
@@ -86,7 +115,7 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     private void sendEmailWithCode(String code) {
-        final String recipient = ((TextInputEditText)findViewById(R.id.enter_your_email)).getText().toString();
+        final String recipient = ((TextInputEditText)findViewById(R.id.email_input)).getText().toString();
         Thread sendEmailThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -106,10 +135,17 @@ public class JoinActivity extends AppCompatActivity {
 
     private void loginDialog() {
         String seed = seedEditText.getText().toString();
+        String email = emailEditText.getText().toString();
 
-        if (seed.isEmpty()) {
-            seedEditTextLayout.setError(getString(R.string.messages_empty_seed));
+        if (SeedValidator.isSeedValid(this, seed) == null) {
+            seedEditTextLayout.setError(getString(R.string.messages_invalid_seed));
             if (seedEditTextLayout.getError() != null)
+                return;
+        }
+
+        if(!EmailValidator.isValid(email)) {
+            emailEditTextLayout.setError(getString(R.string.messages_invalid_email));
+            if (emailEditTextLayout.getError() != null)
                 return;
         }
 
