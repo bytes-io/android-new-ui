@@ -50,6 +50,8 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 import com.crashlytics.android.Crashlytics;
+
+import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConnect;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
@@ -721,7 +723,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private void startServer() {
-        if (!isConnectedToInternet(getApplicationContext())) {
+        if (!InternetConnect.isConnected(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -870,7 +872,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             @Override
             public void run() {
                 while (true) {
-                    if (!isConnectedToInternet(getApplicationContext())) {
+                    if (!InternetConnect.isConnected(getApplicationContext())) {
                         stopServer();
                         return;
                     }
@@ -880,14 +882,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         checkIfConnectedToWifiThread.start();
     }
 
-    public static boolean isConnectedToInternet(Context context) {
-        final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        if (connectivityManager != null) {
-            NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-            return networkInfo != null && networkInfo.isAvailable() && networkInfo.isConnected();
-        }
-        return false;
-    }
 
     private void turnOnHotspot() {
         if (mWifiManager == null) {

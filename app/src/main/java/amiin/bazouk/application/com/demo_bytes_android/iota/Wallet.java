@@ -14,6 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
+import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConnect;
 import jota.utils.IotaUnits;
 
 public class Wallet {
@@ -148,6 +149,9 @@ public class Wallet {
 
 
     private static Iota createIota(Context context) {
+        if(!InternetConnect.isConnected(context)) {
+            return null;
+        }
         providers = context.getResources().getStringArray(R.array.mainnet_providers);
         minWeightMagnitude = context.getResources().getInteger(R.integer.mainnet_min_weight_magnitude);
         explorerHost = context.getResources().getString(R.string.mainnet_explorer_host);
