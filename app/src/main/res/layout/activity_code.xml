@@ -27,6 +27,14 @@
         app:pinLength="6"
         app:pinWidth="40dp" />
 
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="191dp"
+        android:text="Verification code is sent to your email" />
 
 
 </RelativeLayout>
