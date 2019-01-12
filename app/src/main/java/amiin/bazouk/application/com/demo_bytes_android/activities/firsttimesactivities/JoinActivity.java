@@ -19,7 +19,10 @@ import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
+import amiin.bazouk.application.com.demo_bytes_android.utils.Email;
 import amiin.bazouk.application.com.demo_bytes_android.utils.EmailValidator;
+import amiin.bazouk.application.com.demo_bytes_android.utils.GMailSender;
+import amiin.bazouk.application.com.demo_bytes_android.utils.RandomDigits;
 import jota.utils.SeedRandomGenerator;
 
 public class JoinActivity extends AppCompatActivity {
@@ -123,10 +126,10 @@ public class JoinActivity extends AppCompatActivity {
     }
 
     private void login(){
-        String code = "123456";
+        String code = RandomDigits.getRandom6();
         sendEmailWithCode(code);
         Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
-        intent.putExtra(Constants.CODE,code);
+        intent.putExtra(Constants.CODE, code);
         startActivity(intent);
     }
 
@@ -136,11 +139,21 @@ public class JoinActivity extends AppCompatActivity {
             @Override
             public void run() {
                 try {
-                    GMailSender sender = new GMailSender(getResources().getString(R.string.username), getResources().getString(R.string.password));
-                    sender.sendMail("This is Subject",
-                            code,
-                            recipient,
-                            recipient);
+
+                    Email email = new Email(
+                            getResources().getString(R.string.mailgun_domain_name),
+                            getResources().getString(R.string.mailgun_api_key)
+                    );
+                    email.sendAuthEmail("pasupulaphani@gmail.com", code);
+
+
+//                    GMailSender sender = new GMailSender(getResources().getString(R.string.username), getResources().getString(R.string.password));
+//                    sender.sendMail("This is Subject",
+//                            code,
+//                            recipient,
+//                            recipient);
+
+
                 } catch (Exception e) {
                     Log.e("SendMail", e.getMessage(), e);
                 }

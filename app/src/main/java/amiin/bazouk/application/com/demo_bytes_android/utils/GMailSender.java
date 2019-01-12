@@ -1,4 +1,4 @@
-package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities;
+package amiin.bazouk.application.com.demo_bytes_android.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -15,6 +15,8 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
+import amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities.JSSEProvider;
 
 public class GMailSender extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
