@@ -23,7 +23,7 @@ public class Wallet {
     private static int minWeightMagnitude;
     private static String explorerHost;
 
-    public static String paySeller(Context context, float maxGBPriceSeller, String address, long dataUsageForTheMinute) throws AccountException {
+    public static String paySeller(Context context, float maxGBPriceSeller, String address, long dataUsageBytesPerMinute) throws AccountException {
 
         if (iota == null) {
             iota = createIota(context);
@@ -33,12 +33,20 @@ public class Wallet {
         try {
 
             float miotaUSD = IOTAPrice.getMIOTAUSD(context);
-            long amountIni = 0;
+            double iotaUSD = (double)miotaUSD / 1000 / 1000;
+            System.out.println(miotaUSD + " iotaUSD: " + iotaUSD);
+
+            double costPerByte = (double)maxGBPriceSeller / (1024 * 1024);
+            System.out.println("costPerByte: " + costPerByte);
+
+            double amountToPayInUSD = costPerByte * dataUsageBytesPerMinute;
+            System.out.println("amountToPayInUSD: " + amountToPayInUSD);
+
+            long amountToPayIni = (long) (amountToPayInUSD / iotaUSD);
 
             System.out.println("before makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
-            //ADRIEN : float cast to long
-            tails = iota.makeTx(address, (long)amountIni);
+            tails = iota.makeTx(address, amountToPayIni);
             System.out.println("after makeTx: " + DateFormat.getDateTimeInstance()
                     .format(new Date()) );
 
