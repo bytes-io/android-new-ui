@@ -2,6 +2,7 @@ package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesact
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.NetworkOnMainThreadException;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
@@ -13,6 +14,8 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import java.io.IOException;
 
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
@@ -125,14 +128,13 @@ public class JoinActivity extends AppCompatActivity {
         loginButton.setAlpha(.5f);
     }
 
-    private void sendEmailWithCode(String code) throws Exception {
+    private void sendEmailWithCode(String code) throws IOException {
         final String recipient = ((TextInputEditText)findViewById(R.id.email_input)).getText().toString();
         Email email = new Email(
                 getResources().getString(R.string.mailgun_domain_name),
                 getResources().getString(R.string.mailgun_api_key)
         );
         email.sendAuthEmail(recipient, code);
-
     }
 
     private void loginDialog() {
@@ -152,9 +154,9 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         String code = RandomDigits.getRandom6();
+        String errMsg = null;
 
-        try {System.out.print("codecodecode" + code);
-
+        try {
             sendEmailWithCode(code);
             Seed.saveSeed(getApplicationContext(), seed);
 
@@ -162,19 +164,22 @@ public class JoinActivity extends AppCompatActivity {
             intent.putExtra(Constants.CODE, code);
             startActivity(intent);
 
+        } catch (NetworkOnMainThreadException e) {
+            errMsg = "Email cannot be sent. Check your internet.";
         } catch (Exception e) {
-            System.out.print("AAA" + e);
-
-            AlertDialog alertDialog = new AlertDialog.Builder(this)
-                    .setTitle("Unable to proceed")
-                    .setMessage(e.getMessage())
-                    .setCancelable(false)
-                    .setNegativeButton(R.string.buttons_ok, null)
-                    .create();
-
-            alertDialog.show();
-            disableLoginButton();
+            e.printStackTrace();
+            Log.d("LOGIN", e.toString(), e);
+            errMsg = e.getMessage() != null ? e.getMessage() : "Internal Error occurred.";
         }
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle("Unable to proceed.")
+                .setMessage(errMsg)
+                .setCancelable(false)
+                .setNegativeButton(R.string.buttons_ok, null)
+                .create();
+
+        alertDialog.show();
     }
 
     protected void onStart(){

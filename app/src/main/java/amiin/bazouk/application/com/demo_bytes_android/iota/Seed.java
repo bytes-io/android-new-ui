@@ -11,18 +11,8 @@ import amiin.bazouk.application.com.demo_bytes_android.utils.AESCrypt;
 public class Seed {
     public static void saveSeed(Context context, String seed) throws Exception {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-
-        if (SeedValidator.isSeedValid(context, seed) != null) {
-            throw new Exception("Internal error. Invalid seed.");
-        }
-
-        try {
-            AESCrypt aes = new AESCrypt(context.getResources().getString(R.string.seed_password));
-            preferences.edit().putString(Constants.ENC_SEED, aes.encrypt(seed)).apply();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new Exception("Internal error. Invalid seed.", e);
-        }
+        AESCrypt aes = new AESCrypt(context.getResources().getString(R.string.seed_password));
+        preferences.edit().putString(Constants.ENC_SEED, aes.encrypt(seed)).apply();
     }
 
     public static String getSeed(Context context) throws Exception {

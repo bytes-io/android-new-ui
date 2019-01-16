@@ -14,7 +14,7 @@ public class Email {
         apiKey = apiKey2;
     }
 
-    public ResponseBody sendAuthEmail(String toEmail, String code) throws Exception {
+    public ResponseBody sendAuthEmail(String toEmail, String code) throws IOException {
         String url = "https://api.mailgun.net/v3/" + domainName + "/messages";
 
         RequestBody formBody = new FormBody.Builder()
@@ -32,14 +32,8 @@ public class Email {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new BasicAuthInterceptor("api", apiKey))
                 .build();
-        Response response;
-        try {
-            response = client.newCall(request).execute();
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new Exception("Unable to send email.", e);
-        }
 
+        Response response  = client.newCall(request).execute();
         return response.body();
     }
 }
