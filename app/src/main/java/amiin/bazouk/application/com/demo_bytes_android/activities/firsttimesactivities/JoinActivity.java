@@ -130,11 +130,23 @@ public class JoinActivity extends AppCompatActivity {
 
     private void sendEmailWithCode(String code) throws IOException {
         final String recipient = ((TextInputEditText)findViewById(R.id.email_input)).getText().toString();
-        Email email = new Email(
-                getResources().getString(R.string.mailgun_domain_name),
-                getResources().getString(R.string.mailgun_api_key)
-        );
-        email.sendAuthEmail(recipient, code);
+        Thread sendEmailThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Email email = new Email(
+                            getResources().getString(R.string.mailgun_domain_name),
+                            getResources().getString(R.string.mailgun_api_key)
+                    );
+                    email.sendAuthEmail(recipient, code);
+
+                } catch (Exception e) {
+                    Log.e("SendMail", e.getMessage(), e);
+                }
+            }
+        });
+        sendEmailThread.start();
     }
 
     private void loginDialog() {
@@ -153,8 +165,12 @@ public class JoinActivity extends AppCompatActivity {
                 return;
         }
 
+        if (!InternetConn.isConnected(getApplicationContext())) {
+            showAlertDialog("Email cannot be sent. Not connected to internet.");
+            return;
+        }
+
         String code = RandomDigits.getRandom6();
-        String errMsg = null;
 
         try {
             sendEmailWithCode(code);
@@ -163,17 +179,18 @@ public class JoinActivity extends AppCompatActivity {
             Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
             intent.putExtra(Constants.CODE, code);
             startActivity(intent);
-            return;
 
         } catch (NetworkOnMainThreadException e) {
             e.printStackTrace();
-            errMsg = "Email cannot be sent. Not connected to internet.";
+            showAlertDialog("Email cannot be sent. Not connected to internet.");
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("LOGIN", e.toString(), e);
-            errMsg = e.getMessage() != null ? e.getMessage() : "Internal Error occurred.";
+            showAlertDialog(e.getMessage() != null ? e.getMessage() : "Internal Error occurred.");
         }
+    }
 
+    private void showAlertDialog(String errMsg) {
         AlertDialog alertDialog = new AlertDialog.Builder(this)
                 .setTitle("Unable to proceed")
                 .setMessage(errMsg)
