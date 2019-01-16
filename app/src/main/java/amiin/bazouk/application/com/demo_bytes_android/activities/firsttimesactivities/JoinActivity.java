@@ -165,7 +165,7 @@ public class JoinActivity extends AppCompatActivity {
             startActivity(intent);
 
         } catch (NetworkOnMainThreadException e) {
-            errMsg = "Email cannot be sent. Check your internet.";
+            errMsg = "Email cannot be sent. Not connected to internet.";
         } catch (Exception e) {
             e.printStackTrace();
             Log.d("LOGIN", e.toString(), e);
@@ -173,7 +173,7 @@ public class JoinActivity extends AppCompatActivity {
         }
 
         AlertDialog alertDialog = new AlertDialog.Builder(this)
-                .setTitle("Unable to proceed.")
+                .setTitle("Unable to proceed")
                 .setMessage(errMsg)
                 .setCancelable(false)
                 .setNegativeButton(R.string.buttons_ok, null)
