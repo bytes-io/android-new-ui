@@ -163,8 +163,10 @@ public class JoinActivity extends AppCompatActivity {
             Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
             intent.putExtra(Constants.CODE, code);
             startActivity(intent);
+            return;
 
         } catch (NetworkOnMainThreadException e) {
+            e.printStackTrace();
             errMsg = "Email cannot be sent. Not connected to internet.";
         } catch (Exception e) {
             e.printStackTrace();
