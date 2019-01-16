@@ -1,8 +1,8 @@
 package amiin.bazouk.application.com.demo_bytes_android.utils;
 
-import okhttp3.*;
 import java.io.IOException;
-import org.json.simple.parser.ParseException;
+
+import okhttp3.*;
 
 public class Email {
 
@@ -14,7 +14,7 @@ public class Email {
         apiKey = apiKey2;
     }
 
-    public void sendAuthEmail(String toEmail, String code) throws IOException, ParseException {
+    public ResponseBody sendAuthEmail(String toEmail, String code) throws Exception {
         String url = "https://api.mailgun.net/v3/" + domainName + "/messages";
 
         RequestBody formBody = new FormBody.Builder()
@@ -32,8 +32,14 @@ public class Email {
         OkHttpClient client = new OkHttpClient.Builder()
                 .addInterceptor(new BasicAuthInterceptor("api", apiKey))
                 .build();
-        Response response = client.newCall(request).execute();
+        Response response;
+        try {
+            response = client.newCall(request).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new Exception("Unable to send email.", e);
+        }
 
-        System.out.println(response.body().string());
+        return response.body();
     }
 }

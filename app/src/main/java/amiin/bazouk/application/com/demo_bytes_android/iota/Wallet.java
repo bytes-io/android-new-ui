@@ -1,12 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.iota;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,8 +9,7 @@ import java.util.Date;
 import java.util.List;
 
 import amiin.bazouk.application.com.demo_bytes_android.R;
-import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConnect;
-import jota.utils.IotaUnits;
+import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
 
 public class Wallet {
     private static Iota iota = null;
@@ -149,7 +143,7 @@ public class Wallet {
 
 
     private static Iota createIota(Context context) {
-        if(!InternetConnect.isConnected(context)) {
+        if(!InternetConn.isConnected(context)) {
             return null;
         }
         providers = context.getResources().getStringArray(R.array.mainnet_providers);

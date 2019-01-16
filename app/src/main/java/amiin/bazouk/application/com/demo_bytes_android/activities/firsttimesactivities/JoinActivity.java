@@ -21,7 +21,7 @@ import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
 import amiin.bazouk.application.com.demo_bytes_android.utils.Email;
 import amiin.bazouk.application.com.demo_bytes_android.utils.EmailValidator;
-import amiin.bazouk.application.com.demo_bytes_android.utils.GMailSender;
+import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
 import amiin.bazouk.application.com.demo_bytes_android.utils.RandomDigits;
 import jota.utils.SeedRandomGenerator;
 
@@ -125,41 +125,14 @@ public class JoinActivity extends AppCompatActivity {
         loginButton.setAlpha(.5f);
     }
 
-    private void login(){
-        String code = RandomDigits.getRandom6();
-        sendEmailWithCode(code);
-        Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
-        intent.putExtra(Constants.CODE, code);
-        startActivity(intent);
-    }
-
-    private void sendEmailWithCode(String code) {
+    private void sendEmailWithCode(String code) throws Exception {
         final String recipient = ((TextInputEditText)findViewById(R.id.email_input)).getText().toString();
-        Thread sendEmailThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
+        Email email = new Email(
+                getResources().getString(R.string.mailgun_domain_name),
+                getResources().getString(R.string.mailgun_api_key)
+        );
+        email.sendAuthEmail(recipient, code);
 
-                    Email email = new Email(
-                            getResources().getString(R.string.mailgun_domain_name),
-                            getResources().getString(R.string.mailgun_api_key)
-                    );
-                    email.sendAuthEmail("pasupulaphani@gmail.com", code);
-
-
-//                    GMailSender sender = new GMailSender(getResources().getString(R.string.username), getResources().getString(R.string.password));
-//                    sender.sendMail("This is Subject",
-//                            code,
-//                            recipient,
-//                            recipient);
-
-
-                } catch (Exception e) {
-                    Log.e("SendMail", e.getMessage(), e);
-                }
-            }
-        });
-        sendEmailThread.start();
     }
 
     private void loginDialog() {
@@ -178,23 +151,29 @@ public class JoinActivity extends AppCompatActivity {
                 return;
         }
 
-        if (SeedValidator.isSeedValid(this, seed) == null) {
-            try {
-                Seed.saveSeed(getApplicationContext(), seed);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+        String code = RandomDigits.getRandom6();
 
-            login();
+        try {System.out.print("codecodecode" + code);
 
-        } else {
-            AlertDialog loginDialog = new AlertDialog.Builder(this)
-                    .setMessage(SeedValidator.isSeedValid(this, seed))
+            sendEmailWithCode(code);
+            Seed.saveSeed(getApplicationContext(), seed);
+
+            Intent intent = new Intent(JoinActivity.this, CodeActivity.class);
+            intent.putExtra(Constants.CODE, code);
+            startActivity(intent);
+
+        } catch (Exception e) {
+            System.out.print("AAA" + e);
+
+            AlertDialog alertDialog = new AlertDialog.Builder(this)
+                    .setTitle("Unable to proceed")
+                    .setMessage(e.getMessage())
                     .setCancelable(false)
                     .setNegativeButton(R.string.buttons_ok, null)
                     .create();
 
-            loginDialog.show();
+            alertDialog.show();
+            disableLoginButton();
         }
     }
 

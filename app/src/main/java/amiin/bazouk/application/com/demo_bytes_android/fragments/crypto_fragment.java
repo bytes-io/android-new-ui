@@ -105,11 +105,13 @@ public class crypto_fragment extends Fragment {
                 addressEmptyTextView.setText("");
                 final TextView amountEmptyTextView = result.findViewById(R.id.amount_empty);
                 amountEmptyTextView.setText("");
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext()).setTitle(R.string.withdrawal_confirmation).setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                    }
-                });
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext())
+                        .setTitle(R.string.withdrawal_confirmation)
+                        .setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                            }
+                        });
                 Thread makeWithdrawalThread = new Thread(new Runnable() {
                     @Override
                     public void run() {

@@ -51,7 +51,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 import com.crashlytics.android.Crashlytics;
 
-import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConnect;
+import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
@@ -723,7 +723,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     }
 
     private void startServer() {
-        if (!InternetConnect.isConnected(getApplicationContext())) {
+        if (!InternetConn.isConnected(getApplicationContext())) {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -872,7 +872,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             @Override
             public void run() {
                 while (true) {
-                    if (!InternetConnect.isConnected(getApplicationContext())) {
+                    if (!InternetConn.isConnected(getApplicationContext())) {
                         stopServer();
                         return;
                     }
