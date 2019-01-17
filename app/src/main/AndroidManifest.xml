@@ -56,12 +56,15 @@
             android:name=".activities.AddACreditCardActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".activities.firsttimesactivities.JoinActivity"><intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+        <activity android:name=".activities.firsttimesactivities.JoinActivity" android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
-        <activity android:name=".activities.firsttimesactivities.CodeActivity"></activity>
+        <activity android:name=".activities.firsttimesactivities.CodeActivity"
+            android:screenOrientation="portrait" />
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="5ff7630e947a463d4e71088942a6567f6a5237ac"
