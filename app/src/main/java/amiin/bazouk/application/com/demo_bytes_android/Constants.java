@@ -1,6 +1,8 @@
 package amiin.bazouk.application.com.demo_bytes_android;
 
 public class Constants {
+    public static final String PREF_RUN_WITH_ROOT = "pref_run_with_root";
+
     public static final String IS_FIRST_TIME = "is_first_time";
     public static final String CODE = "code";
 

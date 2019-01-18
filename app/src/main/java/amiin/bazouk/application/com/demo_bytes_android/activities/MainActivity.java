@@ -51,6 +51,7 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 import com.crashlytics.android.Crashlytics;
 
+import amiin.bazouk.application.com.demo_bytes_android.utils.DetectRoot;
 import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
 import io.fabric.sdk.android.Fabric;
 
@@ -111,6 +112,15 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             StrictMode.ThreadPolicy policy = new
                     StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
+        }
+
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preferences.getBoolean(Constants.PREF_RUN_WITH_ROOT, false)) {
+            if (DetectRoot.isDeviceRooted()) {
+                RootDetectedDialog dialog = new RootDetectedDialog();
+                dialog.show(this.getFragmentManager(), null);
+            }
         }
 
         mWifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
@@ -182,7 +192,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
         navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
         SharedPreferences.Editor editor = preferences.edit();
         editor.putBoolean(Constants.IS_SELLER, false);
         editor.putBoolean(Constants.IS_BUYER, false);

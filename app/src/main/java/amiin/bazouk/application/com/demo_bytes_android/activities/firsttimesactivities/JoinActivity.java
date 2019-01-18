@@ -1,6 +1,7 @@
 package amiin.bazouk.application.com.demo_bytes_android.activities.firsttimesactivities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.NetworkOnMainThreadException;
 import android.preference.PreferenceManager;
@@ -20,8 +21,10 @@ import java.io.IOException;
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.activities.MainActivity;
+import amiin.bazouk.application.com.demo_bytes_android.activities.RootDetectedDialog;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Seed;
 import amiin.bazouk.application.com.demo_bytes_android.iota.SeedValidator;
+import amiin.bazouk.application.com.demo_bytes_android.utils.DetectRoot;
 import amiin.bazouk.application.com.demo_bytes_android.utils.Email;
 import amiin.bazouk.application.com.demo_bytes_android.utils.EmailValidator;
 import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
@@ -36,10 +39,22 @@ public class JoinActivity extends AppCompatActivity {
     private TextInputLayout emailEditTextLayout;
     private Button loginButton;
 
+    private static SharedPreferences preferences;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_join);
+
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (!preferences.getBoolean(Constants.PREF_RUN_WITH_ROOT, false)) {
+            if (DetectRoot.isDeviceRooted()) {
+                RootDetectedDialog dialog = new RootDetectedDialog();
+                dialog.show(this.getFragmentManager(), null);
+            }
+        }
+
+
         loginButton = findViewById(R.id.go_to_code);
         disableLoginButton();
 
