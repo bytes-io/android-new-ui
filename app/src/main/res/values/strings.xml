@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Bytes</string>
+    <string name="title_root_detected">Device probably rooted!</string>
+    <string name="message_root_detected">Unfortunately, rooted devices are not supported. Closing the app.</string>
     <string name="network_information">Network information</string>
     <string name="Bytes">Bytes</string>
     <string name="ready_to_connect">Ready to connect?</string>
