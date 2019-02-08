@@ -63,6 +63,7 @@ import java.net.NetworkInterface;
 import java.net.SocketException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -70,6 +71,7 @@ import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Random;
 
 import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
@@ -654,7 +656,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             mWifiManager.setWifiEnabled(true);
             WifiConfiguration conf = new WifiConfiguration();
             conf.SSID = String.format("\"%s\"", ssid);
-            String password = "12345678";
+            String password = getPasswordFromSsid(ssid);
 
             conf.status = WifiConfiguration.Status.ENABLED;
             conf.priority = 40;
@@ -860,10 +862,38 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
                 changeMenuColorAndTitle(R.string.selling, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                 getNetworkStatsServer();
+                String ssid = "bytes-"+randomString();
+                ((TextView)findViewById(R.id.ssid_to_use)).setText(ssid);
+                ((TextView)findViewById(R.id.password_to_use)).setText(getPasswordFromSsid(ssid));
             }
         });
         //paySeller();
         checkIfConnectedToWifi();
+    }
+
+    private String randomString() {
+        Random rand=new Random();
+        String possibleLetters = "abcdefghijklmnopqrstuvwxyz";
+        StringBuilder sb = new StringBuilder(8);
+        for(int i = 0; i < 8; i++)
+            sb.append(possibleLetters.charAt(rand.nextInt(possibleLetters.length())));
+        return sb.toString();
+
+    }
+
+    private String getPasswordFromSsid(String ssid) {
+        String res = "";
+        for(int i = 6;i<ssid.length();i++){
+            char letter = ssid.charAt(i);
+            if(letter == 'z'){
+                letter = 'a';
+            }
+            else{
+                letter ++;
+            }
+            res+=letter;
+        }
+        return res;
     }
 
     private void paySeller(float maxPriceSeller, String address, long dataUsageForTheMinute) {
@@ -898,8 +928,8 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
         WifiConfiguration wifiCon = new WifiConfiguration();
         //System.out.println("Wifi ssid: "+wifiCon.SSID);
-        wifiCon.SSID = "bytes-";
-        wifiCon.wepKeys[0] = "12345678";
+        //wifiCon.SSID = "bytes-";
+        //wifiCon.wepKeys[0] = "12345678";
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             MyOreoWifiManager myOreoWifiManager = new MyOreoWifiManager(this);
             myOreoWifiManager.startTethering();
