@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.app.usage.NetworkStats;
 import android.app.usage.NetworkStatsManager;
 import android.content.BroadcastReceiver;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -45,6 +47,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.handshake.ServerHandshake;
@@ -289,6 +293,26 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 mHandler.postDelayed(mRunnableClient, 10000);
             }
         };
+
+        findViewById(R.id.ssid_to_use).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("text to copy", ((TextView) findViewById(R.id.ssid_to_use)).getText().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(),"Name of Hotspot Copied",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        findViewById(R.id.password_to_use).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ClipboardManager clipboard = (ClipboardManager) getApplicationContext().getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("text to copy", ((TextView) findViewById(R.id.password_to_use)).getText().toString());
+                clipboard.setPrimaryClip(clip);
+                Toast.makeText(getApplicationContext(),"Password of Hotspot Copied",Toast.LENGTH_SHORT).show();
+            }
+        });
 
         findViewById(R.id.sell_button).setOnClickListener(new View.OnClickListener() {
             @Override
