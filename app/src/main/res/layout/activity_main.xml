@@ -4,6 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="20dp"
+    android:layout_marginRight="20dp"
     tools:context=".activities.MainActivity">
 
     <LinearLayout
@@ -274,58 +276,64 @@
                     android:orientation="vertical"
                     android:layout_alignParentBottom="true">
 
-                    <LinearLayout
-                        android:id="@+id/buttons"
-                        android:layout_width="match_parent"
+                    <RelativeLayout
+                        android:id="@+id/wallet_button"
+                        android:layout_width="wrap_content"
+                        android:layout_centerHorizontal="true"
                         android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
+                        android:layout_above="@+id/buy_button"
+                        android:layout_marginBottom="20dp">
+
+                        <ImageView
+                            android:id="@+id/peddy_image"
+                            android:src="@drawable/peggy_banl"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_marginLeft="30dp"/>
+
+                        <TextView
+                            android:id="@+id/check_txt"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CHECK YOUR WALLET"
+                            android:layout_centerVertical="true"
+                            android:layout_toRightOf="@+id/peddy_image"
+                            android:layout_marginLeft="12dp"
+                            android:textSize="15sp"
+                            android:textColor="@color/blue"
+                            android:textStyle="bold"/>
+
+                        <ImageView
+                            android:layout_toRightOf="@+id/check_txt"
+                            android:src="@drawable/ic_next"
+                            android:layout_width="30dp"
+                            android:layout_centerVertical="true"
+                            android:layout_height="30dp"
+                            android:layout_marginLeft="30dp"/>
+
+                    </RelativeLayout>
 
                         <Button
                             android:id="@+id/buy_button"
-                            android:layout_width="0dp"
+                            android:layout_above="@+id/sell_button"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:layout_weight="1"
-                            android:textColor="@color/selector_text_color_buttons"
-                            android:background="@drawable/selector_background_buttons"
-                            android:text="@string/buy_data" />
+                            android:background="@drawable/button_border_color_grey"
+                            android:text="@string/buy_data"
+                            android:layout_marginBottom="20dp"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"/>
 
                         <Button
                             android:id="@+id/sell_button"
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:layout_weight="1"
-                            android:textColor="@color/selector_text_color_buttons"
-                            android:background="@drawable/selector_background_buttons"
-                            android:text="@string/sell_data" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/buttons1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:orientation="horizontal"
-                        android:weightSum="2">
-
-                        <Button
-                            android:id="@+id/wallet_button"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="20dp"
-                            android:layout_marginRight="20dp"
-                            android:layout_weight="2"
-                            android:background="@drawable/roundbutton"
-                            android:text="@string/check_your_wallet"
-                            android:textColor="@android:color/white" />
-
-                    </LinearLayout>
+                            android:background="@drawable/button_border_color_grey"
+                            android:layout_alignParentBottom="true"
+                            android:layout_marginBottom="30dp"
+                            android:text="@string/sell_data"
+                            android:textColor="@android:color/white"
+                            android:textSize="22sp"/>
 
             </LinearLayout>
 

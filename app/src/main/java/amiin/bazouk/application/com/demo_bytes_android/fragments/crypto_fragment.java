@@ -68,6 +68,9 @@ public class crypto_fragment extends Fragment {
                 if(currentUSDBalance == null){
                     currentUSDBalance = "$--";
                 }
+                /*if(Double.parseDouble(currentUSDBalance)>5){
+                    result.findViewById(R.id.current_balance);
+                }*/
                 FragmentActivity fragmentActivity= getActivity();
                 if(fragmentActivity!=null) {
                     getActivity().runOnUiThread(new Runnable() {
@@ -284,5 +287,13 @@ public class crypto_fragment extends Fragment {
 
         return iotaUnits;
     }
+
+    /*@Override
+    public void onResume(){
+        super.onResume();
+        if(){
+            butt
+        }
+    }*/
 
 }
