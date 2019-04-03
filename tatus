@@ -1,0 +1,845 @@
+[33mcommit 42c6715177c7ca19c38eb3d48e2fa451a80876fa[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Mar 29 21:16:09 2019 +0000
+
+    push new main_activity
+
+[33mcommit aa1e7ca9f520a1c550899c5af883edf8ef19021c[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Feb 8 16:46:37 2019 +0000
+
+    copy password
+
+[33mcommit a907ab3eea7c253d4e8785549d0bae3924de8cd4[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Feb 8 16:27:01 2019 +0000
+
+    option 3
+
+[33mcommit cadba31c087b35c0d7ec2b8ed8368ba97e9abf75[m
+Merge: 9ca4e7a 37df199
+Author: Phaninder Pasupula <pasupulaphani@gmail.com>
+Date:   Fri Jan 18 22:27:23 2019 +0000
+
+    Merge pull request #1 from bytes-io/disallow_rooted_app
+    
+    Disallow rooted app
+
+[33mcommit 37df19906e674b0ea832bca6f351dc822ee00ccb[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Jan 18 22:25:37 2019 +0000
+
+    Disallow rooted app
+
+[33mcommit 9ca4e7af480f282f6b2998d5e689a25395dcc46e[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 17 17:54:06 2019 +0000
+
+    Disable screen orientation change
+
+[33mcommit 6ff447d458b8e371d750619bd5a01fc1ac5ff2f8[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 16 14:31:40 2019 +0000
+
+    Check for internet conn at join activity
+
+[33mcommit 4db815e9b8bd1aa263007348c60f0f01477907fc[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 16 14:16:47 2019 +0000
+
+    more debug
+
+[33mcommit c63197b3239297381d1d8a07547f9a1141bb2b7a[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 16 13:49:57 2019 +0000
+
+    Fix typo
+
+[33mcommit 9c1fd8f13195f4cbaa3fdfddcb1164e4bcc0c253[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 16 13:48:40 2019 +0000
+
+    SOme refactoring to try caches
+
+[33mcommit 0995e7b9e97792b6168e478cc3c8caadbc346944[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 16 13:25:19 2019 +0000
+
+    Update to check errors in join activity
+
+[33mcommit b6da98bfc02c44a0288671a40116c30e82975c6a[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 12 17:56:08 2019 +0000
+
+    Added email verification sent text
+
+[33mcommit b27b7c6a48d6001635bd6c3bf59fd9ba7bb2bd31[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 12 17:47:30 2019 +0000
+
+    Added Email validator
+
+[33mcommit 30ac7295e12eb4a9a8e0b59ebab6f17da5976c99[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 12 14:30:52 2019 +0000
+
+    Check internet before attempting to connect to iota node
+
+[33mcommit 61717d636efca0ef7b94856b1fb3333097167799[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 12 13:39:42 2019 +0000
+
+    Merge calculation of payPer Use
+
+[33mcommit 225c0308b164ba4f72810c849a78593ea7aae0fa[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 23:20:16 2019 +0000
+
+    Clear err msg after input
+
+[33mcommit 0dae5bb28270543b8e683ab768c5ccaa748c52bb[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 23:14:06 2019 +0000
+
+    Minor fix to login btn validation
+
+[33mcommit 4f387839c82bce256adb01b76232f12288cd5212[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 22:59:32 2019 +0000
+
+    Fix seed generation messages
+
+[33mcommit 098c62d81733644b9e686cc20d7888160fbf7e8c[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 22:51:57 2019 +0000
+
+    Disabled copy and paste for seed text edit
+
+[33mcommit 782710b592c2acacee8f51e9e6c382ea2ec8656a[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 22:46:01 2019 +0000
+
+    Remove select text edit
+
+[33mcommit 19f48d65936d34c63e63a451f580346b6aa47794[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Jan 10 21:53:39 2019 +0000
+
+    Fix the join activity layout
+
+[33mcommit 709ac7d30a599312fb7621b1fd6f063d61756bb8[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 9 13:21:14 2019 +0000
+
+    Take in the seller max price and data usage stats
+
+[33mcommit ace4a6cda2ffa0fc889501926531d0975409fc8b[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Tue Jan 8 19:14:30 2019 +0000
+
+    add usage in paySeller() and login button disabled/enabled
+
+[33mcommit d546f832afafaea84c50279e5f81c818c706fc58[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 20:35:18 2019 +0000
+
+    Round balance to display
+
+[33mcommit 1d7af05d40452bf8a381458291482d39c3630f0c[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 20:10:34 2019 +0000
+
+    Fix layout balance margins
+
+[33mcommit 71e266225cf1bd99103f9b2e22c6442a0cc5d6a5[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 20:04:01 2019 +0000
+
+    Show balance in usd and in Iota
+
+[33mcommit d0dd9415d8bbce1b45859528c9ec8b09e145b27b[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 19:43:48 2019 +0000
+
+    Format transaction date display
+
+[33mcommit 50e912f897a5838411e89951baa25df6a53b82fc[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 19:31:20 2019 +0000
+
+    Use display text to show iota balance with correct units
+
+[33mcommit 5af640b76e5be0a3e3e083dcc72d29ab022b63a8[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 19:12:18 2019 +0000
+
+    Use the unit spinner to convert amount
+
+[33mcommit ca17144e3ef30c902ff9487deff56531d861c862[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 14:31:08 2019 +0000
+
+    Add margin to spinner
+
+[33mcommit 15508541f160ea731eebc102f85cd008c9a5e922[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Jan 5 14:17:36 2019 +0000
+
+    Added IotaUnits
+
+[33mcommit d32678b9a2477b3cb93b47beaa0da100ee3e11f1[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Jan 4 22:33:20 2019 +0000
+
+    added spinner
+
+[33mcommit 255965f4000ad03e85e5eb0c6b9944f9283769d8[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Jan 3 15:45:47 2019 +0000
+
+    add computation of the wifi usage
+
+[33mcommit eaa961891328489f47c8dc2e0d5361c44ac066af[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 2 18:54:33 2019 +0000
+
+    Remove checksum on remainder address
+
+[33mcommit 093340a90e4bae7810f9ed0d93fc7bbb035dd276[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 2 17:27:35 2019 +0000
+
+    Added more amt
+
+[33mcommit 66f662c2b84b66fdc7fe6708ef831ecffe022a5b[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 2 15:09:38 2019 +0000
+
+    Validate address before processing payout
+
+[33mcommit 0fc5a059c24bc1fac4c2fce3ce9791027ff56176[m
+Merge: 0bb108d f93b640
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Jan 2 12:03:21 2019 +0000
+
+    Merge branch 'master' of https://github.com/bytes-io/android-new-ui
+
+[33mcommit 0bb108dd35e80b043d0a3cdb55af111937beecee[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Jan 2 12:03:13 2019 +0000
+
+    quicj changes
+
+[33mcommit f93b6408a31b349ab5418d9b5d4d0ad368a42f75[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Jan 2 11:58:49 2019 +0000
+
+    Added crash analytics
+
+[33mcommit 8deedf99628149fecf8dd5086c5b6b1c7f9690eb[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Dec 30 16:29:24 2018 +0000
+
+    Change history transaction and remove menu in PaymentActivity
+
+[33mcommit b11e6cbf6ebe1e20c38453891775a7728d5a8b22[m
+Merge: 30fa78f f1c8512
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Dec 30 15:28:59 2018 +0000
+
+    Merge branch 'master' of https://github.com/bytes-io/android-new-ui
+
+[33mcommit 30fa78f9305912e079a663b2792f109f065542b0[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Dec 30 15:18:31 2018 +0000
+
+    prevent copy and write in seeds
+
+[33mcommit f1c8512d3248aae05a77a49d28ef39a0d96214b5[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 13:50:41 2018 +0000
+
+    Added padding to no tx msg
+
+[33mcommit bf407db381838b2908458ec098a66b68d60787ff[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 13:45:38 2018 +0000
+
+    Added loading screen to view histroy fragmnet
+
+[33mcommit 3bdc34f43c5c950cd61e30d45f86e0ede886a4df[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 12:12:56 2018 +0000
+
+    Remove debug items
+
+[33mcommit 2066823e6fca9ebaac7355ef1d1a6aee66838e10[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 12:06:29 2018 +0000
+
+    hide old menu
+
+[33mcommit e6da41f071afe70d41e3c4ff2af73e6c2d423e5c[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 12:03:57 2018 +0000
+
+    Added IOTA units in history
+
+[33mcommit 834588e6f7552a228d5a36ae7c62f9c893d92e2b[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 00:56:44 2018 +0000
+
+    Fix withdrawal to take Mi in decimals
+
+[33mcommit 99952032faba99c5c3b9259e202f1fc13680a87d[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 00:54:20 2018 +0000
+
+    Show msg to credit card
+
+[33mcommit 714872d7951989aea7ff6e83789925f6c3554cc7[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 00:28:32 2018 +0000
+
+    Added status to transaction info
+
+[33mcommit 16809df616c216b81ac863086a84bb545c2eadb5[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 00:06:54 2018 +0000
+
+    Remove debug
+
+[33mcommit 19a11b6597ea86f30aa047e1151538596e8458cc[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Dec 30 00:03:33 2018 +0000
+
+    Show new alert box for transaction info
+
+[33mcommit 69f35597a850445ec192082f452f137cda126086[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Dec 29 23:40:54 2018 +0000
+
+    Fix tx hist
+
+[33mcommit 7d309ae570d6165cd14a5ddbf1532b2e79a055c2[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Dec 29 20:50:46 2018 +0000
+
+    Fix Iota withdraw
+
+[33mcommit 3cf21ae6a8899289a5236e7cee3b0ee166e12c90[m
+Author: Phaninder Pasupula <pasupulaphani@gmail.com>
+Date:   Sat Dec 29 20:30:33 2018 +0000
+
+    Update README.md
+
+[33mcommit 379b8b1ce94c37f5a6f4404407adc14524612645[m
+Author: samnet <samnet@users.noreply.github.com>
+Date:   Sat Dec 29 20:52:56 2018 +0100
+
+    Add files via upload
+
+[33mcommit 895d5112930741ed401b0071cf7c4fc376678a32[m
+Author: samnet <samnet@users.noreply.github.com>
+Date:   Sat Dec 29 20:52:26 2018 +0100
+
+    Create README.md
+
+[33mcommit 221070fe2acf1e1942ce2c59e444e01891dd368e[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 19:47:30 2018 +0000
+
+    Fetch and store IOTA usd price one next load
+
+[33mcommit 531ee0913070dc13284eb8d4c32fd874b63e37b8[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 19:44:33 2018 +0000
+
+    Fix iota price store and fetch
+
+[33mcommit 5ad25bbf1c9a4447790d39c763b1f8ccfab58d3f[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 18:40:48 2018 +0000
+
+    Use USD by default
+
+[33mcommit 42ff4dc5d0669ea3f0c93d4fa9971ff5c907f4f0[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 18:35:55 2018 +0000
+
+    Fix wording and withdraw
+
+[33mcommit b6fdcbc4b212faf786ea5efc707b544cbe24bcfe[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 18:26:44 2018 +0000
+
+    Avoid autofocus to wallet text box
+
+[33mcommit 66f5cac2e6bf8eb0962bb88ff625048c8bd63f88[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 18:16:21 2018 +0000
+
+    added seed to encrypt and store
+
+[33mcommit 46a883ee3e4a5cd366e581b15d26606d06751dd7[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 17:52:59 2018 +0000
+
+    Refactor constants
+
+[33mcommit d9ad529aec2ec9ae9ca2c1afd1f14c34c197fd33[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 16:15:38 2018 +0000
+
+    Fix seed pref string constant
+
+[33mcommit b0b2a8457bd516d1ecc395c598d138aab36aae06[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Dec 28 16:05:29 2018 +0000
+
+    Use pref seed to create address
+
+[33mcommit d86f8ea7fca78ceaaff5167ef4a9c3d9e80a0f08[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Dec 27 14:06:26 2018 +0000
+
+    ecription seed and cant go back on main screen
+
+[33mcommit 69e8e1259881b042829af9c2a37eb248eaaecb6d[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Dec 22 13:37:48 2018 +0000
+
+    creation of new seed
+
+[33mcommit c0c76cf4dde4ae9b3922a7d3b56166952b22ac88[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Dec 21 16:27:03 2018 +0000
+
+    fix problem if wifi has bytes- but not app (code ==-1)
+
+[33mcommit 51206b8de11b171c31b2a830e43912a113517b24[m[33m ([m[1;32mtcpBranch[m[33m)[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Dec 21 15:39:13 2018 +0000
+
+    search for new seller if price not match or server disconnected
+
+[33mcommit 79b825f5d71c1acd54ca5b8caae9002291616081[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Dec 20 19:27:18 2018 +0000
+
+    fix websockets+add first activity when istall app+order wifiList by level
+
+[33mcommit e8303532903addb21f302225e4b21821f3653d12[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Dec 15 15:39:56 2018 +0000
+
+    try sth
+
+[33mcommit 3df6a7be1414be4920bd3b32955bc6f9716b4993[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Dec 8 15:32:52 2018 +0000
+
+    add more try on socket failures and change a pop up message
+
+[33mcommit 7b861de6b5aa19bf8d34aa54823cef167a8b411a[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Dec 7 14:43:13 2018 +0000
+
+    put closing instead of closed and put null check
+
+[33mcommit 3e1c89e3c9a72d24cb578a5f0529822f73e9024d[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Nov 29 12:46:19 2018 +0000
+
+    fix webscokets...have to go back on it
+
+[33mcommit 4f24352c916aca183585807e7a8241b98ebc52d2[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Nov 28 11:58:14 2018 +0000
+
+    fix bg of maxBuyer<maxSeller->click Buy->cant click buy again
+
+[33mcommit 9bfd5b9563d6938058ba6193606e95e354774309[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Nov 28 09:22:48 2018 +0000
+
+    fix menu drawer + add link to menu + remove earned and spent + remove data consumption
+
+[33mcommit c15d37efe5a0b74cf836ddfdb08c63be9ac780d4[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 25 17:18:00 2018 +0000
+
+    add drawer menu and 3 dots menus in settings and refactor so that all activities.xml include app_bar
+
+[33mcommit 10af83993904f84998969e6f42d66b685dc4fff3[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 24 14:13:03 2018 +0000
+
+    add white alertDialog, wallet linked to crypto_payment, link on alertDiaog, settings better
+
+[33mcommit 79c9db8910ec2a7662d10a6c03f75002a474dcab[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Nov 23 18:39:05 2018 +0000
+
+    remove cacne files
+
+[33mcommit 81f1eb7b4e4774374d3187d3ef6799da876405a1[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 23 16:24:03 2018 +0000
+
+    add new screen crypto_fragment
+
+[33mcommit 666724eaa9f80e29962afdb19938add9e19edddd[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Nov 22 10:50:54 2018 +0000
+
+    add color files in drawable and color directory
+
+[33mcommit 65d9c016871773ce02ede04215e0aaf886aa11d6[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Nov 21 22:01:14 2018 +0000
+
+    work on buttons
+
+[33mcommit f4989d498b292c9c9d45d5d2af628a07e3c12f67[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Tue Nov 20 20:33:48 2018 +0000
+
+    fix bug of setting price buyer and sell buy for transaction
+
+[33mcommit 7f41587121ee20bea51119a70a7a1913749dde78[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Mon Nov 19 15:41:49 2018 +0000
+
+    seller send address for paying
+
+[33mcommit eeac52705b3e67b4e73827c20f6199962dd12116[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Mon Nov 19 15:02:14 2018 +0000
+
+    added temp to get to address
+
+[33mcommit 59a63a4093fc1645e172e9f114e07f5f09460630[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Mon Nov 19 14:59:45 2018 +0000
+
+    implement the handshake connection with prices problem
+
+[33mcommit 7e8459be9e12e59d638fa7769052bf001dd5667d[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Mon Nov 19 11:57:18 2018 +0000
+
+    Use settings to store all prefs
+
+[33mcommit d5347d6b081997c6a302efddb6a2014158316c08[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 18 17:26:51 2018 +0000
+
+    aler dialog when click on view of listview in history fragment
+
+[33mcommit a312a85da08f00b2aecc78a1545c7baa4b10e742[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 18 17:10:51 2018 +0000
+
+    remove credit card functionalities, change history transactions and fix menu that disappear on payment activities
+
+[33mcommit 4de8768ff070e50ef1997bc8479bf229e9655c1d[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 17 23:13:18 2018 +0000
+
+    add credit card fragment and the activity + change the permission order + maybe fixed the data pb
+
+[33mcommit aac9d33a5b8f42a7fa8656403f16c82b09dafe80[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 16 17:50:27 2018 +0000
+
+    improve settinfs.xml
+
+[33mcommit 05c29ee89ff168348c985e647cc67871787b2f54[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 16 17:06:24 2018 +0000
+
+    fix name of each activity and creates the new settings
+
+[33mcommit e22979e355412ab66c2b8eaeb7a21af5eb508796[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Nov 15 15:41:46 2018 +0000
+
+    change in packages and start history fragment
+
+[33mcommit c8dc54cd9610420c8c124771640f7feeee8ef9dd[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 15 10:50:39 2018 +0000
+
+    Minor wording
+
+[33mcommit 427434cbda486451704a8c230a5833fd4d1e1f6e[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 15 10:44:26 2018 +0000
+
+    Minor Ui fixes
+
+[33mcommit 0dded3837e5bfc59aa5d8edc5d7fd9199aa7548c[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Nov 15 10:23:33 2018 +0000
+
+    change some things in cripto fragment
+
+[33mcommit 57f4720fb2c452b9997e3583bc7f0a46b7771976[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Thu Nov 15 09:51:57 2018 +0000
+
+    MB data
+
+[33mcommit af60bb9bf1bc1d467a8e7acfe2b0f735e239e8a1[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 15 09:50:29 2018 +0000
+
+    catch all exception
+
+[33mcommit 2f682562501f0cacdb25916b346a8d926fe936f5[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Nov 14 17:02:08 2018 +0000
+
+    added acct errror handle
+
+[33mcommit 8c9a84020a0e6b79712724a4eb926a065666d114[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Nov 14 15:13:11 2018 +0000
+
+    Change color of menu in setting and nack arrow
+
+[33mcommit a1e84b3bdceb7259137967371e096d83a2ea08c8[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Wed Nov 14 14:41:27 2018 +0000
+
+    change layout for buyer+fix ban at the top
+
+[33mcommit a32d89bda6baaa49860cdbaa3716b4f7fb2f0aad[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Wed Nov 14 13:12:37 2018 +0000
+
+    added basic node selection as per the availability
+
+[33mcommit 1244b22ff06faf2ec5d585973e34484d248d7d8e[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Tue Nov 13 19:07:39 2018 +0000
+
+    added preference manager
+
+[33mcommit 461fb32a770f4e4648d7ca96f1e680d61b28a0ea[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Tue Nov 13 18:20:06 2018 +0000
+
+    minor fix
+
+[33mcommit 222e686f01f2b79f0f2b873d95b52267c965201d[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Tue Nov 13 18:40:54 2018 +0000
+
+    modify design of button+back arrow+color of menus
+
+[33mcommit 14bd15ba5d7303e886f886d5d397d2545675f833[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Mon Nov 12 13:42:34 2018 +0000
+
+    refactor and work on menus and toolbars
+
+[33mcommit d22e2b7dd6510fa48ec68b88fdbe227d11d96af9[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Tue Nov 13 16:13:00 2018 +0000
+
+    return linl in txdata
+
+[33mcommit 0067c1fb2151c584441feca3494cba9c3d5bd56b[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Tue Nov 13 16:02:28 2018 +0000
+
+    reverse tx list
+
+[33mcommit 43b0705d12ce7b365cd4be782ff16132f7a79d0c[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Tue Nov 13 15:53:57 2018 +0000
+
+    added new acct
+
+[33mcommit 7f567bca68f600e53af345c05b7d17c0430d9ff0[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Mon Nov 12 13:09:02 2018 +0000
+
+    ise old iota
+
+[33mcommit 3edd184bc103abfd5a1e6a82aac5871a651b6e6b[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Mon Nov 12 13:04:39 2018 +0000
+
+    remove debug
+
+[33mcommit e44206349b061fe748dea1b3633fc519097b0ba7[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Nov 11 18:48:44 2018 +0000
+
+    calc amount ot pay
+
+[33mcommit 5291f0be2c60335096884e095aa07fff00ed1aa4[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 11 18:21:33 2018 +0000
+
+    remove useless code and maje isConnectedToInternet static and public
+
+[33mcommit b1cc252ae3d2d5ea551642ce78ed4fc59ac016b0[m
+Merge: 1a60e05 f4f59bf
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Nov 11 16:15:36 2018 +0000
+
+    Merge branch 'master' of github.com:bytes-io/android-new-ui
+
+[33mcommit 1a60e05350eb6b2e76270aba5d9d9eeafc23f2c6[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sun Nov 11 16:11:35 2018 +0000
+
+    added defatult pref
+
+[33mcommit f4f59bf74c8c78669202399d5411f8b604a1ecca[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 11 15:47:08 2018 +0000
+
+    start fixing menu change color for other applications
+
+[33mcommit f6634314a0c84fb313d151b64d4e418f08d1cfac[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 11 10:34:22 2018 +0000
+
+    add a layout
+
+[33mcommit 7b8ee0d20f729efb11c9e3be37989d43566ad92c[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sun Nov 11 10:33:05 2018 +0000
+
+    continue with crypto by getting data from iota
+
+[33mcommit 1ee315f7e3d68b5f69de11e546ba1d17497ad8d7[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 10 19:19:18 2018 +0000
+
+    continue with fragments (history and crypto)
+
+[33mcommit f77e992e374bb75f9f52b73ab3c47a6b439df3d9[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 18:04:09 2018 +0000
+
+    git remove checksum
+
+[33mcommit 770a9c24cdd55d0a1341aec524a3c1ad68e970ae[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 18:02:34 2018 +0000
+
+    give permissions to threads
+
+[33mcommit a0e9a313def0bbff77a7cc661d2862d92d2febcb[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 10 17:43:23 2018 +0000
+
+    add fragment history xml
+
+[33mcommit 2087e34976f5c5a51e850b30d32dd9cfd3737a5a[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 10 17:24:20 2018 +0000
+
+    crypt fragment done without iota api
+
+[33mcommit bbcd7836e1ad5ccf795257a55c3dc4aef94d8271[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 10 16:09:14 2018 +0000
+
+    checksum
+
+[33mcommit ff5f826b19c547ae0705de0917743df0f626ad64[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Sat Nov 10 16:08:04 2018 +0000
+
+    work on crypto fragment
+
+[33mcommit 42a52d06102ecbf30c1a43f457075852a60ff025[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 15:57:18 2018 +0000
+
+    added getCurrentAddress
+
+[33mcommit c570167f8d01ade15ba9b6ed6e772362a7767483[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 15:24:18 2018 +0000
+
+    test wallet btn
+
+[33mcommit c80664d0b232a3817c4ca595ae74ec0bfd2279b7[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 14:50:52 2018 +0000
+
+    more fixes to iota package
+
+[33mcommit 2d8a0766844ee6431f6e6f956176aed1064c18e7[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 14:19:39 2018 +0000
+
+    Refactor to accounts
+
+[33mcommit 4bdd202335ec4237ab3549de6a057dafe794d03d[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Sat Nov 10 13:54:12 2018 +0000
+
+    added new buyer
+
+[33mcommit 25532bf47ea85cbc276dfac4f01ebbb99f800560[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 9 17:44:29 2018 +0000
+
+    continue copying from new design and start crypto
+
+[33mcommit 05d16f7fffe9d501117131ed7d8b9dec9678c351[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 9 16:43:08 2018 +0000
+
+    add java classes from design
+
+[33mcommit 3455358d04f76413fb3d96bede93f38ee964ddf9[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 9 16:39:29 2018 +0000
+
+    add new design
+
+[33mcommit cb817ac098ffe10b7b69ba224614f3c56d9211b7[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 9 13:56:22 2018 +0000
+
+    number of client updated automatically
+
+[33mcommit 43bb4d93da6067049c7cf4e10df59ed7c43e766d[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Fri Nov 9 12:44:38 2018 +0000
+
+    added new iota functions
+
+[33mcommit 688a5b3a4811142858799d8931b5ae717d23f191[m
+Author: Bazouk55555 <adrien_boukobza@hotmail.fr>
+Date:   Fri Nov 9 11:17:49 2018 +0000
+
+    change names/packages add menu functionnality to change color and name+ fix bugs
+
+[33mcommit f771a33c9931bcc32bf84e0ba2a55c932d7c93a0[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 8 12:58:09 2018 +0000
+
+    added secrets
+
+[33mcommit 60515e39322eb745ec59d447b04212e3b9781139[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 8 12:47:26 2018 +0000
+
+    untrack files
+
+[33mcommit 23a1e0fab0da93b35c092e8e0b1556b6b8f382fa[m
+Author: phani <pasupulaphani@gmail.com>
+Date:   Thu Nov 8 12:32:41 2018 +0000
+
+    init cmit

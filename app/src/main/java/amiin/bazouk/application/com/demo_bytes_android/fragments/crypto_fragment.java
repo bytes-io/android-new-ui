@@ -38,6 +38,7 @@ public class crypto_fragment extends Fragment {
     String currentUSDBalance;
     String currentIOTABalance;
     private AlertDialog alertDialog;
+    public static double currentBalance = -1;
 
     @Nullable
     @Override
@@ -56,7 +57,8 @@ public class crypto_fragment extends Fragment {
                 }
                 try {
                     ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
-                    currentUSDBalance = "$"+Round.round(responseGetBalance.usd, 2);
+                    currentBalance = Round.round(responseGetBalance.usd, 2);
+                    currentUSDBalance = "$"+currentBalance;
                     currentIOTABalance = "("+responseGetBalance.displayIotaBal+")";
                 } catch (AccountException e) {
                     System.out.println("Failed due to " + e.getMessage());
@@ -94,6 +96,15 @@ public class crypto_fragment extends Fragment {
         result.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
+                    if(Round.round(responseGetBalance.usd, 2)>3){
+                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                        return;
+                    }
+                } catch (AccountException e) {
+                    e.printStackTrace();
+                }
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("text to copy", ((TextView) container.findViewById(R.id.iota_address_deposit)).getText().toString());
                 clipboard.setPrimaryClip(clip);
@@ -226,6 +237,15 @@ public class crypto_fragment extends Fragment {
             }
         });
         return result;
+    }
+
+    private void setAlertDialogBuilder(String title, String message) {
+        new AlertDialog.Builder(getContext()).setTitle(title)
+                .setMessage(message)
+                .setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                    }
+                }).show();
     }
 
     @Override

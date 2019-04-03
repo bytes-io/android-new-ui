@@ -55,8 +55,10 @@ import org.java_websocket.handshake.ServerHandshake;
 import org.java_websocket.server.WebSocketServer;
 import com.crashlytics.android.Crashlytics;
 
+import amiin.bazouk.application.com.demo_bytes_android.fragments.crypto_fragment;
 import amiin.bazouk.application.com.demo_bytes_android.utils.DetectRoot;
 import amiin.bazouk.application.com.demo_bytes_android.utils.InternetConn;
+import amiin.bazouk.application.com.demo_bytes_android.utils.Round;
 import io.fabric.sdk.android.Fabric;
 
 import java.io.IOException;
@@ -317,6 +319,15 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         findViewById(R.id.sell_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
+                    if(Round.round(responseGetBalance.usd, 2)>3){
+                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                        return;
+                    }
+                } catch (AccountException e) {
+                    e.printStackTrace();
+                }
                 Thread serverThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -340,6 +351,15 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         findViewById(R.id.buy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                try {
+                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
+                    if(Round.round(responseGetBalance.usd, 2)>3){
+                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                        return;
+                    }
+                } catch (AccountException e) {
+                    e.printStackTrace();
+                }
                 Thread clientThread = new Thread(new Runnable() {
                     @Override
                     public void run() {
@@ -779,13 +799,11 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         }
         /*WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(WIFI_SERVICE);
         WifiInfo wifiInfo = wifiManager.getConnectionInfo();
-        Log.d("wifiInfo HAHAHAHAHAHAHA", wifiInfo.toString());
         Log.d("SSID",wifiInfo.getSSID());*/
         /*ConnectivityManager cm = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = cm.getActiveNetworkInfo();
         if (info != null && info.isConnected()) {
             String ssid = info.getExtraInfo();
-            Log.d("LOOK HERE BRO: ", "WiFi SSID: " + ssid);
         }*/
         if (!isHotspotTurnOn) {
             runOnUiThread(new Runnable() {
@@ -891,7 +909,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 ((TextView)findViewById(R.id.password_to_use)).setText(getPasswordFromSsid(ssid));
             }
         });
-        //paySeller();
         checkIfConnectedToWifi();
     }
 
@@ -1190,13 +1207,6 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     public void onClick(DialogInterface dialog, int which) {
                     }
                 }).show();
-    }
-
-    @Override
-    public void onPause(){
-        super.onPause();
-        if(mWifiScanReceiver!=null) {
-        }
     }
 
     @Override
