@@ -1229,6 +1229,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             editor.apply();
             toolbarTitle += balanceValueString;
         }
+        else{
+            balanceValueString = preferences.getString(Constants.BalanceValue,"N/A");
+            toolbarTitle += balanceValueString;
+        }
         toolbar.setTitle(toolbarTitle);
     }
 
