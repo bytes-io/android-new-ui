@@ -27,8 +27,8 @@
     <string name="you_are_not_connected_to_internet">You are not connected to internet</string>
     <string name="buying">Buying</string>
     <string name="settings">Settings</string>
-    <string name="sell_data">SELL DATA</string>
-    <string name="buy_data">BUY DATA</string>
+    <string name="sell_data">PROVIDE ACCESS</string>
+    <string name="buy_data">GET ACCESS</string>
     <string name="check_your_wallet">CHECK YOUR WALLET</string>
     <string name="selling">Selling</string>
     <string name="title_activity_payment">Payment</string>
