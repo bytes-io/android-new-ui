@@ -40,7 +40,7 @@
                 android:gravity="center"
                 android:textSize="30sp"
                 android:textStyle="bold"
-                android:textColor="@android:color/black"/>
+                android:textColor="@color/colorPrimary"/>
 
             <EditText
                 android:id="@+id/max_price"
@@ -51,11 +51,13 @@
                 android:inputType="number|numberDecimal"
                 android:maxLines="1"
                 android:singleLine="true"
+                android:textColor="@color/colorPrimary"
                 android:textSize="30sp" />
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text=" / GB"
+                android:textColor="@color/colorPrimary"
                 android:textSize="30sp"
                 android:gravity="center" />
         </LinearLayout>
@@ -71,7 +73,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="45dp"
-            android:background="@android:color/black"
+            android:background="@color/colorPrimary"
             android:text="SET MAX PRICE"
             android:textColor="@android:color/white"/>
     </LinearLayout>

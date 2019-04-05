@@ -14,4 +14,5 @@ public class Constants {
     public static final String PREF_MIOTA_USD = "pref_miota_usd";
     public static final String PREF_MIOTA_USD_LAST_LOAD = "pref_miota_usd_last_load";
     public static final String ENC_SEED = "enc_seed";
+    public static String BalanceValue = "balance_value";
 }

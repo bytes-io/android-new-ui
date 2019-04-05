@@ -319,14 +319,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         findViewById(R.id.sell_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
-                    if(Round.round(responseGetBalance.usd, 2)>3){
-                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
-                        return;
-                    }
-                } catch (AccountException e) {
-                    e.printStackTrace();
+                if(Double.valueOf(preferences.getString(Constants.BalanceValue,"0"))>3){
+                    setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                    return;
                 }
                 Thread serverThread = new Thread(new Runnable() {
                     @Override
@@ -351,14 +346,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         findViewById(R.id.buy_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
-                    if(Round.round(responseGetBalance.usd, 2)>3){
-                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
-                        return;
-                    }
-                } catch (AccountException e) {
-                    e.printStackTrace();
+                if(Double.valueOf(preferences.getString(Constants.BalanceValue,"0"))>3){
+                    setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                    return;
                 }
                 Thread clientThread = new Thread(new Runnable() {
                     @Override
@@ -447,7 +437,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                     mHandler.removeCallbacks(mRunnableServer);
                     enableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),R.string.sell);
                     makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_sell));
-                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.selector_text_drawer,R.color.selector_icon_drawer);
+                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.colorPrimaryDark,R.color.selector_text_drawer,R.color.selector_icon_drawer);
                     ((TextView) findViewById(R.id.number_of_clients)).setText("0");
                     //((TextView) findViewById(R.id.data_seller)).setText("0MB");
                 }
@@ -519,9 +509,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                             public void run() {
                                 setAlertDialogBuilder(getResources().getString(R.string.connected_to_server), getResources().getString(R.string.connected_to_server));
                                 getNetworkStatsClient();
-                                disableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button),getResources().getColor(R.color.red),R.string.disconnect, getResources().getColor(android.R.color.white));
+                                disableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button),R.string.disconnect, getResources().getColor(android.R.color.white));
                                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_buy), findViewById(R.id.layout_main));
-                                changeMenuColorAndTitle(R.string.buying, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
+                                changeMenuColorAndTitle(R.string.buying, R.color.greenLight,R.color.greenDark,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                             }
                         });
                         webSocketClient.send(CONNECTION_OPENED);
@@ -623,7 +613,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                     mHandler.removeCallbacks(mRunnableClient);
                                     enableButtons(findViewById(R.id.sell_button), findViewById(R.id.buy_button), R.string.connect);
                                     makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_main), findViewById(R.id.layout_buy));
-                                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary, R.color.selector_text_drawer, R.color.selector_icon_drawer);
+                                    changeMenuColorAndTitle(R.string.Bytes, R.color.colorPrimary,R.color.colorPrimaryDark, R.color.selector_text_drawer, R.color.selector_icon_drawer);
                                     //((TextView) findViewById(R.id.data_buyer)).setText("0MB");
                                     setAlertDialogBuilder(getResources().getString(R.string.connection_closed), getResources().getString(R.string.connection_of_client_closed));
                                 }
@@ -648,17 +638,27 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         webSocketClient.connect();
     }
 
-    private void disableButtons(Button buttonToDisable, Button buttonToChange,int resBackgroundToChange, int resTextToChange, int resTextColorToChange ) {
+    private void disableButtons(Button buttonToDisable, Button buttonToChange, int resTextToChange, int resTextColorToChange ) {
         buttonToDisable.setEnabled(false);
         buttonToChange.setEnabled(true);
-        buttonToChange.setBackgroundColor(resBackgroundToChange);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            buttonToChange.setBackground(getDrawable(R.drawable.button_border_color_red));
+        }
+        else{
+            buttonToChange.setBackground(getResources().getDrawable(R.drawable.button_border_color_red));
+        }
         buttonToChange.setText(getResources().getString(resTextToChange));
         buttonToChange.setTextColor(resTextColorToChange);
     }
 
     private void enableButtons(Button buttonToEnable, Button buttonToChange, int resTextToChange ) {
         buttonToEnable.setEnabled(true);
-        buttonToChange.setBackgroundResource(R.drawable.selector_background_buttons);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            buttonToChange.setBackground(getDrawable(R.drawable.button_border_color_grey));
+        }
+        else{
+            buttonToChange.setBackground(getResources().getDrawable(R.drawable.button_border_color_grey));
+        }
         buttonToChange.setText(getResources().getString(resTextToChange));
         ColorStateList colorStates = getResources().getColorStateList(R.color.selector_text_color_buttons);
         buttonToChange.setTextColor(colorStates);
@@ -900,9 +900,9 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                disableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button),getResources().getColor(R.color.red), R.string.stop_selling, getResources().getColor(android.R.color.white));
+                disableButtons(findViewById(R.id.buy_button),findViewById(R.id.sell_button), R.string.stop_selling, getResources().getColor(android.R.color.white));
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
-                changeMenuColorAndTitle(R.string.selling, R.color.green,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
+                changeMenuColorAndTitle(R.string.selling, R.color.greenLight,R.color.greenDark,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                 getNetworkStatsServer();
                 String ssid = "bytes-"+randomString();
                 ((TextView)findViewById(R.id.ssid_to_use)).setText(ssid);
@@ -1187,13 +1187,13 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
         layoutInvisible.setVisibility(View.INVISIBLE);
     }
 
-    private void changeMenuColorAndTitle(int resTitle, int resColor, int selectorTextDrawer, int selectorIconDrawer){
+    private void changeMenuColorAndTitle(int resTitle, int resColorDown,int resColorUp, int selectorTextDrawer, int selectorIconDrawer){
         toolbar.setTitle(resTitle);
-        appBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
+        appBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColorDown)));
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            getWindow().setStatusBarColor(ContextCompat.getColor(this,resColor));
+            getWindow().setStatusBarColor(ContextCompat.getColor(this,resColorUp));
         }
-        findViewById(R.id.nav_header).setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColor)));
+        findViewById(R.id.nav_header).setBackgroundDrawable(new ColorDrawable(getResources().getColor(resColorDown)));
         ColorStateList colorStatesListText = getResources().getColorStateList(selectorTextDrawer);
         ColorStateList colorStatesListIcon = getResources().getColorStateList(selectorIconDrawer);
         navigationView.setItemTextColor(colorStatesListText);
@@ -1213,6 +1213,23 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
     public void onResume(){
         super.onResume();
         navigationView.getMenu().getItem(0).setChecked(true);
+        double balanceValue = -1;
+        try {
+            ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
+            balanceValue = Round.round(responseGetBalance.usd, 2);
+        } catch (AccountException e) {
+            e.printStackTrace();
+        }
+        String toolbarTitle = "Balance: ";
+        String balanceValueString;
+        if(balanceValue != -1){
+            balanceValueString = String.valueOf(balanceValue);
+            SharedPreferences.Editor editor = preferences.edit();
+            editor.putString(Constants.BalanceValue, balanceValueString);
+            editor.apply();
+            toolbarTitle += balanceValueString;
+        }
+        toolbar.setTitle(toolbarTitle);
     }
 
     @Override

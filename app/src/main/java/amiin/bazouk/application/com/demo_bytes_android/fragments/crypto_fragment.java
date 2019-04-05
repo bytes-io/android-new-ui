@@ -23,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import amiin.bazouk.application.com.demo_bytes_android.Constants;
 import amiin.bazouk.application.com.demo_bytes_android.R;
 import amiin.bazouk.application.com.demo_bytes_android.iota.ResponseGetBalance;
 import amiin.bazouk.application.com.demo_bytes_android.iota.Wallet;
@@ -38,7 +39,7 @@ public class crypto_fragment extends Fragment {
     String currentUSDBalance;
     String currentIOTABalance;
     private AlertDialog alertDialog;
-    public static double currentBalance = -1;
+    private double currentBalance = -1;
 
     @Nullable
     @Override
@@ -96,14 +97,9 @@ public class crypto_fragment extends Fragment {
         result.findViewById(R.id.copy).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getContext());
-                    if(Round.round(responseGetBalance.usd, 2)>3){
-                        setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
-                        return;
-                    }
-                } catch (AccountException e) {
-                    e.printStackTrace();
+                if(currentBalance>3){
+                    setAlertDialogBuilder("Limit reached","For your security, we request you to limit your IOTA holdings to $3. Please withdraw excess holdings before trying anything else.");
+                    return;
                 }
                 ClipboardManager clipboard = (ClipboardManager) getContext().getSystemService(Context.CLIPBOARD_SERVICE);
                 ClipData clip = ClipData.newPlainText("text to copy", ((TextView) container.findViewById(R.id.iota_address_deposit)).getText().toString());

@@ -56,10 +56,10 @@ public class SettingsActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.toolbar);
         if(preferences.getBoolean(Constants.IS_BUYER,false) || preferences.getBoolean(Constants.IS_SELLER,false)){
-            findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
-            toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.green)));
+            findViewById(R.id.appbar).setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.greenLight)));
+            toolbar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.greenLight)));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.green));
+                getWindow().setStatusBarColor(ContextCompat.getColor(this,R.color.greenDark));
             }
         }
         setSupportActionBar(toolbar);
