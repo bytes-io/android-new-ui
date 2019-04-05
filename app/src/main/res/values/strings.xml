@@ -6,8 +6,8 @@
     <string name="Bytes">Bytes</string>
     <string name="ready_to_connect">Ready to connect?</string>
     <string name="nice_wording">Some really nice wording</string>
-    <string name="sell">SELL DATA</string>
-    <string name="connect">BUY DATA</string>
+    <string name="sell">PROVIDE ACCESS</string>
+    <string name="connect">GET ACCESS</string>
     <string name="activity">Activity</string>
     <string name="turn_on_hotspot">Turn on your hotspot</string>
     <string name="change_hotspot_address">Change your hotspot address</string>
@@ -45,7 +45,7 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <string name="history">History</string>
     <string name="generate_seed">Seed Generated</string>
-    <string name="message_generate_seed">Keep it secure and don\'t share it with anyone. If someone has access to your seed they can access your account.</string>
+    <string name="message_generate_seed">Keep it secure and don\'t share it with anyone. If someone has access to your seed they can control your funds.</string>
     <string name="buttons_ok">OK</string>
     <string name="buttons_cancel">CANCEL</string>
     <string name="seed">Seed:</string>

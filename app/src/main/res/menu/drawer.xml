@@ -28,10 +28,6 @@
             android:id="@+id/faq"
             android:icon="@drawable/ic_faq"
             android:title="FAQ" />
-        <item
-            android:id="@+id/visit_us_online"
-            android:icon="@drawable/ic_visit_us"
-            android:title="Visit us online" />
     </group>
 
 </menu>

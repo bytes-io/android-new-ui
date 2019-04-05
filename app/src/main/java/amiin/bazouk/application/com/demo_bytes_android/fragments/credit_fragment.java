@@ -51,7 +51,7 @@ public class credit_fragment extends Fragment {
 //                startActivity(new Intent(getContext(), AddACreditCardActivity.class));
 
                 final AlertDialog.Builder builder;
-                builder = new AlertDialog.Builder(getContext()).setTitle("Add a new Credit Card").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
+                builder = new AlertDialog.Builder(getContext()).setTitle("Credit Card top up not available").setPositiveButton("CLOSE", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                     }

@@ -13,6 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
+        android:layout_alignTop="@id/buttom_layout"
         android:layout_marginTop="117dp"
         android:orientation="vertical"
         android:paddingBottom="100dp">
@@ -41,6 +42,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:layout_alignTop="@id/buttom_layout"
         android:orientation="vertical"
         android:visibility="invisible">
 
@@ -115,26 +117,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Earned (last week)"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="USD 2.20" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_margin="40dp"
             android:orientation="vertical">
 
@@ -190,6 +172,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
+        android:layout_alignTop="@+id/buttom_layout"
         android:orientation="vertical"
         android:visibility="invisible">
 
@@ -237,103 +220,80 @@
                 android:text="0MB" />
         </LinearLayout>-->
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Spent (last week)"
-                android:textColor="@android:color/black"
-                android:textSize="16sp" />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="end"
-                android:text="USD 2.20" />
-        </LinearLayout>
-
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/layout_buy"
+        android:id="@+id/buttom_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical">
 
-            <RelativeLayout
-                android:layout_width="wrap_content"
-                android:layout_height="0dp"
-                android:layout_weight="7">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="7">
 
-                <LinearLayout
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_alignParentBottom="true">
+
+                <RelativeLayout
+                    android:id="@+id/wallet_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="20dp">
+
+                    <ImageView
+                        android:id="@+id/peddy_image"
+                        android:src="@drawable/peggy_banl"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
+                        android:layout_marginLeft="30dp"/>
+
+                    <TextView
+                        android:id="@+id/check_txt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CHECK YOUR WALLET"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/peddy_image"
+                        android:layout_marginLeft="12dp"
+                        android:textSize="15sp"
+                        android:textColor="@color/blue"
+                        android:textStyle="bold"/>
+
+                    <ImageView
+                        android:layout_toRightOf="@+id/check_txt"
+                        android:src="@drawable/ic_next"
+                        android:layout_width="30dp"
+                        android:layout_centerVertical="true"
+                        android:layout_height="30dp"
+                        android:layout_marginLeft="30dp"/>
+
+                </RelativeLayout>
+
+                <Button
+                    android:id="@+id/buy_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:layout_alignParentBottom="true">
+                    android:background="@drawable/button_border_color_grey"
+                    android:text="@string/buy_data"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/selector_text_color_buttons"
+                    android:textSize="22sp"/>
 
-                    <RelativeLayout
-                        android:id="@+id/wallet_button"
-                        android:layout_width="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_height="wrap_content"
-                        android:layout_above="@+id/buy_button"
-                        android:layout_marginBottom="20dp">
-
-                        <ImageView
-                            android:id="@+id/peddy_image"
-                            android:src="@drawable/peggy_banl"
-                            android:layout_width="60dp"
-                            android:layout_height="60dp"
-                            android:layout_marginLeft="30dp"/>
-
-                        <TextView
-                            android:id="@+id/check_txt"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="CHECK YOUR WALLET"
-                            android:layout_centerVertical="true"
-                            android:layout_toRightOf="@+id/peddy_image"
-                            android:layout_marginLeft="12dp"
-                            android:textSize="15sp"
-                            android:textColor="@color/blue"
-                            android:textStyle="bold"/>
-
-                        <ImageView
-                            android:layout_toRightOf="@+id/check_txt"
-                            android:src="@drawable/ic_next"
-                            android:layout_width="30dp"
-                            android:layout_centerVertical="true"
-                            android:layout_height="30dp"
-                            android:layout_marginLeft="30dp"/>
-
-                    </RelativeLayout>
-
-                        <Button
-                            android:id="@+id/buy_button"
-                            android:layout_above="@+id/sell_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/button_border_color_grey"
-                            android:text="@string/buy_data"
-                            android:layout_marginBottom="20dp"
-                            android:textColor="@color/selector_text_color_buttons"
-                            android:textSize="22sp"/>
-
-                        <Button
-                            android:id="@+id/sell_button"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/button_border_color_grey"
-                            android:layout_alignParentBottom="true"
-                            android:layout_marginBottom="30dp"
-                            android:text="@string/sell_data"
-                            android:textColor="@color/selector_text_color_buttons"
-                            android:textSize="22sp"/>
+                <Button
+                    android:id="@+id/sell_button"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/button_border_color_grey"
+                    android:layout_marginBottom="30dp"
+                    android:text="@string/sell_data"
+                    android:textColor="@color/selector_text_color_buttons"
+                    android:textSize="22sp"/>
 
             </LinearLayout>
 

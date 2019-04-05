@@ -19,7 +19,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="Navigation header"
         android:paddingTop="8dp"
-        app:srcCompat="@mipmap/ic_launcher_round" />
+        app:srcCompat="@mipmap/bytes" />
 
     <TextView
         android:layout_width="match_parent"

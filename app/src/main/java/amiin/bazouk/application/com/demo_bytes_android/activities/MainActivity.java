@@ -1021,7 +1021,7 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
             startActivity(intent);
         } else if (id == R.id.terms_privacy_policy) {
             Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
-            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/privacy"));
             startActivity(visitUsOnlineIntent);
 
         } else if (id == R.id.help_support) {
@@ -1032,15 +1032,10 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
 
         } else if (id == R.id.faq) {
             Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
-            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
+            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/faq"));
             startActivity(visitUsOnlineIntent);
 
-        } else if (id == R.id.visit_us_online) {
-            Intent visitUsOnlineIntent = new Intent(Intent.ACTION_VIEW);;
-            visitUsOnlineIntent.setData(Uri.parse("https://www.bytes.io/"));
-            startActivity(visitUsOnlineIntent);
         }
-
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
