@@ -537,6 +537,17 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                                 long dataUsageForTheMinute = TrafficStats.getTotalTxBytes()+TrafficStats.getTotalRxBytes()-TrafficStats.getMobileRxBytes()-TrafficStats.getMobileTxBytes() - dataWifiAtStart;
                                 System.out.println("data usage: "+dataUsageForTheMinute);
                                 paySeller(maxPriceSeller, address,dataUsageForTheMinute);
+                                double balanceValue = -1;
+                                try {
+                                    ResponseGetBalance responseGetBalance = Wallet.getBalance(getApplicationContext());
+                                    balanceValue = Round.round(responseGetBalance.usd, 2);
+                                } catch (AccountException e) {
+                                    e.printStackTrace();
+                                }
+                                if(balanceValue<=0){
+                                    webSocketClient.close();
+                                    break;
+                                }
                             }
                         }
                     });
@@ -904,7 +915,13 @@ public class MainActivity extends PermissionsActivity implements NavigationView.
                 makeLayoutsVisibleAndInvisible(findViewById(R.id.layout_sell), findViewById(R.id.layout_main));
                 changeMenuColorAndTitle(R.string.selling, R.color.greenLight,R.color.greenDark,R.color.selector_text_drawer_when_buy_or_sell,R.color.selector_icon_drawer_when_buy_or_sell);
                 getNetworkStatsServer();
-                String ssid = "bytes-"+randomString();
+                String ssid = preferences.getString(Constants.SSID,"");
+                if(ssid.equals("")){
+                    ssid = "bytes-"+randomString();
+                    SharedPreferences.Editor editor = preferences.edit();
+                    editor.putString(Constants.SSID, ssid);
+                    editor.apply();
+                }
                 ((TextView)findViewById(R.id.ssid_to_use)).setText(ssid);
                 ((TextView)findViewById(R.id.password_to_use)).setText(getPasswordFromSsid(ssid));
             }

@@ -16,11 +16,11 @@ repositories {
 android {
     compileSdkVersion 27
     defaultConfig {
-        applicationId "amiin.bazouk.application.com.demo_bytes_android"
+        applicationId "amiin.bazouk.application.com.bytes_android"
         minSdkVersion 17
         targetSdkVersion 27
-        versionCode 25
-        versionName "25.0"
+        versionCode 27
+        versionName "27.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         packagingOptions {
